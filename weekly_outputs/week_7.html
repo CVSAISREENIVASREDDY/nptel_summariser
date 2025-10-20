@@ -1,0 +1,697 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week7</title>
+
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+      };
+    </script>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 2em;
+        }
+        .mjx-display {
+            margin: 2.5em 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="week" id="week_7"><h1 class="week-title">Week 7</h1><h2>Transcript Explanations</h2><div class="chapter" id="Lecture 31 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 31 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts presented in the transcript regarding the optimization of Multiple-Input Multiple-Output (MIMO) wireless communication systems using Singular Value Decomposition (SVD).</p>
+
+<b>1. Decoupling the MIMO Channel with SVD</b>
+<p>The core idea presented is that a complex MIMO system, where signals from multiple transmit antennas interfere with each other at multiple receive antennas, can be transformed into a set of simple, independent, parallel channels. This transformation is achieved by applying SVD to the MIMO channel matrix.</p>
+<ul>
+    <li><b>Pre-coding at the Transmitter:</b> The input signals are processed before transmission.</li>
+    <li><b>Post-processing at the Receiver:</b> The received signals are combined in a specific way.</li>
+</ul>
+<p>This process, known as <b>spatial multiplexing</b>, effectively decouples the system. Instead of one complex channel, we get $t$ parallel sub-channels, where $t$ is the number of singular values. Each of these sub-channels can be analyzed independently.</p>
+<p>The mathematical model for the $i$-th decoupled sub-channel is given by:</p>
+\$$ y_i^{\sim} = \sigma_i x_i^{\sim} + n_i^{\sim} $$
+<p>Where:</p>
+<ul>
+    <li>$ y_i^{\sim} $ is the output of the $i$-th sub-channel after receiver processing.</li>
+    <li>$ x_i^{\sim} $ is the symbol transmitted on the $i$-th sub-channel after transmitter pre-coding.</li>
+    <li>$ \sigma_i $ is the <b>amplitude gain</b> of the $i$-th sub-channel. This gain is directly given by the $i$-th singular value of the original MIMO channel matrix.</li>
+    <li>$ n_i^{\sim} $ is the noise affecting the $i$-th sub-channel.</li>
+    <li>This model holds for $ i = 1, 2, \dots, t $.</li>
+</ul>
+
+<b>2. Rate of Transmission and the Shannon Capacity Formula</b>
+<p>To determine the performance of these sub-channels, we analyze their Signal-to-Noise Ratio (SNR) and the maximum rate at which data can be transmitted reliably.</p>
+<ul>
+    <li><b>Transmit Power:</b> The power allocated to the $i$-th sub-channel is denoted by $ P_i = E\left[|x_i^{\sim}|^2\right] $, where $E[\cdot]$ is the expected value.</li>
+    <li><b>Noise Power:</b> The power of the noise on each sub-channel is assumed to be the same, denoted by $ \sigma^2 $.</li>
+</ul>
+<p>The output SNR for the $i$-th sub-channel is calculated as:</p>
+\$$ \text{SNR}_i = \frac{\text{Signal Power}}{\text{Noise Power}} = \frac{\sigma_i^2 P_i}{\sigma^2} $$
+<p>Note that since $\sigma_i$ is the amplitude gain, the power gain is $\sigma_i^2$.</p>
+<p>The maximum rate of error-free transmission for any channel is given by the <b>Shannon Capacity Formula</b>. For the $i$-th sub-channel, this rate, $R_i$, is:</p>
+\$$ R_i = \log_2(1 + \text{SNR}_i) = \log_2\left(1 + \frac{\sigma_i^2 P_i}{\sigma^2}\right) $$
+<p>The total rate for the entire MIMO system, known as the <b>sum rate</b>, is the sum of the individual rates of the parallel sub-channels:</p>
+\$$ R_{\text{sum}} = \sum_{i=1}^{t} R_i = \sum_{i=1}^{t} \log_2\left(1 + \frac{\sigma_i^2 P_i}{\sigma^2}\right) $$
+
+<b>3. The Rate Maximization Problem</b>
+<p>The goal is to maximize this sum rate. However, there is a practical limitation: the total power available at the transmitter is finite. This introduces a constraint on our optimization problem.</p>
+<p>The <b>Total Power Constraint</b> is given by:</p>
+\$$ \sum_{i=1}^{t} P_i \le P_0 $$
+<p>where $P_0$ is the total available transmit power.</p>
+<p>The formal optimization problem is therefore stated as:</p>
+<ul>
+    <li><b>Maximize:</b> $ \quad \sum_{i=1}^{t} \log_2\left(1 + \frac{\sigma_i^2 P_i}{\sigma^2}\right) $ </li>
+    <li><b>Subject to:</b> $ \quad \sum_{i=1}^{t} P_i \le P_0 \quad \) and $ \quad P_i \ge 0 \quad \text{for all } i $</li>
+</ul>
+
+<b>4. Solving with Lagrange Multipliers and the Water-Filling Algorithm</b>
+<p>This constrained optimization problem can be solved using the method of Lagrange multipliers. We construct the Lagrangian function $\mathcal{L}$:</p>
+\$$ \mathcal{L} = \sum_{i=1}^{t} \log_2\left(1 + \frac{\sigma_i^2 P_i}{\sigma^2}\right) + \lambda \left(P_0 - \sum_{i=1}^{t} P_i\right) $$
+<p>To find the optimal values of $P_i$, we take the partial derivative of $\mathcal{L}$ with respect to each $P_i$ and set it to zero:</p>
+\$$ \frac{\partial \mathcal{L}}{\partial P_i} = \frac{1}{\ln(2)} \cdot \frac{\sigma_i^2 / \sigma^2}{1 + (\sigma_i^2 P_i / \sigma^2)} - \lambda = 0 $$
+<p>Solving this equation for $P_i$ gives the optimal power allocation for the $i$-th channel:</p>
+\$$ P_i = \frac{1}{\lambda \ln(2)} - \frac{\sigma^2}{\sigma_i^2} $$
+<p>Since power cannot be negative ($P_i \ge 0$), we introduce a notation $ [x]^+ = \max(x, 0) $ to enforce this. The final solution is:</p>
+\$$ P_i = \left( \frac{1}{\mu} - \frac{\sigma^2}{\sigma_i^2} \right)^+ $$
+<p>where $\mu = \lambda \ln(2)$ is a constant. This solution is known as the <b>Water-Filling Algorithm</b>.</p>
+<p><b>Intuition behind Water-Filling:</b></p>
+<p>This formula has a powerful analogy:</p>
+<ul>
+    <li>Imagine a container whose floor has an uneven surface. For each sub-channel $i$, there is a "step" at a height of $ \frac{\sigma^2}{\sigma_i^2} $. This value represents the inverse of the channel quality; a better channel (larger $\sigma_i$) has a lower step.</li>
+    <li>The term $ \frac{1}{\mu} $ represents a uniform "water level".</li>
+    <li>We "pour" a total amount of water, corresponding to the total power $P_0$, into this container.</li>
+    <li>The power $P_i$ allocated to each channel is the depth of the water above its corresponding step.</li>
+    <li>If the water level $\frac{1}{\mu}$ is below a channel's step $\frac{\sigma^2}{\sigma_i^2}$, no water covers that step, meaning no power ($P_i=0$) is allocated to that very weak channel.</li>
+</ul>
+<p>In essence, the algorithm allocates more power to stronger sub-channels (those with higher $\sigma_i$) and less or no power to weaker sub-channels, thereby maximizing the total data rate for a fixed total power budget.</p>
+
+<b>5. A Practical Example</b>
+<p>The transcript provides a specific example to illustrate this process.</p>
+<ul>
+    <li><b>MIMO Channel (H):</b> A $4 \times 2$ matrix is given.</li>
+    <li><b>Noise Power:</b> $ \sigma^2 = 16 $</li>
+    <li><b>Total Power:</b> $ P_0 = 5 $</li>
+</ul>
+<p>From a previous SVD of the channel matrix $H$, the singular values are found to be:</p>
+\$$ \sigma_1 = 4, \quad \sigma_2 = 2 $$
+<p>The water-filling formulas for the two power allocations $P_1$ and $P_2$ are:</p>
+\$$ P_1 = \left( \frac{1}{\mu} - \frac{\sigma^2}{\sigma_1^2} \right)^+ = \left( \frac{1}{\mu} - \frac{16}{4^2} \right)^+ = \left( \frac{1}{\mu} - 1 \right)^+ $$
+\$$ P_2 = \left( \frac{1}{\mu} - \frac{\sigma^2}{\sigma_2^2} \right)^+ = \left( \frac{1}{\mu} - \frac{16}{2^2} \right)^+ = \left( \frac{1}{\mu} - 4 \right)^+ $$
+<p>We use the total power constraint to find the "water level" $\frac{1}{\mu}$. Assuming both powers are non-zero:</p>
+\$$ P_1 + P_2 = P_0 $$
+\$$ \left(\frac{1}{\mu} - 1\right) + \left(\frac{1}{\mu} - 4\right) = 5 $$
+\$$ \frac{2}{\mu} - 5 = 5 \implies \frac{2}{\mu} = 10 \implies \frac{1}{\mu} = 5 $$
+<p>Now, we substitute this water level back to find the optimal powers:</p>
+\$$ P_1 = 5 - 1 = 4 $$
+\$$ P_2 = 5 - 4 = 1 $$
+<p>Since both $P_1=4$ and $P_2=1$ are positive, this is a valid solution. The optimal power allocation to maximize the data rate is to assign 4 units of power to the first sub-channel and 1 unit to the second. This demonstrates how the better channel (with $\sigma_1=4$) receives more power.</p>
+</div></div><div class="chapter" id="Lecture 32 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 32 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts and formulas discussed in the transcript, focusing on the application of Singular Value Decomposition (SVD) in Principal Component Analysis (PCA) and for creating low-rank matrix approximations.</p>
+
+<b><h3>1. Singular Value Decomposition (SVD) in Principal Component Analysis (PCA)</h3></b>
+
+<p>Principal Component Analysis (PCA) is a fundamental technique in machine learning and data analysis used for dimensionality reduction. Its primary goal is to identify the most significant directions, or "principal axes," in a dataset—those along which the data exhibits the maximum variance or spread.</p>
+
+<b><h4>The PCA Procedure</h4></b>
+<p>The standard procedure for PCA is outlined as follows:</p>
+<ol>
+    <li>
+        <b>Data Representation:</b>
+        <p>The dataset consists of $n$ data vectors, $\tilde{\mathbf{x}}_1, \tilde{\mathbf{x}}_2, \dots, \tilde{\mathbf{x}}_n$. Each vector $\tilde{\mathbf{x}}_i$ is of size $m \times 1$, where $m$ is the number of features and $n$ is the number of observations or experiments.</p>
+    </li>
+    <li>
+        <b>Mean Centering:</b>
+        <p>The first step is to compute the mean of the dataset and subtract it from each data vector. This process centers the data around the origin.</p>
+        <ul>
+            <li><b>Sample Mean ($\bar{\boldsymbol{\mu}}$):</b> The mean vector is estimated by averaging all data vectors.
+            \$$ \bar{\boldsymbol{\mu}} = \frac{1}{n} \sum_{i=1}^{n} \tilde{\mathbf{x}}_i $$
+            </li>
+            <li><b>Mean-Adjusted Data ($\bar{\mathbf{x}}_i$):</b> Each original data vector is adjusted by subtracting the sample mean.
+            \$$ \bar{\mathbf{x}}_i = \tilde{\mathbf{x}}_i - \bar{\boldsymbol{\mu}} $$
+            </li>
+        </ul>
+    </li>
+    <li>
+        <b>Covariance Matrix Estimation:</b>
+        <p>The next step is to compute the sample covariance matrix, $\mathbf{R}_x$, which measures the relationships between different features. A high covariance between two features indicates they vary together, while a low covariance suggests they are independent.</p>
+        \$$ \mathbf{R}_x = \frac{1}{n-1} \sum_{i=1}^{n} \bar{\mathbf{x}}_i \bar{\mathbf{x}}_i^T $$
+        <p>This can be expressed in matrix form. Let $\bar{\mathbf{X}}$ be the $n \times m$ data matrix where each row is a mean-centered data vector $\bar{\mathbf{x}}_i^T$:</p>
+        \$$ \bar{\mathbf{X}} = \begin{pmatrix} \bar{\mathbf{x}}_1^T \\ \bar{\mathbf{x}}_2^T \\ \vdots \\ \bar{\mathbf{x}}_n^T \end{pmatrix} $$
+        <p>The covariance matrix can then be written as:</p>
+        \$$ \mathbf{R}_x = \frac{1}{n-1} \bar{\mathbf{X}}^T \bar{\mathbf{X}} $$
+        <p>For convenience, a scaled data matrix $\mathbf{X}$ is introduced:</p>
+        \$$ \mathbf{X} = \frac{1}{\sqrt{n-1}} \bar{\mathbf{X}} $$
+        <p>This simplifies the covariance matrix expression to:</p>
+        \$$ \mathbf{R}_x = \mathbf{X}^T \mathbf{X} $$
+    </li>
+    <li>
+        <b>Finding Principal Axes (Eigenvalue Decomposition):</b>
+        <p>Traditionally, the principal axes are found by performing an eigenvalue decomposition of the covariance matrix $\mathbf{R}_x$. The eigenvectors of $\mathbf{R}_x$ point in the directions of variance, and the corresponding eigenvalues quantify the amount of variance in those directions. The principal axes are the $p$ eigenvectors ($\bar{\mathbf{v}}_1, \bar{\mathbf{v}}_2, \dots, \bar{\mathbf{v}}_p$) corresponding to the $p$ largest eigenvalues.</p>
+    </li>
+</ol>
+
+<b><h4>Connecting PCA to SVD</h4></b>
+<p>The transcript highlights a crucial connection between PCA and SVD that provides a more direct and often numerically stable method for finding the principal axes.</p>
+<ul>
+    <li><b>Key Property:</b> The eigenvectors of the matrix $\mathbf{X}^T \mathbf{X}$ (which is the covariance matrix $\mathbf{R}_x$) are precisely the <b>right singular vectors</b> of the matrix $\mathbf{X}$.</li>
+</ul>
+<p>This means that instead of forming the covariance matrix $\mathbf{X}^T \mathbf{X}$ and then finding its eigenvectors, we can directly compute the SVD of the scaled data matrix $\mathbf{X}$:</p>
+\$$ \mathbf{X} = \mathbf{U} \boldsymbol{\Sigma} \mathbf{V}^T $$
+<p>Here:</p>
+<ul>
+    <li>$\mathbf{U}$ is an $n \times n$ matrix of left singular vectors.</li>
+    <li>$\boldsymbol{\Sigma}$ is an $n \times m$ diagonal matrix of singular values ($\sigma_1 \ge \sigma_2 \ge \dots \ge 0$).</li>
+    <li>$\mathbf{V}$ is an $m \times m$ matrix whose columns ($\bar{\mathbf{v}}_1, \bar{\mathbf{v}}_2, \dots, \bar{\mathbf{v}}_m$) are the <b>right singular vectors</b>.</li>
+</ul>
+<p>The columns of $\mathbf{V}$ are the principal axes of the data. The singular values $\sigma_i$ are related to the eigenvalues $\lambda_i$ of $\mathbf{R}_x$ by $\sigma_i = \sqrt{\lambda_i}$. Therefore, the right singular vectors corresponding to the largest singular values are the principal axes representing the directions of maximum variance.</p>
+
+<b><h4>Obtaining Principal Components</h4></b>
+<p>The principal components of a data vector are its coordinates in the new basis defined by the principal axes. They are obtained by projecting the mean-centered data vector $\bar{\mathbf{x}}_i$ onto the chosen principal axes ($\bar{\mathbf{v}}_1, \bar{\mathbf{v}}_2, \dots, \bar{\mathbf{v}}_p$).</p>
+<p>Let $\mathbf{V}_{\text{top}}^T$ be a $p \times m$ matrix formed by the first $p$ rows of $\mathbf{V}^T$:</p>
+\$$ \mathbf{V}_{\text{top}}^T = \begin{pmatrix} \bar{\mathbf{v}}_1^T \\ \bar{\mathbf{v}}_2^T \\ \vdots \\ \bar{\mathbf{v}}_p^T \end{pmatrix} $$
+<p>The principal component vector $\check{\mathbf{x}}_i$ for the data point $\bar{\mathbf{x}}_i$ is a $p \times 1$ vector given by:</p>
+\$$ \check{\mathbf{x}}_i = \mathbf{V}_{\text{top}}^T \bar{\mathbf{x}}_i $$
+<p>This vector $\check{\mathbf{x}}_i$ is the lower-dimensional representation of the original $m \times 1$ vector $\bar{\mathbf{x}}_i$, effectively compressing the data by retaining only its most significant features.</p>
+
+<br>
+<b><h3>2. Low-Rank Approximation using SVD</h3></b>
+
+<p>Another powerful application of SVD is finding the best low-rank approximation of a matrix. This is a form of matrix compression, where a large, complex matrix is approximated by a simpler matrix with a lower rank.</p>
+
+<b><h4>Problem Formulation</h4></b>
+<p>Given an $m \times n$ matrix $\mathbf{H}$, the goal is to find another $m \times n$ matrix $\hat{\mathbf{H}}$ that satisfies two conditions:</p>
+<ol>
+    <li><b>Rank Constraint:</b> The rank of $\hat{\mathbf{H}}$ is fixed to a value $p$, where $p$ is less than the rank of $\mathbf{H}$.</li>
+    <li><b>Minimization Condition:</b> The matrix $\hat{\mathbf{H}}$ is the "closest" possible rank-$\textit{p}$ matrix to $\mathbf{H}$. Closeness is measured by the Frobenius norm.</li>
+</ol>
+<p>The optimization problem is:</p>
+\$$ \text{Minimize} \quad \|\mathbf{H} - \hat{\mathbf{H}}\|_F^2 \quad \text{subject to} \quad \text{rank}(\hat{\mathbf{H}}) = p $$
+
+<b><h4>The Frobenius Norm</h4></b>
+<p>The Frobenius norm of a matrix $\mathbf{A}$ is the matrix equivalent of the Euclidean vector norm. It is the square root of the sum of the squares of all its elements.</p>
+\$$ \|\mathbf{A}\|_F = \sqrt{\sum_{i=1}^{m} \sum_{j=1}^{n} |a_{ij}|^2} = \sqrt{\text{trace}(\mathbf{A}^T \mathbf{A})} $$
+<p>Therefore, $\|\mathbf{A}\|_F^2$ is simply the sum of the squared magnitudes of all elements in $\mathbf{A}$.</p>
+\$$ \|\mathbf{A}\|_F^2 = \sum_{i=1}^{m} \sum_{j=1}^{n} |a_{ij}|^2 $$
+
+<b><h4>The SVD-Based Solution</h4></b>
+<p>The Eckart-Young-Mirsky theorem states that the best rank-$\textit{p}$ approximation of a matrix $\mathbf{H}$ can be found by truncating its SVD. The procedure is as follows:</p>
+<ol>
+    <li>
+        <b>Compute the SVD of $\mathbf{H}$:</b>
+        \$$ \mathbf{H} = \mathbf{U} \boldsymbol{\Sigma} \mathbf{V}^T $$
+        The singular values on the diagonal of $\boldsymbol{\Sigma}$ are sorted in descending order: $\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_p \ge \dots \ge 0$.
+    </li>
+    <li>
+        <b>Truncate the SVD matrices:</b> To create a rank-$\textit{p}$ approximation, we keep only the components corresponding to the $p$ largest singular values.
+        <ul>
+            <li>$\tilde{\mathbf{U}}$: An $m \times p$ matrix containing the first $p$ columns of $\mathbf{U}$ (the left singular vectors for $\sigma_1, \dots, \sigma_p$).</li>
+            <li>$\tilde{\boldsymbol{\Sigma}}$: A $p \times p$ diagonal matrix containing the top $p$ singular values $\sigma_1, \dots, \sigma_p$.</li>
+            <li>$\tilde{\mathbf{V}}^T$: A $p \times n$ matrix containing the first $p$ rows of $\mathbf{V}^T$ (the transposes of the right singular vectors for $\sigma_1, \dots, \sigma_p$).</li>
+        </ul>
+    </li>
+    <li>
+        <b>Construct the Approximation $\hat{\mathbf{H}}$:</b> The best rank-$\textit{p}$ approximation is formed by multiplying these truncated matrices.
+        \$$ \hat{\mathbf{H}} = \tilde{\mathbf{U}} \tilde{\boldsymbol{\Sigma}} \tilde{\mathbf{V}}^T $$
+    </li>
+</ol>
+<p>This matrix $\hat{\mathbf{H}}$ is the optimal solution to the minimization problem. It provides a compact representation of the original matrix $\mathbf{H}$, which is highly useful for data compression, storage, and reducing computational complexity in subsequent processing.</p>
+</div></div><div class="chapter" id="Lecture 33 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 33 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the system model and foundational concepts for the MUSIC (Multiple Signal Classification) algorithm, as presented in the transcript. The MUSIC algorithm is a powerful technique in signal processing used for Direction of Arrival (DOA) estimation.</p>
+
+<h3>1. Introduction to the MUSIC Algorithm</h3>
+<p>The name <b>MUSIC</b> is an acronym for <b>Mu</b>ltiple <b>Si</b>gnal <b>C</b>lassification. It is an algorithm designed to solve the problem of <b>Direction of Arrival (DOA)</b> estimation.</p>
+<p>
+<b>DOA Estimation:</b> The primary goal is to determine the direction from which one or more signals are arriving at a sensor array. This has significant practical applications, including:
+<ul>
+  <li>Radar and sonar systems for tracking objects like aircraft, ships, or submarines.</li>
+  <li>Wireless communications for locating mobile users.</li>
+  <li>Astronomy for identifying the location of celestial radio sources.</li>
+</ul>
+The process of estimating the location or direction of an object is often referred to as "ranging."
+</p>
+
+<h3>2. The System Model: Uniform Linear Array (ULA)</h3>
+<p>To estimate the direction of a signal, a single antenna is insufficient. The MUSIC algorithm relies on an array of multiple antennas. The specific configuration discussed is a <b>Uniform Linear Array (ULA)</b>.</p>
+<p>
+A ULA has two key properties:
+<ol>
+  <li><b>Linear:</b> The antennas are arranged in a straight line.</li>
+  <li><b>Uniform:</b> The spacing between any two adjacent antennas is constant.</li>
+</ol>
+</p>
+<p>The key parameters of this model are:</p>
+<ul>
+    <li>$L$: The total number of antennas in the array.</li>
+    <li>$d$: The uniform separation distance between adjacent antennas.</li>
+    <li>$\theta$: The direction of arrival of the incoming signal, measured as an angle relative to the array's axis.</li>
+</ul>
+
+<center><img src="https://i.imgur.com/8Qj8j0Y.png" alt="Diagram of a Uniform Linear Array receiving a signal." width="500"></center>
+<i><p style="text-align:center;">An incoming plane wave signal arrives at an angle $\theta$ to a Uniform Linear Array with inter-element spacing $d$.</p></i>
+
+<h3>3. Signal Model for a Single Source</h3>
+<p>Let's first develop the mathematical model for a single signal arriving from a direction $\theta$.</p>
+
+<h4>A. Signal at the First Antenna</h4>
+<p>The signal received at the first antenna (antenna 1) is represented as a complex baseband signal modulated onto a carrier wave, plus some additive noise. The output signal at the first antenna, $y_1(t)$, is given by:</p>
+\$$ y_1(t) = x(t) e^{j2\pi f_c t} + n_1(t) $$
+Where:
+<ul>
+  <li>$x(t)$ is the complex baseband signal being transmitted.</li>
+  <li>$f_c$ is the carrier frequency.</li>
+  <li>$e^{j2\pi f_c t}$ is the complex representation of the carrier wave.</li>
+  <li>$n_1(t)$ is the random noise measured at the first antenna.</li>
+</ul>
+
+<h4>B. Signal at Subsequent Antennas and the Concept of Delay</h4>
+<p>The core insight for DOA estimation is that the signal arrives at different antennas at slightly different times. The signal arriving at antenna 2 is a <b>delayed version</b> of the signal arriving at antenna 1.</p>
+<p>
+Using simple trigonometry from the diagram above, the extra distance the signal must travel to reach antenna 2 compared to antenna 1 is $d \cos\theta$. The time delay ($\tau$) is this extra distance divided by the speed of light ($c$):
+</p>
+\$$ \text{Delay } (\tau) = \frac{\text{distance}}{\text{velocity}} = \frac{d \cos\theta}{c} $$
+
+<p>Therefore, the signal at the second antenna, $y_2(t)$, is the original signal delayed by $\tau$:</p>
+\$$ y_2(t) = x(t-\tau) e^{j2\pi f_c (t-\tau)} + n_2(t) $$
+Assuming the baseband signal $x(t)$ changes slowly compared to the carrier (a common narrow-band assumption), we can approximate $x(t-\tau) \approx x(t)$. The delay primarily manifests as a phase shift in the rapidly oscillating carrier term.
+\$$ y_2(t) \approx x(t) e^{j2\pi f_c (t - \frac{d \cos\theta}{c})} + n_2(t) $$
+<p>We can separate the exponential term:</p>
+\$$ y_2(t) = x(t) e^{j2\pi f_c t} \cdot e^{-j2\pi f_c \frac{d \cos\theta}{c}} + n_2(t) $$
+The phase shift term can be simplified by introducing the wavelength $\lambda$, which is related to frequency $f_c$ and speed $c$ by $\lambda = c/f_c$.
+\$$ e^{-j2\pi f_c \frac{d \cos\theta}{c}} = e^{-j \frac{2\pi d}{\lambda} \cos\theta} $$
+For convenience, a constant $k$ is defined as $k = \frac{2\pi d}{\lambda}$. The phase shift becomes $e^{-j k \cos\theta}$. Thus, the signal at the second antenna is:
+\$$ y_2(t) = \left( x(t) e^{j2\pi f_c t} \right) e^{-j k \cos\theta} + n_2(t) $$
+
+<h4>C. Generalizing for the Entire Array</h4>
+<p>This logic extends to all $L$ antennas. The signal at the $l$-th antenna experiences a delay corresponding to an extra path length of $(l-1)d \cos\theta$. This results in a phase shift of $e^{-j (l-1)k \cos\theta}$.
+<br>For example, at antenna 3, the delay is $\frac{2d \cos\theta}{c}$, and the phase shift is $e^{-j 2k \cos\theta}$.
+\$$ y_3(t) = \left( x(t) e^{j2\pi f_c t} \right) e^{-j 2k \cos\theta} + n_3(t) $$
+</p>
+
+<h3>4. Vector Representation and the Array Steering Vector</h3>
+<p>We can stack the signals from all $L$ antennas into a single column vector $\mathbf{y}(t)$. This provides a compact representation of the entire system.</p>
+\$$ \mathbf{y}(t) = \begin{bmatrix} y_1(t) \\ y_2(t) \\ y_3(t) \\ \vdots \\ y_L(t) \end{bmatrix} = x(t) e^{j2\pi f_c t} \begin{bmatrix} 1 \\ e^{-j k \cos\theta} \\ e^{-j 2k \cos\theta} \\ \vdots \\ e^{-j (L-1) k \cos\theta} \end{bmatrix} + \begin{bmatrix} n_1(t) \\ n_2(t) \\ \vdots \\ n_L(t) \end{bmatrix} $$
+<p>The vector containing the phase shifts is critically important. It depends only on the array geometry ($d$, $L$) and the direction of arrival ($\theta$). This vector is known as the <b>Array Steering Vector</b> or <b>Array Response Vector</b>, denoted by $\mathbf{a}(\theta)$.</p>
+\$$ \mathbf{a}(\theta) = \begin{bmatrix} 1 \\ e^{-j k \cos\theta} \\ e^{-j 2k \cos\theta} \\ \vdots \\ e^{-j (L-1) k \cos\theta} \end{bmatrix} $$
+<p>
+The steering vector $\mathbf{a}(\theta)$ is a unique "spatial signature" for a signal arriving from direction $\theta$. The ability to distinguish between different directions comes from the fact that $\mathbf{a}(\theta_1) \neq \mathbf{a}(\theta_2)$ if $\theta_1 \neq \theta_2$. The entire field of array signal processing is built upon this concept.
+</p>
+<p>The single-signal model can now be written concisely:</p>
+\$$ \mathbf{y}(t) = \mathbf{a}(\theta) \left( x(t) e^{j2\pi f_c t} \right) + \mathbf{n}(t) $$
+
+<h3>5. The Sampled Digital Model</h3>
+<p>In practice, signals are processed digitally. The continuous-time signal $\mathbf{y}(t)$ is sampled at a certain rate, resulting in a discrete-time sequence $\mathbf{y}(m)$, where $m$ is the sample index. The model becomes:</p>
+\$$ \mathbf{y}(m) = \mathbf{a}(\theta) x(m) + \mathbf{n}(m) $$
+Here, $x(m)$ now represents the sampled baseband signal value at time index $m$, and $\mathbf{n}(m)$ is the sampled noise vector.</p>
+
+<h3>6. Extension to Multiple Signals (The "Multiple Signal" Model)</h3>
+<p>The model can be extended to the more realistic case where $P$ signals from $P$ different targets arrive simultaneously from different directions $\theta_1, \theta_2, \dots, \theta_P$. The received signal at the array is the linear superposition (sum) of the contributions from all $P$ signals.</p>
+<p>The received signal vector $\mathbf{y}(m)$ is:</p>
+\$$ \mathbf{y}(m) = \mathbf{a}(\theta_1)x_1(m) + \mathbf{a}(\theta_2)x_2(m) + \cdots + \mathbf{a}(\theta_P)x_P(m) + \mathbf{n}(m) $$
+<p>This can be expressed elegantly in matrix form. We define a <b>steering matrix</b> $\mathbf{A}(\mathbf{\theta})$ whose columns are the steering vectors for each of the $P$ directions:</p>
+\$$ \mathbf{A}(\mathbf{\theta}) = \begin{bmatrix} \mathbf{a}(\theta_1) & \mathbf{a}(\theta_2) & \cdots & \mathbf{a}(\theta_P) \end{bmatrix} $$
+This is an $L \times P$ matrix. We also define a vector of the $P$ source signals $\mathbf{x}(m)$:
+\$$ \mathbf{x}(m) = \begin{bmatrix} x_1(m) \\ x_2(m) \\ \vdots \\ x_P(m) \end{bmatrix} $$
+This is a $P \times 1$ vector.
+
+<p>With these definitions, the final <b>multiple signal model</b> is:</p>
+\$$ \mathbf{y}(m) = \mathbf{A}(\mathbf{\theta}) \mathbf{x}(m) + \mathbf{n}(m) $$
+This equation is the foundation of the MUSIC algorithm. The problem is to take measurements of $\mathbf{y}(m)$ over time and use them to estimate the unknown directions of arrival $\theta_1, \theta_2, \dots, \theta_P$ that are embedded in the steering matrix $\mathbf{A}(\mathbf{\theta})$. This estimation or identification of the DOAs is the "classification" part of the MUSIC algorithm.</div></div><div class="chapter" id="Lecture 34 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 34 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts, theories, and formulas related to the <b>MUSIC (Multiple Signal Classification)</b> algorithm, as presented in the transcript. MUSIC is a high-resolution, subspace-based algorithm widely used in array signal processing for estimating the Direction of Arrival (DOA) of multiple signals.</p>
+
+<b>1. The Signal Model</b>
+<p>The foundation of the MUSIC algorithm is the mathematical model for the signals received by an antenna array. Consider an array with $L$ antenna elements receiving signals from $P$ distinct targets or sources.</p>
+<p>The signal received across all $L$ antennas at a specific time instance (or snapshot) $m$ can be represented by a vector $\bar{y}(m)$. This vector is a composite of the signals from all $P$ sources, combined with additive noise. The model is expressed as:</p>
+\$$ \bar{y}(m) = A(\bar{\theta}) \bar{x}(m) + \bar{n}(m) $$
+<p>Let's break down the components of this equation:</p>
+<ul>
+    <li>$\bar{y}(m)$ is the $L \times 1$ vector of received signals at the $L$ antennas.</li>
+    <li>$\bar{x}(m)$ is the $P \times 1$ vector containing the signals transmitted by the $P$ sources at that instant.</li>
+    <li>$\bar{n}(m)$ is the $L \times 1$ vector of additive noise at each antenna element.</li>
+    <li>$A(\bar{\theta})$ is the $L \times P$ <b>array response matrix</b> (also called the steering matrix). This matrix is central to DOA estimation as it contains the geometric information of the array and the arrival angles. It is composed of $P$ column vectors:
+    \$$ A(\bar{\theta}) = [\bar{a}(\theta_1), \bar{a}(\theta_2), \dots, \bar{a}(\theta_P)] $$
+    Each column $\bar{a}(\theta_i)$ is the <b>array response vector</b> (or steering vector) corresponding to the direction of arrival $\theta_i$ of the $i$-th target. This vector characterizes the phase shifts of the signal across the array elements for a given arrival angle.</li>
+</ul>
+
+<b>2. The Output Covariance Matrix</b>
+<p>The next step is to analyze the statistical properties of the received signal. This is done by calculating the <b>output covariance matrix</b>, $R_y$, which is the expected value of the outer product of the received signal vector with its Hermitian transpose (conjugate transpose).</p>
+\$$ R_y = E[\bar{y}(m) \bar{y}^H(m)] $$
+<p>Substituting the signal model into this definition, and assuming that the source signals $\bar{x}(m)$ and the noise $\bar{n}(m)$ are uncorrelated, we get:</p>
+\$$ R_y = A(\bar{\theta}) E[\bar{x}(m)\bar{x}^H(m)] A^H(\bar{\theta}) + E[\bar{n}(m)\bar{n}^H(m)] $$
+<p>This simplifies to:</p>
+\$$ R_y = A(\bar{\theta}) R_s A^H(\bar{\theta}) + \sigma^2 I $$
+<p>Here:</p>
+<ul>
+    <li>$R_s = E[\bar{x}(m)\bar{x}^H(m)]$ is the $P \times P$ source covariance matrix.</li>
+    <li>It is assumed that the noise is spatially white, meaning it is uncorrelated between antenna elements and has the same variance $\sigma^2$ at each element. Therefore, the noise covariance matrix is $\sigma^2 I$, where $I$ is the $L \times L$ identity matrix.</li>
+</ul>
+
+<b>3. Eigen-decomposition and Subspace Partitioning</b>
+<p>The core insight of the MUSIC algorithm comes from the eigenvalue decomposition (EVD) of the covariance matrix $R_y$.</p>
+<p>Let's analyze the first term, the signal covariance matrix $A(\bar{\theta}) R_s A^H(\bar{\theta})$. This is an $L \times L$ matrix. Since it is formed from the $L \times P$ matrix $A(\bar{\theta})$, its rank is $P$ (assuming $P < L$ and the source signals are not perfectly correlated). A matrix of rank $P$ has exactly $P$ non-zero eigenvalues.</p>
+<p>When we add the noise term $\sigma^2 I$ to the signal covariance matrix, the eigenvectors remain the same, but the eigenvalues are all shifted by $\sigma^2$. Consequently, the EVD of the total output covariance matrix $R_y$ can be written as:</p>
+\$$ R_y = U (\Lambda + \sigma^2 I) U^H $$
+<p>where $U$ is a unitary matrix whose columns are the eigenvectors of $R_y$, and $\Lambda + \sigma^2 I$ is a diagonal matrix containing the eigenvalues of $R_y$. These eigenvalues have a distinct structure:</p>
+<ul>
+    <li><b>P largest eigenvalues:</b> $\lambda_1 + \sigma^2, \lambda_2 + \sigma^2, \dots, \lambda_P + \sigma^2$. These are associated with the signals.</li>
+    <li><b>L-P smallest eigenvalues:</b> The remaining $L-P$ eigenvalues are all equal to the noise variance, $\sigma^2$.</li>
+</ul>
+<p>This structure allows us to partition the vector space spanned by the eigenvectors (columns of $U$) into two orthogonal subspaces:</p>
+<ol>
+    <li><b>The Signal Subspace:</b> This space is spanned by the $P$ eigenvectors $\{\bar{u}_1, \dots, \bar{u}_P\}$ corresponding to the $P$ largest eigenvalues. This subspace is identical to the space spanned by the array steering vectors of the actual targets, $\{\bar{a}(\theta_1), \dots, \bar{a}(\theta_P)\}$.</li>
+    <li><b>The Noise Subspace:</b> This space is spanned by the $L-P$ eigenvectors $\{\bar{u}_{P+1}, \dots, \bar{u}_L\}$ corresponding to the $L-P$ smallest eigenvalues (all equal to $\sigma^2$).</li>
+</ol>
+
+<b>4. The Orthogonality Principle</b>
+<p>The key principle of MUSIC is that the <b>signal subspace</b> and the <b>noise subspace</b> are orthogonal to each other. This means that any vector lying in the signal subspace is orthogonal to any vector lying in the noise subspace.</p>
+<p>Since the true array steering vectors $\bar{a}(\theta_1), \dots, \bar{a}(\theta_P)$ lie in the signal subspace, they must be orthogonal to every eigenvector in the noise subspace. Mathematically, this is expressed as:</p>
+\$$ \bar{a}^H(\theta_i) \bar{u}_j = 0 \quad \text{for } i \in \{1, \dots, P\} \text{ and } j \in \{P+1, \dots, L\} $$
+<p>This property is a direct consequence of the fact that the noise subspace eigenvectors $\{\bar{u}_j\}_{j=P+1}^L$ belong to the null space of the signal-only covariance matrix $A(\bar{\theta}) R_s A^H(\bar{\theta})$.</p>
+
+<b>5. The MUSIC Pseudospectrum</b>
+<p>The orthogonality principle is used to find the unknown DOAs. We can search for angles $\theta$ for which the corresponding steering vector $\bar{a}(\theta)$ is orthogonal to the noise subspace. This is done by defining a function, often called the MUSIC spectrum or pseudospectrum.</p>
+<p>The squared norm of the projection of a test steering vector $\bar{a}(\theta)$ onto the noise subspace is given by $\sum_{j=P+1}^{L} |\bar{a}^H(\theta) \bar{u}_j|^2$. According to the orthogonality principle, this sum will be zero (or close to zero in practice) if and only if $\theta$ is one of the true DOAs.</p>
+<p>To create a function that has sharp peaks at the DOAs instead of nulls, we take the reciprocal. This gives the MUSIC spectrum formula:</p>
+\$$ F(\theta) = \frac{1}{\sum_{j=P+1}^{L} |\bar{a}^H(\theta) \bar{u}_j|^2} $$
+<p>By plotting $F(\theta)$ as a function of the angle $\theta$ over the range of interest, we obtain a spectrum. The locations of the $P$ highest peaks in this spectrum correspond to the estimated DOAs of the targets.</p>
+<p>In summary, the MUSIC algorithm elegantly transforms the DOA estimation problem into a search for peaks in a spectrum, which is constructed by leveraging the fundamental orthogonality between the signal and noise subspaces derived from the received signal's covariance matrix.</p>
+</div></div><div class="chapter" id="Lecture 35 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 35 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts, theories, and formulas related to <b>Linear Minimum Mean Squared Error (LMMSE) Estimation</b> as presented in the transcript.</p>
+
+<h3>1. Introduction to LMMSE Estimation</h3>
+<p>LMMSE stands for <b>Linear Minimum Mean Squared Error</b> estimation. It is a fundamental technique in signal processing and statistics for estimating an unknown random vector based on observations of a related random vector.</p>
+
+<p>The core problem is as follows:</p>
+<ul>
+    <li>We have an unobserved random vector, let's call it $\bar{x}$, which can be thought of as an input to a system or an underlying parameter we want to know.</li>
+    <li>We have an observed random vector, $\bar{y}$, which is the output of the system or some available measurement.</li>
+    <li>The vectors $\bar{x}$ and $\bar{y}$ are statistically related, meaning they are <b>correlated</b>. This correlation is key, as it allows us to infer information about $\bar{x}$ from $\bar{y}$.</li>
+</ul>
+<p>The goal of LMMSE is to find the <i>best linear estimate</i> of $\bar{x}$ using $\bar{y}$. The two defining characteristics of LMMSE are:</p>
+<ol>
+    <li><b>Linear Estimator:</b> The estimate of $\bar{x}$, denoted $\hat{x}$, is restricted to be a linear transformation of the observation $\bar{y}$. This makes the problem mathematically tractable and computationally efficient. It's important to note that the underlying system relating $\bar{x}$ and $\bar{y}$ does not need to be linear; the constraint is on the structure of the <i>estimator</i> itself.</li>
+    <li><b>Minimum Mean Squared Error (MMSE) Criterion:</b> "Best" is defined in the sense of minimizing the average (or "mean") of the squared error between the true vector $\bar{x}$ and its estimate $\hat{x}$.</li>
+</ol>
+
+<h3>2. Statistical Preliminaries and Notation</h3>
+<p>To formulate the problem mathematically, we define the statistical properties of the random vectors $\bar{x}$ and $\bar{y}$. For simplicity, the analysis begins with the assumption that both vectors are <b>zero-mean</b>:</p>
+\$$ E[\bar{x}] = \mathbf{0} $$
+\$$ E[\bar{y}] = \mathbf{0} $$
+<p>The relationships between the vectors are captured by their second-order statistics, specifically their covariance matrices.</p>
+
+<ul>
+    <li><b>Autocovariance of $\bar{x}$:</b> This matrix describes the internal structure and variance of the vector $\bar{x}$.
+    \$$ \mathbf{R}_{xx} = E[\bar{x}\bar{x}^T] $$
+    </li>
+    <li><b>Autocovariance of $\bar{y}$:</b> This matrix describes the internal structure and variance of the vector $\bar{y}$.
+    \$$ \mathbf{R}_{yy} = E[\bar{y}\bar{y}^T] $$
+    </li>
+    <li><b>Cross-covariance Matrices:</b> These are the most crucial quantities for estimation, as they capture the statistical correlation between $\bar{x}$ and $\bar{y}$. If these matrices are zero, the vectors are uncorrelated, and it's impossible to linearly estimate one from the other (beyond using the mean).
+    \$$ \mathbf{R}_{xy} = E[\bar{x}\bar{y}^T] $$
+    \$$ \mathbf{R}_{yx} = E[\bar{y}\bar{x}^T] $$
+    These two matrices are transposes of each other:
+    \$$ \mathbf{R}_{xy} = \mathbf{R}_{yx}^T $$
+    </li>
+</ul>
+
+<h3>3. The Linear Estimator</h3>
+<p>As per the "Linear" constraint in LMMSE, the estimate $\hat{x}$ is formed by applying a linear transformation (a matrix multiplication) to the observation $\bar{y}$. This is expressed as:</p>
+\$$ \hat{x} = \mathbf{C}\bar{y} $$
+<p>Here, $\mathbf{C}$ is the matrix that defines the estimator. The entire goal of the LMMSE derivation is to find the optimal matrix $\mathbf{C}$ that minimizes the estimation error.</p>
+<p>If $\bar{x}$ is an $n \times 1$ vector and $\bar{y}$ is an $m \times 1$ vector, then the matrix $\mathbf{C}$ must have dimensions $n \times m$ for the matrix multiplication to be valid and produce an estimate $\hat{x}$ of the correct size ($n \times 1$).</p>
+
+<h3>4. The LMMSE Principle and Objective Function</h3>
+<p>The term "Linear Minimum Mean Squared Error" can be broken down to understand the objective:</p>
+<ul>
+    <li><b>Error:</b> The difference between the true vector and the estimate: $ \bar{x} - \hat{x} $.</li>
+    <li><b>Squared Error:</b> The magnitude of the error, measured by the squared Euclidean norm: $ ||\bar{x} - \hat{x}||^2 $.</li>
+    <li><b>Mean Squared Error (MSE):</b> The expected value (or mean) of the squared error. This is the cost function we want to minimize.
+    \$$ \text{MSE} = E[||\bar{x} - \hat{x}||^2] $$
+    </li>
+    <li><b>Minimum:</b> We seek to find the estimator that makes this MSE as small as possible.</li>
+    <li><b>Linear Estimator:</b> The search for the optimal estimator is constrained to the form $\hat{x} = \mathbf{C}\bar{y}$.</li>
+</ul>
+<p>Combining these, the LMMSE problem is to find the matrix $\mathbf{C}$ that minimizes the MSE:</p>
+\$$ \min_{\mathbf{C}} E[||\bar{x} - \mathbf{C}\bar{y}||^2] $$
+
+<h3>5. Derivation of the Mean Squared Error (MSE) Expression</h3>
+<p>The derivation involves expanding the MSE expression to make it a function of the matrix $\mathbf{C}$ and the known covariance matrices. A key technique used is the <b>trace property</b>.</p>
+
+<p><b>Trace Property:</b> For any column vector $\mathbf{v}$, its squared norm can be expressed as the trace of its outer product:</p>
+\$$ ||\mathbf{v}||^2 = \mathbf{v}^T\mathbf{v} = \text{trace}(\mathbf{v}\mathbf{v}^T) $$
+<p>The trace of a square matrix is the sum of its diagonal elements. This property allows us to manipulate the matrix expressions more easily.</p>
+
+<p><b>Step-by-step derivation:</b></p>
+<p>1. Start with the MSE objective function, using the error vector $ \hat{x} - \bar{x} $ (the result is the same as using $\bar{x} - \hat{x}$ due to the square).</p>
+\$$ \text{MSE} = E[||\hat{x} - \bar{x}||^2] = E[||\mathbf{C}\bar{y} - \bar{x}||^2] $$
+<p>2. Apply the trace property:</p>
+\$$ \text{MSE} = E\left[ \text{trace}\left( (\mathbf{C}\bar{y} - \bar{x})(\mathbf{C}\bar{y} - \bar{x})^T \right) \right] $$
+<p>3. Expand the term inside the trace:</p>
+\$$ (\mathbf{C}\bar{y} - \bar{x})(\bar{y}^T\mathbf{C}^T - \bar{x}^T) = \mathbf{C}\bar{y}\bar{y}^T\mathbf{C}^T - \mathbf{C}\bar{y}\bar{x}^T - \bar{x}\bar{y}^T\mathbf{C}^T + \bar{x}\bar{x}^T $$
+<p>4. The trace and expectation operators are both linear, so their order can be swapped. This is a crucial step that allows us to introduce the covariance matrices.</p>
+\$$ \text{MSE} = \text{trace}\left( E\left[ \mathbf{C}\bar{y}\bar{y}^T\mathbf{C}^T - \mathbf{C}\bar{y}\bar{x}^T - \bar{x}\bar{y}^T\mathbf{C}^T + \bar{x}\bar{x}^T \right] \right) $$
+<p>5. Apply the expectation to each term individually. Since $\mathbf{C}$ is a constant (non-random) matrix, it can be pulled out of the expectation.</p>
+\$$ \text{MSE} = \text{trace}\left( \mathbf{C}E[\bar{y}\bar{y}^T]\mathbf{C}^T - \mathbf{C}E[\bar{y}\bar{x}^T] - E[\bar{x}\bar{y}^T]\mathbf{C}^T + E[\bar{x}\bar{x}^T] \right) $$
+<p>6. Substitute the definitions of the covariance matrices ($\mathbf{R}_{xx}, \mathbf{R}_{yy}, \mathbf{R}_{xy}, \mathbf{R}_{yx}$):</p>
+\$$ \text{MSE}(\mathbf{C}) = \text{trace}(\mathbf{R}_{xx} - \mathbf{C}\mathbf{R}_{yx} - \mathbf{R}_{xy}\mathbf{C}^T + \mathbf{C}\mathbf{R}_{yy}\mathbf{C}^T) $$
+
+<p>This final expression represents the Mean Squared Error as a function of the estimator matrix $\mathbf{C}$. The next step, which the transcript defers to a future module, is to find the specific matrix $\mathbf{C}$ that minimizes this trace expression. The transcript hints at the technique for this minimization, which involves adding and subtracting a specific term ($\mathbf{R}_{xy}\mathbf{R}_{yy}^{-1}\mathbf{R}_{yx}$) to algebraically complete the square.</p>
+</div></div><div class="chapter" id="Lecture 36 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 36 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the derivation and key concepts of the <b>Linear Minimum Mean Squared Error (LMMSE) estimator</b> as presented in the transcript. The goal of the LMMSE estimator is to find the best linear estimate of a random vector $\mathbf{x}$ given an observation of a correlated random vector $\mathbf{y}$. The "best" estimate is the one that minimizes the mean squared error (MSE).</p>
+
+<b>1. The Mean Squared Error (MSE) Formulation</b>
+<p>We want to estimate a random vector $\mathbf{x}$ using a linear function of a related random vector $\mathbf{y}$. For the initial derivation, we assume both vectors are zero-mean (i.e., $E[\mathbf{x}] = \mathbf{0}$ and $E[\mathbf{y}] = \mathbf{0}$). The linear estimate, denoted as $\hat{\mathbf{x}}$, takes the form:</p>
+\$$ \hat{\mathbf{x}} = C\mathbf{y} $$
+<p>where $C$ is a matrix of coefficients that we need to determine. The objective is to find the matrix $C$ that minimizes the mean squared error, which is the expected value of the squared norm of the error vector $\mathbf{x} - \hat{\mathbf{x}}$. This can be expressed using the trace operator:</p>
+\$$ \text{MSE} = E\left[\|\mathbf{x} - \hat{\mathbf{x}}\|^2\right] = E\left[\|\mathbf{x} - C\mathbf{y}\|^2\right] $$
+<p>Expanding this expression leads to a formula involving the correlation matrices of the vectors:</p>
+\$$ \text{MSE} = \text{Trace}\left(R_{xx} - C R_{yx} - R_{xy} C^T + C R_{yy} C^T\right) $$
+<p>Where:</p>
+<ul>
+    <li>$R_{xx} = E[\mathbf{x}\mathbf{x}^T]$ is the auto-correlation matrix of $\mathbf{x}$.</li>
+    <li>$R_{yy} = E[\mathbf{y}\mathbf{y}^T]$ is the auto-correlation matrix of $\mathbf{y}$.</li>
+    <li>$R_{xy} = E[\mathbf{x}\mathbf{y}^T]$ is the cross-correlation matrix between $\mathbf{x}$ and $\mathbf{y}$.</li>
+    <li>$R_{yx} = E[\mathbf{y}\mathbf{x}^T] = R_{xy}^T$ is the cross-correlation matrix between $\mathbf{y}$ and $\mathbf{x}$.</li>
+</ul>
+
+<b>2. Minimization by Completing the Square</b>
+<p>To find the optimal matrix $C$ that minimizes the MSE, the transcript uses a matrix version of the "completing the square" technique. This is done by adding and subtracting the term $R_{xy} R_{yy}^{-1} R_{yx}$ inside the trace.</p>
+<p>The MSE expression is manipulated as follows:</p>
+\$$ \text{MSE} = \text{Trace}\left(R_{xx} - C R_{yx} - R_{xy} C^T + C R_{yy} C^T + R_{xy}R_{yy}^{-1}R_{yx} - R_{xy}R_{yy}^{-1}R_{yx}\right) $$
+<p>By rearranging terms, this can be factored into a more structured form:</p>
+\$$ \text{MSE} = \text{Trace}\left( (C R_{yy} - R_{xy}) R_{yy}^{-1} (C R_{yy} - R_{xy})^T \right) + \text{Trace}\left( R_{xx} - R_{xy} R_{yy}^{-1} R_{yx} \right) $$
+<p>This new expression consists of two main parts. Our goal is to find the matrix $C$ that minimizes this entire quantity.</p>
+
+<b>3. Finding the Optimal Estimator</b>
+<p>We analyze the two components of the rewritten MSE expression:</p>
+<ol>
+    <li><b>The Second Term:</b> $\text{Trace}\left( R_{xx} - R_{xy} R_{yy}^{-1} R_{yx} \right)$
+    <br>This term consists only of correlation matrices and does not depend on our choice of $C$. Therefore, it is a constant with respect to the minimization problem.</li>
+    <li><b>The First Term:</b> $\text{Trace}\left( (C R_{yy} - R_{xy}) R_{yy}^{-1} (C R_{yy} - R_{xy})^T \right)$
+    <br>This term is the only part that depends on $C$. To minimize the total MSE, we must minimize this term.</li>
+</ol>
+<p>The correlation matrix $R_{yy}$ is positive semi-definite (PSD). Assuming it is invertible, its inverse $R_{yy}^{-1}$ is also PSD. The structure of the first term, which is of the form $\text{Trace}(A M A^T)$ where $M$ is a PSD matrix, ensures that the matrix inside the trace is also PSD. The trace of a PSD matrix is always non-negative (greater than or equal to zero).</p>
+<p>Therefore, the minimum possible value for this term is <b>zero</b>. This minimum is achieved when the matrix expression inside the trace is the zero matrix:</p>
+\$$ C R_{yy} - R_{xy} = \mathbf{0} $$
+<p>Solving for the optimal matrix $C_{\text{opt}}$:</p>
+\$$ C_{\text{opt}} R_{yy} = R_{xy} \implies C_{\text{opt}} = R_{xy} R_{yy}^{-1} $$
+
+<b>4. The LMMSE Estimator and Minimum Error (Zero-Mean Case)</b>
+<p>Substituting this optimal matrix $C_{\text{opt}}$ back into our linear estimator equation $\hat{\mathbf{x}} = C\mathbf{y}$, we get the LMMSE estimator for zero-mean vectors:</p>
+\$$ \hat{\mathbf{x}}_{\text{LMMSE}} = R_{xy} R_{yy}^{-1} \mathbf{y} $$
+<p>With this optimal estimator, the first term in our MSE expression becomes zero. The minimum MSE is therefore equal to the second, constant term:</p>
+\$$ \text{MMSE} = \text{Trace}\left( R_{xx} - R_{xy} R_{yy}^{-1} R_{yx} \right) $$
+
+<b>5. The Error Covariance Matrix</b>
+<p>The matrix inside the trace of the MMSE is known as the <b>error covariance matrix</b>. It describes the covariance of the estimation error vector $\mathbf{e} = \mathbf{x} - \hat{\mathbf{x}}$:</p>
+\$$ C_{ee} = E\left[(\mathbf{x} - \hat{\mathbf{x}})(\mathbf{x} - \hat{\mathbf{x}})^T\right] = R_{xx} - R_{xy} R_{yy}^{-1} R_{yx} $$
+<p>The diagonal elements of this matrix represent the mean squared error for each component of the estimated vector $\mathbf{x}$, and the sum of these diagonal elements (the trace) gives the total MMSE.</p>
+
+<b>6. Generalization to Non-Zero Mean Vectors</b>
+<p>The derivation can be extended to the more general case where the vectors are not zero-mean, i.e., $E[\mathbf{x}] = \boldsymbol{\mu}_x$ and $E[\mathbf{y}] = \boldsymbol{\mu}_y$. The strategy is to first create zero-mean versions of the vectors:</p>
+\$$ \tilde{\mathbf{x}} = \mathbf{x} - \boldsymbol{\mu}_x $$
+\$$ \tilde{\mathbf{y}} = \mathbf{y} - \boldsymbol{\mu}_y $$
+<p>We can apply the zero-mean LMMSE formula to estimate $\tilde{\mathbf{x}}$ from $\tilde{\mathbf{y}}\ \):</p>
+\$$ \hat{\tilde{\mathbf{x}}} = R_{\tilde{x}\tilde{y}} R_{\tilde{y}\tilde{y}}^{-1} \tilde{\mathbf{y}} $$
+<p>The correlation matrices of these new zero-mean vectors are, by definition, the <i>covariance</i> matrices of the original vectors:</p>
+<ul>
+    <li>$R_{\tilde{y}\tilde{y}} = E[\tilde{\mathbf{y}}\tilde{\mathbf{y}}^T] = E[(\mathbf{y} - \boldsymbol{\mu}_y)(\mathbf{y} - \boldsymbol{\mu}_y)^T] = C_{yy}$</li>
+    <li>$R_{\tilde{x}\tilde{y}} = E[\tilde{\mathbf{x}}\tilde{\mathbf{y}}^T] = E[(\mathbf{x} - \boldsymbol{\mu}_x)(\mathbf{y} - \boldsymbol{\mu}_y)^T] = C_{xy}$</li>
+</ul>
+<p>Substituting these back, along with the definitions of $\tilde{\mathbf{x}}$ and $\tilde{\mathbf{y}}$:</p>
+\$$ \hat{\mathbf{x}} - \boldsymbol{\mu}_x = C_{xy} C_{yy}^{-1} (\mathbf{y} - \boldsymbol{\mu}_y) $$
+<p>Finally, solving for $\hat{\mathbf{x}}$ gives the LMMSE estimator for the general (non-zero mean) case:</p>
+\$$ \hat{\mathbf{x}}_{\text{LMMSE}} = \boldsymbol{\mu}_x + C_{xy} C_{yy}^{-1} (\mathbf{y} - \boldsymbol{\mu}_y) $$
+
+<b>7. Key Insights and Interpretations</b>
+<ul>
+    <li><b>Uncorrelated Vectors:</b> If $\mathbf{x}$ and $\mathbf{y}$ are uncorrelated, their cross-covariance matrix $C_{xy}$ is the zero matrix. In this case, the LMMSE formula simplifies to:
+    \$$ \hat{\mathbf{x}} = \boldsymbol{\mu}_x + \mathbf{0} \cdot C_{yy}^{-1} (\mathbf{y} - \boldsymbol{\mu}_y) = \boldsymbol{\mu}_x $$
+    This means that if the observation $\mathbf{y}$ provides no correlated information about $\mathbf{x}$, the best linear estimate for $\mathbf{x}$ is simply its mean. Observing $\mathbf{y}$ does not improve the estimate.
+    <br><br>
+    </li>
+    <li><b>Impact of Correlation on Error:</b> The error covariance matrix for the general case is:
+    \$$ C_{ee} = C_{xx} - C_{xy} C_{yy}^{-1} C_{yx} $$
+    The term $C_{xy} C_{yy}^{-1} C_{yx}$ represents the reduction in uncertainty about $\mathbf{x}$ that is gained by observing $\mathbf{y}$. A "stronger" cross-correlation (a larger $C_{xy}$ in a matrix sense) leads to a larger reduction term, and therefore a smaller estimation error. This confirms the intuition that the better $\mathbf{y}$ is correlated with $\mathbf{x}$, the more accurately we can estimate $\mathbf{x}$.</li>
+</ul>
+</div></div><h2>Weekly Summary</h2><div><h3>MIMO Wireless Communication Optimization using SVD</h3>
+<p>This section explores the application of Singular Value Decomposition (SVD) to optimize Multiple-Input Multiple-Output (MIMO) wireless communication systems.</p>
+<ul>
+    <li><b>Decoupling MIMO Channels:</b> SVD can be used to transform a complex, coupled MIMO system into a set of simpler, independent, parallel channels. This process involves pre-coding at the transmitter and combining at the receiver, which are derived from the SVD of the channel matrix. This enables <b>spatial multiplexing</b>, where multiple data streams (symbols) are transmitted simultaneously over the same frequency.</li>
+    <li><b>Sum Rate Maximization:</b> The primary optimization goal is to maximize the total data rate (sum rate) across all these parallel channels, subject to a constraint on the total transmit power. The sum rate is the sum of the individual channel capacities, given by the Shannon formula:
+    \$$ R_{sum} = \sum_{i=1}^{t} \log_2 \left( 1 + \frac{\sigma_i^2 P_i}{\sigma^2} \right) $$
+    where $\sigma_i$ is the $i$-th singular value (channel gain), $P_i$ is the power allocated to the $i$-th channel, and $\sigma^2$ is the noise power.</li>
+    <li><b>Water-filling Algorithm:</b> The optimal power allocation strategy to solve this constrained optimization problem is the water-filling algorithm. This celebrated algorithm allocates more power to channels with higher gains (larger singular values) and less or zero power to weaker channels. The power for the $i$-th channel is given by:
+    \$$ P_i = \left( \frac{1}{\lambda'} - \frac{\sigma^2}{\sigma_i^2} \right)^+ $$
+    where $\frac{1}{\lambda'}$ acts as a "water level" determined by the total power constraint, and the $ ( \cdot )^+ $ operator ensures power is non-negative.</li>
+</ul>
+
+<h3>Other Applications of SVD</h3>
+<p>The discussion covers two other significant applications of SVD in machine learning and data analysis.</p>
+<ul>
+    <li><b>Principal Component Analysis (PCA):</b> SVD provides a direct and efficient method to perform PCA. Instead of calculating the covariance matrix and then finding its eigenvectors, one can directly apply SVD to the mean-centered data matrix $X$. The <b>right singular vectors</b> of $X$ are the principal components (axes of maximum variance). The singular values indicate the importance of each component.</li>
+    <li><b>Low-Rank Approximation:</b> SVD is used to find the best rank-$p$ approximation of a matrix $H$. This is crucial for data compression and creating compact representations of large matrices. The optimal rank-$p$ approximation, $\hat{H}$, is constructed by truncating the SVD of $H$, keeping only the top $p$ singular values and their corresponding left and right singular vectors:
+    \$$ \hat{H} = U_p \Sigma_p V_p^T $$
+    This minimizes the Frobenius norm of the error, $ ||H - \hat{H}||_F $.</li>
+</ul>
+
+<h3>The MUSIC Algorithm for Direction of Arrival (DOA) Estimation</h3>
+<p>This topic introduces the MUSIC (Multiple Signal Classification) algorithm, a powerful technique in signal processing used to estimate the angles from which multiple signals arrive at an antenna array.</p>
+<ul>
+    <li><b>System Model:</b> The algorithm relies on a Uniform Linear Array (ULA) of antennas. A signal arriving at an angle $\theta$ experiences different time delays at each antenna, resulting in a predictable phase shift across the array. This spatial signature is captured by the <b>array steering vector</b>, $\mathbf{a}(\theta)$, which is unique for each angle $\theta$.</li>
+    <li><b>Signal and Noise Subspaces:</b> The core of MUSIC is the analysis of the received signal's output covariance matrix, $R_y$. By performing eigenvalue decomposition on $R_y$, the vector space is separated into two orthogonal subspaces:
+        <ul>
+            <li>The <b>signal subspace</b>, spanned by the eigenvectors corresponding to the largest eigenvalues, which are associated with the incoming signals.</li>
+            <li>The <b>noise subspace</b>, spanned by the eigenvectors corresponding to the smallest eigenvalues, which are associated with noise.</li>
+        </ul>
+    </li>
+    <li><b>DOA Estimation:</b> A fundamental property is that the steering vectors of the true signal directions are orthogonal to the noise subspace. The MUSIC algorithm exploits this by creating a "spectrum" function that scans through all possible angles $\theta$. The function is the reciprocal of the magnitude of the projection of the steering vector $\mathbf{a}(\theta)$ onto the noise subspace.
+    \$$ f(\theta) = \frac{1}{\sum_{j=p+1}^{L} |\mathbf{a}(\theta)^H \mathbf{u}_j|^2} $$
+    This function exhibits sharp peaks at the angles where $\mathbf{a}(\theta)$ is orthogonal to the noise subspace vectors $\mathbf{u}_j$, thus revealing the Directions of Arrival.</li>
+</ul>
+
+<h3>Linear Minimum Mean Squared Error (LMMSE) Estimation</h3>
+<p>This final topic introduces the LMMSE estimation principle, a fundamental technique for estimating an unknown random vector based on a correlated, observed random vector.</p>
+<ul>
+    <li><b>Principle:</b> The goal is to find the best <b>linear estimator</b> $\hat{\mathbf{x}} = C\mathbf{y} + \mathbf{d}$ for an unknown random vector $\mathbf{x}$ given an observation $\mathbf{y}$. The "best" estimator is one that minimizes the Mean Squared Error (MSE), defined as $E[||\mathbf{x} - \hat{\mathbf{x}}||^2]$.</li>
+    <li><b>The LMMSE Estimator Formula:</b> The optimal linear estimator is derived using the statistical properties (mean and covariance) of the vectors. The final formula for the LMMSE estimate is:
+    \$$ \hat{\mathbf{x}} = \mu_x + R_{xy}R_{yy}^{-1}(\mathbf{y} - \mu_y) $$
+    where $\mu_x, \mu_y$ are the mean vectors, $R_{yy}$ is the covariance matrix of $\mathbf{y}$, and $R_{xy}$ is the cross-covariance matrix between $\mathbf{x}$ and $\mathbf{y}$.</li>
+    <li><b>Key Takeaways:</b>
+        <ul>
+            <li>The estimator heavily relies on the <b>correlation</b> between $\mathbf{x}$ and $\mathbf{y}$, captured by $R_{xy}$.</li>
+            <li>If the vectors are uncorrelated ($R_{xy} = 0$), the observation $\mathbf{y}$ provides no useful information, and the best estimate for $\mathbf{x}$ is simply its mean, $\mu_x$.</li>
+            <li>The minimum estimation error (error covariance) decreases as the correlation between the vectors increases, showing that stronger correlation leads to a more accurate estimate.</li>
+        </ul>
+    </li>
+</ul>
+</div><h2>Assignment Explanation</h2><div>
+<p>Here is an explanation of the questions and answers from the assignment.</p>
+
+<p><b>Question 1: Singular value decomposition (SVD) is defined for</b></p>
+<p><b>Answer:</b> Any matrix</p>
+<p><b>Explanation:</b> Singular Value Decomposition (SVD) is a fundamental matrix factorization technique in linear algebra. It can be applied to any rectangular matrix $ A \in \mathbb{C}^{m \times n} $, regardless of whether it is square, tall, wide, invertible, or singular. The decomposition takes the form $ A = U\Sigma V^H $, where $ U $ and $ V $ are unitary matrices, and $ \Sigma $ is a rectangular diagonal matrix containing the non-negative singular values of $ A $.</p>
+<br>
+
+<p><b>Question 2: Consider the $ L \times L $ output covariance matrix $ R_y $ for the MUSIC scheme... The MUSIC spectrum as a function of $ \theta $ plots</b></p>
+<p><b>Answer:</b> $ \frac{1}{|\sum_{j=P+1}^{L} \bar{a}^H(\theta) \bar{u}_j|^2} $</p>
+<p><b>Explanation:</b> The MUSIC (Multiple Signal Classification) algorithm estimates the direction of arrival (DOA) of signals. It operates by separating the eigenspace of the data covariance matrix $R_y$ into two orthogonal subspaces: the "signal subspace" and the "noise subspace".
+<ul>
+    <li>The signal subspace is spanned by the eigenvectors $\{\bar{u}_1, \dots, \bar{u}_P\}$ corresponding to the $P$ largest eigenvalues.</li>
+    <li>The noise subspace is spanned by the eigenvectors $\{\bar{u}_{P+1}, \dots, \bar{u}_L\}$ corresponding to the $L-P$ smallest eigenvalues.</li>
+</ul>
+The array response vector $\bar{a}(\theta)$ for a true signal's DOA is orthogonal to the noise subspace. Therefore, the projection of $\bar{a}(\theta)$ onto the noise subspace will be zero (or close to zero in the presence of noise) for a true DOA. To find these DOAs, the MUSIC algorithm calculates the squared norm of this projection, which is given by $\sum_{j=P+1}^{L} |\bar{a}^H(\theta) \bar{u}_j|^2$. To get sharp peaks at the true DOAs, the spectrum is defined as the reciprocal of this value.
+<br><i>Note: The expression in the provided answer $|\sum_{j=P+1}^{L} \bar{a}^H(\theta) \bar{u}_j|^2$ is likely a typo in the question and should be $\sum_{j=P+1}^{L} |\bar{a}^H(\theta) \bar{u}_j|^2$. However, among the given options, this is the correct choice as it correctly identifies the noise subspace eigenvectors (from $j=P+1$ to $L$).</i></p>
+<br>
+
+<p><b>Question 3: Consider the matrix $ H $ given below... Its second largest singular value $ \sigma_2 $ is given as</b></p>
+<p><b>Answer:</b> Accepted Answer is $16\sqrt{2}$, but this appears to be an error in the question.</p>
+<p><b>Explanation:</b> The question's formatting is ambiguous, but the most plausible interpretation is that the matrix is $ H = \begin{bmatrix} 1 & -2 \\ 1 & 2 \\ -1 & 2 \\ -1 & -2 \end{bmatrix} $.
+To find the singular values, we first compute $ H^T H $:
+\$$ H^T H = \begin{bmatrix} 1 & 1 & -1 & -1 \\ -2 & 2 & 2 & -2 \end{bmatrix} \begin{bmatrix} 1 & -2 \\ 1 & 2 \\ -1 & 2 \\ -1 & -2 \end{bmatrix} = \begin{bmatrix} 4 & 0 \\ 0 & 16 \end{bmatrix} $$
+The eigenvalues of $ H^T H $ are $\lambda_1 = 16$ and $\lambda_2 = 4$. The singular values are the square roots of these eigenvalues, conventionally arranged in decreasing order:
+\$$ \sigma_1 = \sqrt{16} = 4 $$
+\$$ \sigma_2 = \sqrt{4} = 2 $$
+Thus, the second largest singular value is 2. This result does not match any of the options or the accepted answer of $16\sqrt{2}$. The question as presented is likely flawed.</p>
+<br>
+
+<p><b>Question 4: The determinant of a unitary matrix $U$ satisfies the property</b></p>
+<p><b>Answer:</b> $ |\det(U)| = 1 $</p>
+<p><b>Explanation:</b> A matrix $U$ is unitary if its conjugate transpose is also its inverse, i.e., $U^H U = I$. Using the properties of determinants, we have:
+\$$ \det(U^H U) = \det(I) $$
+\$$ \det(U^H)\det(U) = 1 $$
+Since $\det(U^H) = \overline{\det(U)}$ (the complex conjugate of $\det(U)$), the equation becomes:
+\$$ \overline{\det(U)}\det(U) = 1 $$
+\$$ |\det(U)|^2 = 1 $$
+Taking the positive square root, we get $ |\det(U)| = 1 $. This means the determinant of a unitary matrix is a complex number with a magnitude of 1 (i.e., it lies on the unit circle in the complex plane).</p>
+<br>
+
+<p><b>Question 5: Consider the zero-mean Gaussian random vector $\bar{x}$... The probability density function of $\bar{x}$ when $x_1, x_2, \dots, x_n$ are independent and identically distributed (i.i.d.) with variance $\sigma^2$ is given as</b></p>
+<p><b>Answer:</b> $ (\frac{1}{2\pi\sigma^2})^{n/2} e^{-\frac{\|\bar{x}\|^2}{2\sigma^2}} $</p>
+<p><b>Explanation:</b> For a single zero-mean Gaussian random variable $x_i$ with variance $\sigma^2$, the probability density function (PDF) is $ p(x_i) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-x_i^2 / (2\sigma^2)} $.
+Because the variables $x_i$ are independent, the joint PDF of the vector $\bar{x}$ is the product of the individual PDFs:
+\$$ p(\bar{x}) = \prod_{i=1}^{n} p(x_i) = \prod_{i=1}^{n} \left( \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{x_i^2}{2\sigma^2}} \right) $$
+\$$ p(\bar{x}) = \left(\frac{1}{\sqrt{2\pi\sigma^2}}\right)^n \exp\left(-\sum_{i=1}^{n} \frac{x_i^2}{2\sigma^2}\right) $$
+\$$ p(\bar{x}) = \left(\frac{1}{2\pi\sigma^2}\right)^{n/2} \exp\left(-\frac{1}{2\sigma^2} \sum_{i=1}^{n} x_i^2\right) $$
+Recognizing that $\sum_{i=1}^{n} x_i^2 = \|\bar{x}\|^2$ (the squared Euclidean norm), we get the final expression.</p>
+<br>
+
+<p><b>Question 6: Consider the singular values of a MIMO channel matrix given as $\sigma_1 = 2, \sigma_2 = 1$ with noise power $\sigma^2 = 8$ and total power $P = 20$. The optimal power allocation to maximize the capacity of the MIMO channel is given as</b></p>
+<p><b>Answer:</b> 13, 7</p>
+<p><b>Explanation:</b> This problem is solved using the water-filling algorithm. The optimal power $P_i$ allocated to the i-th subchannel is given by $ P_i = (\mu - \frac{\sigma^2}{\sigma_i^2})^+ $, where $(x)^+ = \max(0, x)$ and $\mu$ is the "water level" determined by the total power constraint $\sum P_i = P$.
+<ol>
+    <li>Calculate the effective noise level for each subchannel:
+        <br>For $\sigma_1 = 2$: $\frac{\sigma^2}{\sigma_1^2} = \frac{8}{2^2} = 2$
+        <br>For $\sigma_2 = 1$: $\frac{\sigma^2}{\sigma_2^2} = \frac{8}{1^2} = 8$</li>
+    <li>Set up the total power equation, assuming both channels receive power (i.e., $\mu$ is above both noise levels):
+        <br>$P_1 = \mu - 2$
+        <br>$P_2 = \mu - 8$
+        <br>$P_{total} = P_1 + P_2 = (\mu - 2) + (\mu - 8) = 2\mu - 10$</li>
+    <li>Solve for $\mu$ using the total power $P=20$:
+        <br>$20 = 2\mu - 10 \implies 2\mu = 30 \implies \mu = 15$</li>
+    <li>Calculate the allocated powers:
+        <br>$P_1 = 15 - 2 = 13$
+        <br>$P_2 = 15 - 8 = 7$</li>
+</ol>
+The optimal power allocation is (13, 7).</p>
+<br>
+
+<p><b>Question 7: Principal Component Analysis (PCA) is used in machine learning for</b></p>
+<p><b>Answer:</b> Dimensionality reduction</p>
+<p><b>Explanation:</b> PCA is a technique used to emphasize variation and bring out strong patterns in a dataset. It is most commonly used for dimensionality reduction by transforming a large set of variables into a smaller one that still contains most of the information in the large set. It does this by finding a new set of orthogonal axes (principal components) that capture the maximum variance in the data.</p>
+<br>
+
+<p><b>Question 8: The singular values $\sigma_i$ of any matrix satisfy the property</b></p>
+<p><b>Answer:</b> $\sigma_i \ge 0$</p>
+<p><b>Explanation:</b> Singular values are defined as the square roots of the eigenvalues of the matrix $A^H A$. The matrix $A^H A$ is guaranteed to be positive semi-definite. A fundamental property of positive semi-definite matrices is that their eigenvalues are always real and non-negative. Consequently, the singular values, being the square roots of these non-negative eigenvalues, must also be real and non-negative ($\ge 0$).</p>
+<br>
+
+<p><b>Question 9: The eigenvalues of a symmetric positive semi-definite matrix are</b></p>
+<p><b>Answer:</b> Real and non-negative</p>
+<p><b>Explanation:</b> This is a core theorem in linear algebra.
+<ul>
+    <li>For any symmetric (or Hermitian) matrix, all its eigenvalues are real numbers.</li>
+    <li>For a positive semi-definite matrix $A$, by definition, $\mathbf{v}^H A \mathbf{v} \ge 0$ for any vector $\mathbf{v}$. If $\mathbf{v}$ is an eigenvector with eigenvalue $\lambda$, then $\mathbf{v}^H A \mathbf{v} = \mathbf{v}^H (\lambda\mathbf{v}) = \lambda \|\mathbf{v}\|^2$. Since $\|\mathbf{v}\|^2 > 0$ and $\mathbf{v}^H A \mathbf{v} \ge 0$, it follows that $\lambda \ge 0$.</li>
+</ul>
+Combining these two properties, the eigenvalues must be real and non-negative.</p>
+<br>
+
+<p><b>Question 10: The singular values $\sigma_i$ of any matrix are arranged in</b></p>
+<p><b>Answer:</b> Decreasing order</p>
+<p><b>Explanation:</b> By convention, in the Singular Value Decomposition $A = U\Sigma V^H$, the diagonal entries of $\Sigma$ (the singular values) are ordered from largest to smallest: $\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_r \ge 0$, where $r$ is the rank of the matrix. This ordering is crucial for applications like data compression and dimensionality reduction (e.g., PCA), where the largest singular values correspond to the most significant components of the matrix.</p>
+</div></div>
+</body>
+</html>

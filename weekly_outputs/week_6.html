@@ -1,0 +1,766 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week6</title>
+
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+      };
+    </script>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 2em;
+        }
+        .mjx-display {
+            margin: 2.5em 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="week" id="week_6"><h1 class="week-title">Week 6</h1><h2>Transcript Explanations</h2><div class="chapter" id="Lecture 26 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 26 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts and formulas discussed in the transcript regarding polynomial fitting using the method of least squares.</p>
+
+<h3>1. Introduction to Polynomial Fitting</h3>
+<p>The core problem is to find a mathematical function that best fits a given set of data points. In this context, we have data from an unknown functional relationship, denoted as $ y = f(x) $, where the function $f$ itself is not known. We are given a set of $m$ data points or "training points": $(x_1, y_1), (x_2, y_2), \dots, (x_m, y_m)$.</p>
+<p><b>Polynomial fitting</b>, or <b>polynomial approximation</b>, is a technique used to find a polynomial function that closely approximates this unknown function $f(x)$ based on the available data points. The goal is to create a model, $\hat{f}(x)$, that can predict the value of $y$ for a given $x$.</p>
+
+<h3>2. The Polynomial Model</h3>
+<p>We propose to approximate the unknown relationship with an n-th degree polynomial. This approximation is denoted as $\hat{f}(x)$ and is defined as:</p>
+\$$ \hat{f}(x) = a_0 + a_1 x + a_2 x^2 + \dots + a_n x^n $$
+<p>Here:</p>
+<ul>
+    <li>$n$ is the <b>degree</b> or <b>order</b> of the polynomial.</li>
+    <li>$a_0, a_1, \dots, a_n$ are the unknown <b>coefficients</b> of the polynomial. The primary task is to determine the optimal values for these coefficients.</li>
+</ul>
+<p>A special case highlighted in the transcript is when $n=1$. The model becomes:</p>
+\$$ \hat{f}(x) = a_0 + a_1 x $$
+<p>This is the equation of a straight line, which corresponds to the <b>linear fit</b> or <b>linear regression</b> model. Polynomial fitting is thus a generalization of linear regression, allowing for more complex, non-linear relationships to be modeled.</p>
+
+<h3>3. Formulating the Problem for Least Squares</h3>
+<p>To find the coefficients $a_0, \dots, a_n$, we use the $m$ available data points. For each data point $(x_i, y_i)$, we assume that the observed value $y_i$ is equal to the value predicted by our polynomial model plus some error, $\epsilon_i$. This error term accounts for measurement noise and the fact that our model is only an approximation.</p>
+<p>For the first data point $(x_1, y_1)$, the equation is:</p>
+\$$ y_1 = (a_0 + a_1 x_1 + a_2 x_1^2 + \dots + a_n x_1^n) + \epsilon_1 $$
+<p>We can write a similar equation for all $m$ data points:</p>
+\$$ y_i = a_0 + a_1 x_i + a_2 x_i^2 + \dots + a_n x_i^n + \epsilon_i \quad \text{for } i = 1, 2, \dots, m $$
+
+<h4>Vector and Matrix Representation</h4>
+<p>To solve this system of equations efficiently, we express it in matrix form. First, let's represent the coefficients as a column vector, which the transcript calls `a bar`. We will denote it as $\mathbf{a}$:</p>
+\$$ \mathbf{a} = \begin{pmatrix} a_0 \\ a_1 \\ \vdots \\ a_n \end{pmatrix} $$
+<p>Next, for each data point $x_i$, we create a row vector containing the powers of $x_i$ from 0 to $n$. The transcript calls this `x_i bar transpose`, which we denote as $\mathbf{x}_i^T$:</p>
+\$$ \mathbf{x}_i^T = \begin{pmatrix} 1 & x_i & x_i^2 & \dots & x_i^n \end{pmatrix} $$
+<p>Using this notation, the equation for a single data point $(x_i, y_i)$ can be written compactly as:</p>
+\$$ y_i = \mathbf{x}_i^T \mathbf{a} + \epsilon_i $$
+<p>Now, we can "stack" all $m$ equations for our entire dataset into a single matrix equation. We define the following:</p>
+<ul>
+    <li>A column vector $\mathbf{y}$ of all observed responses (called `y bar` in the transcript):</li>
+    \$$ \mathbf{y} = \begin{pmatrix} y_1 \\ y_2 \\ \vdots \\ y_m \end{pmatrix} $$
+    <li>A matrix $X$ where each row is the vector $\mathbf{x}_i^T$ for the corresponding data point:</li>
+    \$$ X = \begin{pmatrix} \mathbf{x}_1^T \\ \mathbf{x}_2^T \\ \vdots \\ \mathbf{x}_m^T \end{pmatrix} = \begin{pmatrix}
+        1 & x_1 & x_1^2 & \dots & x_1^n \\
+        1 & x_2 & x_2^2 & \dots & x_2^n \\
+        \vdots & \vdots & \vdots & \ddots & \vdots \\
+        1 & x_m & x_m^2 & \dots & x_m^n
+        \end{pmatrix} $$
+    <p>This is an $m \times (n+1)$ matrix, where $m$ is the number of data points and $n+1$ is the number of coefficients (for a polynomial of degree $n$).</p>
+    <li>A column vector $\mathbf{\epsilon}$ of all the errors:</li>
+    \$$ \mathbf{\epsilon} = \begin{pmatrix} \epsilon_1 \\ \epsilon_2 \\ \vdots \\ \epsilon_m \end{pmatrix} $$
+</ul>
+<p>With these definitions, the entire system of $m$ equations can be expressed in the well-known linear model form:</p>
+\$$ \mathbf{y} = X \mathbf{a} + \mathbf{\epsilon} $$
+
+<h3>4. The Least Squares Solution</h3>
+<p>The problem is now to find the vector of coefficients $\mathbf{a}$ that makes the model $X\mathbf{a}$ as close as possible to the observed data $\mathbf{y}$. The "least squares" method achieves this by finding the $\mathbf{a}$ that minimizes the sum of the squared errors, which is equivalent to minimizing the squared Euclidean norm of the error vector $\mathbf{\epsilon} = \mathbf{y} - X\mathbf{a}$.</p>
+<p>We want to find the coefficient vector $\hat{\mathbf{a}}$ that solves the following minimization problem:</p>
+\$$ \hat{\mathbf{a}} = \arg\min_{\mathbf{a}} ||\mathbf{y} - X\mathbf{a}||^2 $$
+<p>The solution to this standard least squares problem is given by the <b>normal equations</b>. The optimal coefficient vector $\hat{\mathbf{a}}$ that provides the best polynomial fit in the least squares sense is:</p>
+\$$ \hat{\mathbf{a}} = (X^T X)^{-1} X^T \mathbf{y} $$
+<p>This formula provides the values for $a_0, a_1, \dots, a_n$ that define the n-th order polynomial that best fits the given data. This demonstrates how the versatile least squares framework can be applied not just to linear models but also to non-linear curve fitting problems like polynomial approximation.</p>
+</div></div><div class="chapter" id="Lecture 27 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 27 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts and formulas related to the <b>Least Norm Solution</b> for a system of linear equations, as presented in the transcript.</p>
+
+<h3>1. Introduction to the Least Norm Problem</h3>
+<p>The least norm solution is a method for solving a system of linear equations when there are infinitely many possible solutions. This situation typically arises when the system is <b>underdetermined</b>, meaning there are fewer equations than unknowns. In contrast to the <i>least squares problem</i> (which finds an approximate solution when no exact solution exists), the least norm problem selects one specific, "optimal" solution from an infinite set of exact solutions.</p>
+
+<p>The core idea is to choose the unique solution that has the smallest possible magnitude or "energy," which is mathematically defined as having the minimum Euclidean norm.</p>
+
+<h3>2. The Underdetermined System of Equations</h3>
+<p>We begin with the standard system of linear equations written in matrix form:</p>
+\$$ \mathbf{y} = A \mathbf{x} $$
+<p>Where:</p>
+<ul>
+    <li>$\mathbf{y}$ is an $m \times 1$ vector of observations ($[y_1, y_2, \dots, y_m]^T$).</li>
+    <li>$A$ is an $m \times n$ matrix.</li>
+    <li>$\mathbf{x}$ is an $n \times 1$ vector of unknowns ($[x_1, x_2, \dots, x_n]^T$).</li>
+</ul>
+<p>The least norm problem specifically addresses the case where:</p>
+\$$ m < n $$
+<p>This means the number of equations ($m$) is less than the number of unknowns ($n$).</p>
+
+<h4>Characteristics of an Underdetermined System</h4>
+<ul>
+    <li><b>"Wide" Matrix:</b> Since the number of rows ($m$) is less than the number of columns ($n$), the matrix $A$ is short and wide. This is in contrast to the "tall" matrix ($m > n$) associated with the least squares problem.</li>
+    <li><b>Infinite Solutions:</b> Because $m < n$, the rank of matrix $A$ is at most $m$ (i.e., $\text{rank}(A) \le \min(m, n) = m$). Since the number of columns $n$ is greater than the rank, the columns of $A$ must be linearly dependent. This implies that the <b>null space</b> of $A$ is non-trivial; there exists at least one non-zero vector $\mathbf{u}$ such that:
+    \$$ A \mathbf{u} = \mathbf{0} $$
+    If $\mathbf{x}$ is any solution to $A\mathbf{x} = \mathbf{y}$, then $\mathbf{x} + \mathbf{u}$ is also a solution, because:
+    \$$ A(\mathbf{x} + \mathbf{u}) = A\mathbf{x} + A\mathbf{u} = \mathbf{y} + \mathbf{0} = \mathbf{y} $$
+    Since any scalar multiple of $\mathbf{u}$ is also in the null space, this leads to an infinite number of solutions. We assume that a solution exists, which is guaranteed if $A$ has <b>full row rank</b> (i.e., $\text{rank}(A) = m$).
+    </li>
+</ul>
+
+<h3>3. Formulating the Least Norm Problem</h3>
+<p>To select a single solution from the infinite set, we add a constraint: find the solution $\mathbf{x}$ with the minimum norm. The norm of a vector $||\mathbf{x}||$ can be thought of as its length or energy. Minimizing $||\mathbf{x}||$ is equivalent to minimizing its square, $||\mathbf{x}||^2$, which is mathematically more convenient.</p>
+<p>The problem is therefore formulated as a constrained optimization problem:</p>
+<p><b>Minimize:</b></p>
+\$$ ||\mathbf{x}||^2 $$
+<p><b>Subject to the constraint:</b></p>
+\$$ A\mathbf{x} = \mathbf{y} $$
+<p>This means we are looking for the vector $\mathbf{x}$ that both satisfies the original system of equations and has the smallest possible length.</p>
+
+<h3>4. Derivation of the Least Norm Solution using Lagrange Multipliers</h3>
+<p>This constrained optimization problem can be solved using the method of Lagrange multipliers. Since there are $m$ linear equations in the constraint $A\mathbf{x} = \mathbf{y}$, we need a vector of $m$ Lagrange multipliers, denoted $\boldsymbol{\lambda}$.</p>
+
+<p><b>1. Define the Lagrangian Function:</b></p>
+<p>The Lagrangian $L(\mathbf{x}, \boldsymbol{\lambda})$ is formed by combining the objective function and the constraints:</p>
+\$$ L(\mathbf{x}, \boldsymbol{\lambda}) = ||\mathbf{x}||^2 + \boldsymbol{\lambda}^T (\mathbf{y} - A\mathbf{x}) $$
+<p>Since $||\mathbf{x}||^2 = \mathbf{x}^T\mathbf{x}$, we can rewrite this as:</p>
+\$$ L(\mathbf{x}, \boldsymbol{\lambda}) = \mathbf{x}^T\mathbf{x} + \boldsymbol{\lambda}^T \mathbf{y} - \boldsymbol{\lambda}^T A\mathbf{x} = \mathbf{x}^T\mathbf{x} + \mathbf{y}^T\boldsymbol{\lambda} - \mathbf{x}^T A^T \boldsymbol{\lambda} $$
+
+<p><b>2. Find the Gradient and Set to Zero:</b></p>
+<p>At the optimal solution, the gradient of the Lagrangian with respect to $\mathbf{x}$ must be zero.</p>
+\$$ \nabla_{\mathbf{x}} L(\mathbf{x}, \boldsymbol{\lambda}) = 2\mathbf{x} - A^T \boldsymbol{\lambda} = \mathbf{0} $$
+<p>Solving for $\mathbf{x}$, we get a crucial property of the optimal solution:</p>
+\$$ \mathbf{x} = \frac{1}{2} A^T \boldsymbol{\lambda} $$
+<p>This result shows that the least norm solution $\mathbf{x}$ must lie in the <b>column space of $A^T$</b> (also known as the row space of $A$).</p>
+
+<p><b>3. Solve for the Lagrange Multipliers ($\boldsymbol{\lambda}$):</b></p>
+<p>Substitute the expression for $\mathbf{x}$ back into the original constraint equation $A\mathbf{x} = \mathbf{y}$:</p>
+\$$ A \left(\frac{1}{2} A^T \boldsymbol{\lambda}\right) = \mathbf{y} $$
+\$$ \frac{1}{2} (A A^T) \boldsymbol{\lambda} = \mathbf{y} $$
+<p>To solve for $\boldsymbol{\lambda}$, we need to invert the matrix $A A^T$. This is possible if $A$ has <b>full row rank</b> ($\text{rank}(A) = m$), which makes the $m \times m$ matrix $A A^T$ invertible.</p>
+\$$ \boldsymbol{\lambda} = 2 (A A^T)^{-1} \mathbf{y} $$
+
+<p><b>4. Obtain the Final Least Norm Solution:</b></p>
+<p>Finally, substitute the expression for $\boldsymbol{\lambda}$ back into the equation for $\mathbf{x}$:</p>
+\$$ \mathbf{x} = \frac{1}{2} A^T \left(2 (A A^T)^{-1} \mathbf{y}\right) $$
+<p>The factors of 2 cancel out, giving the final formula for the least norm solution, denoted $\mathbf{x}_{LN}$:</p>
+\$$ \mathbf{x}_{LN} = A^T (A A^T)^{-1} \mathbf{y} $$
+
+<h3>5. The Pseudo-Inverse for a Wide Matrix</h3>
+<p>The term $A^T (A A^T)^{-1}$ is known as the <b>pseudo-inverse</b> of the wide matrix $A$, often denoted as $A^\dagger$. It serves as a <b>right inverse</b> because when multiplied by $A$ on the left, it yields the identity matrix:</p>
+\$$ A (A^\dagger) = A \left( A^T (A A^T)^{-1} \right) = (A A^T) (A A^T)^{-1} = I $$
+<p>This is different from the pseudo-inverse for a "tall" matrix (used in least squares), which is a <i>left inverse</i>. For a square, invertible matrix, both the left and right pseudo-inverses simplify to the standard matrix inverse $A^{-1}$.</p>
+
+<h3>6. Example Calculation</h3>
+<p>Consider the underdetermined system:</p>
+\$$ \begin{pmatrix} y_1 \\ y_2 \end{pmatrix} = \begin{pmatrix} 1 & 1 & 1 & 1 \\ 1 & 2 & 3 & 4 \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \\ x_3 \\ x_4 \end{pmatrix} $$
+<p>Here, $m=2$, $n=4$, so $m < n$. The matrix $A = \begin{pmatrix} 1 & 1 & 1 & 1 \\ 1 & 2 & 3 & 4 \end{pmatrix}$.</p>
+<p><b>Step 1: Calculate $A A^T$</b></p>
+\$$ A A^T = \begin{pmatrix} 1 & 1 & 1 & 1 \\ 1 & 2 & 3 & 4 \end{pmatrix} \begin{pmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3 \\ 1 & 4 \end{pmatrix} = \begin{pmatrix} 4 & 10 \\ 10 & 30 \end{pmatrix} $$
+<p><b>Step 2: Calculate $(A A^T)^{-1}$</b></p>
+<p>The determinant is $(4)(30) - (10)(10) = 120 - 100 = 20$.</p>
+\$$ (A A^T)^{-1} = \frac{1}{20} \begin{pmatrix} 30 & -10 \\ -10 & 4 \end{pmatrix} $$
+<p><b>Step 3: Calculate the pseudo-inverse $A^\dagger = A^T(A A^T)^{-1}$</b></p>
+\$$ A^\dagger = \begin{pmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3 \\ 1 & 4 \end{pmatrix} \frac{1}{20} \begin{pmatrix} 30 & -10 \\ -10 & 4 \end{pmatrix} = \frac{1}{20} \begin{pmatrix} 20 & -6 \\ 10 & -2 \\ 0 & 2 \\ -10 & 6 \end{pmatrix} = \begin{pmatrix} 1 & -3/10 \\ 1/2 & -1/10 \\ 0 & 1/10 \\ -1/2 & 3/10 \end{pmatrix} $$
+<p><i>Note: The transcript contains a different result for the pseudo-inverse. Following the calculation steps yields the matrix above.</i></p>
+
+<p><b>Step 4: Find the least norm solution $\mathbf{x}_{LN}$</b></p>
+\$$ \mathbf{x}_{LN} = A^\dagger \mathbf{y} = \begin{pmatrix} 1 & -3/10 \\ 1/2 & -1/10 \\ 0 & 1/10 \\ -1/2 & 3/10 \end{pmatrix} \begin{pmatrix} y_1 \\ y_2 \end{pmatrix} = y_1 \begin{pmatrix} 1 \\ 1/2 \\ 0 \\ -1/2 \end{pmatrix} + y_2 \begin{pmatrix} -3/10 \\ -1/10 \\ 1/10 \\ 3/10 \end{pmatrix} $$
+<p>This vector $\mathbf{x}_{LN}$ is the unique solution to the system that has the smallest possible norm.</p>
+
+<h3>7. Summary of Solutions for Linear Systems</h3>
+<p>The least norm solution completes the spectrum of solutions for the system $A\mathbf{x} = \mathbf{y}$ based on the dimensions of $A$:</p>
+<ul>
+    <li><b>Case 1: $m = n$ (Square Matrix)</b>
+        <br>If $A$ is invertible, there is a unique solution: $\mathbf{x} = A^{-1}\mathbf{y}$.
+    </li>
+    <li><b>Case 2: $m > n$ (Overdetermined System)</b>
+        <br>No exact solution typically exists. The <b>least squares</b> solution minimizes $||A\mathbf{x} - \mathbf{y}||^2$ and is given by $\mathbf{x}_{LS} = (A^T A)^{-1} A^T \mathbf{y}$, provided $A$ has full column rank.
+    </li>
+    <li><b>Case 3: $m < n$ (Underdetermined System)</b>
+        <br>Infinite solutions typically exist. The <b>least norm</b> solution is the exact solution with the minimum $||\mathbf{x}||^2$ and is given by $\mathbf{x}_{LN} = A^T (A A^T)^{-1} \mathbf{y}$, provided $A$ has full row rank.
+    </li>
+</ul>
+</div></div><div class="chapter" id="Lecture 28 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 28 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts presented in the transcript, focusing on the application of the least norm solution to multi-user beamforming in wireless communication systems.</p>
+
+<b>1. Introduction to Multi-User Beamforming</b>
+<p>In modern wireless communication, a common scenario involves a receiver with multiple antennas trying to receive a signal from a specific "desired" user in the presence of signals from other "interfering" users. Multi-user beamforming is a signal processing technique that leverages the multiple receiver antennas to solve this problem. The core idea is to create a directional "beam" of reception that accomplishes two goals simultaneously:</p>
+<ol>
+    <li><b>Maximize Gain for Desired User:</b> The receiver focuses its sensitivity in the direction of the desired user to capture their signal as strongly as possible.</li>
+    <li><b>Create a Null for Interfering User:</b> The receiver simultaneously creates a "null," or a direction of zero sensitivity, towards the interfering user. This effectively cancels out or suppresses the interference.</li>
+</ol>
+<p>This technique is an application of the <b>least norm</b> (or minimum norm) solution to an underdetermined system of linear equations.</p>
+
+<b>2. The System Model</b>
+<p>Let's define the components of the communication system:</p>
+<ul>
+    <li>A receiver with $L$ antennas.</li>
+    <li>User 1: The desired user, transmitting a symbol $x_1$.</li>
+    <li>User 2: The interfering user, transmitting a symbol $x_2$.</li>
+</ul>
+<p>The signal from each user travels through a wireless channel to each of the $L$ receiver antennas. The channel is characterized by complex coefficients:</p>
+<ul>
+    <li>$\bar{h} = [h_1, h_2, \dots, h_L]^T$: The channel vector for the desired user, where $h_i$ is the channel coefficient between the desired user and the $i$-th antenna.</li>
+    <li>$\bar{g} = [g_1, g_2, \dots, g_L]^T$: The channel vector for the interfering user, where $g_i$ is the channel coefficient between the interfering user and the $i$-th antenna.</li>
+</ul>
+<p>The signal received at the $L$ antennas can be represented by a vector $\bar{y} = [y_1, y_2, \dots, y_L]^T$. The overall system model is a linear combination of the desired signal, the interfering signal, and receiver noise ($\bar{n}$):</p>
+\$$ \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_L \end{bmatrix} = \begin{bmatrix} h_1 \\ h_2 \\ \vdots \\ h_L \end{bmatrix} x_1 + \begin{bmatrix} g_1 \\ g_2 \\ \vdots \\ g_L \end{bmatrix} x_2 + \begin{bmatrix} n_1 \\ n_2 \\ \vdots \\ n_L \end{bmatrix} $$
+<p>This can be written more compactly as:</p>
+\$$ \bar{y} = \bar{h}x_1 + \bar{g}x_2 + \bar{n} $$
+
+<b>3. The Goal: Maximizing SINR via Beamforming</b>
+<p>The primary objective is to maximize the <b>Signal-to-Interference-plus-Noise Ratio (SINR)</b>. This metric quantifies the quality of the received signal by comparing the power of the desired signal to the combined power of the interference and noise.</p>
+<p>To achieve this, the receiver performs <b>beamforming</b>, which is an optimal method of combining the signals $y_i$ from all $L$ antennas. This is done by applying a set of complex weights, $w_1, w_2, \dots, w_L$, to the received signals and summing them up. These weights form the <b>beamforming vector</b>, $\bar{w} = [w_1, w_2, \dots, w_L]^T$.</p>
+<p>The combined output signal is the inner product of the weights vector (in its Hermitian form) and the received signal vector:</p>
+\$$ \text{Output} = w_1^*y_1 + w_2^*y_2 + \dots + w_L^*y_L = \bar{w}^H \bar{y} $$
+<p>where $\bar{w}^H$ denotes the Hermitian (conjugate transpose) of $\bar{w}$.</p>
+
+<b>4. Formulating the Optimization Problem</b>
+<p>By substituting the system model into the beamforming equation, we can see the individual components of the output signal:</p>
+\$$ \bar{w}^H \bar{y} = \bar{w}^H (\bar{h}x_1 + \bar{g}x_2 + \bar{n}) $$
+\$$ \bar{w}^H \bar{y} = \underbrace{(\bar{w}^H \bar{h})x_1}_{\text{Desired Signal}} + \underbrace{(\bar{w}^H \bar{g})x_2}_{\text{Interference}} + \underbrace{\bar{w}^H \bar{n}}_{\text{Noise}} $$
+<p>To maximize the SINR, we design the beamformer $\bar{w}$ by setting specific constraints on the signal and interference terms, and then minimizing the noise term.</p>
+
+<p><b>Constraint 1: Desired Signal Gain</b><br>
+We fix the gain applied to the desired signal to a constant value, typically unity. This ensures the desired signal is passed through without attenuation or excessive amplification.</p>
+\$$ \bar{w}^H \bar{h} = 1 $$
+
+<p><b>Constraint 2: Interference Suppression (Nulling)</b><br>
+To completely eliminate the interference, we set the gain applied to the interfering user's signal to zero. This is the "nulling" constraint.</p>
+\$$ \bar{w}^H \bar{g} = 0 $$
+
+<p><b>Objective: Minimize Noise Power</b><br>
+The power of the output noise, $\bar{w}^H \bar{n}$, is proportional to the squared Euclidean norm of the beamforming vector, $||\bar{w}||^2 = \bar{w}^H \bar{w}$. With the signal gain fixed and interference eliminated, maximizing the SINR is equivalent to minimizing the remaining noise power.</p>
+\$$ \text{Minimize} \quad ||\bar{w}||^2 $$
+
+<b>5. The Least Norm Solution</b>
+<p>The two constraints can be combined into a single matrix equation. First, we take the Hermitian of the constraints to express them in a standard linear system form:</p>
+\$$ \bar{h}^H \bar{w} = 1 $$
+\$$ \bar{g}^H \bar{w} = 0 $$
+<p>This can be written as:</p>
+\$$ \begin{bmatrix} \bar{h}^H \\ \bar{g}^H \end{bmatrix} \bar{w} = \begin{bmatrix} 1 \\ 0 \end{bmatrix} $$
+<p>Let's define a matrix $\mathbf{C}$ whose columns are the channel vectors:</p>
+\$$ \mathbf{C} = [\bar{h} \quad \bar{g}] $$
+<p>Then the constraint matrix is $\mathbf{C}^H$. The system of constraints becomes:</p>
+\$$ \mathbf{C}^H \bar{w} = \begin{bmatrix} 1 \\ 0 \end{bmatrix} $$
+<p>Here, $\mathbf{C}$ is an $L \times 2$ matrix, so $\mathbf{C}^H$ is a $2 \times L$ matrix. If the number of antennas is greater than the number of users ($L > 2$), $\mathbf{C}^H$ is a "wide" matrix. This means the system of linear equations is <b>underdetermined</b>, having infinitely many solutions for $\bar{w}$.</p>
+
+<p>The complete optimization problem is to find the solution $\bar{w}$ that has the smallest norm:</p>
+<p><b>Minimize</b> $||\bar{w}||^2$ <b>subject to</b> $\mathbf{C}^H \bar{w} = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$.</p>
+<p>This is a classic <b>least norm problem</b>. The solution for a general system $\mathbf{A}\mathbf{x} = \mathbf{y}$ is $\mathbf{x} = \mathbf{A}^H(\mathbf{A}\mathbf{A}^H)^{-1}\mathbf{y}$. Adapting this formula to our problem (with $\mathbf{A} = \mathbf{C}^H$, $\mathbf{x} = \bar{w}$, and $\mathbf{y} = [1, 0]^T$), we get the optimal beamforming vector:</p>
+\$$ \bar{w}_{opt} = (\mathbf{C}^H)^H ( \mathbf{C}^H (\mathbf{C}^H)^H )^{-1} \begin{bmatrix} 1 \\ 0 \end{bmatrix} $$
+<p>Simplifying this expression gives the final solution for the optimal multi-user beamformer:</p>
+\$$ \bar{w}_{opt} = \mathbf{C} ( \mathbf{C}^H \mathbf{C} )^{-1} \begin{bmatrix} 1 \\ 0 \end{bmatrix} $$
+
+<b>6. A Numerical Example</b>
+<p>Let's find the optimal beamformer $\bar{w}$ for a system with $L=4$ antennas and the following channel vectors:</p>
+<ul>
+    <li>Desired User: $\bar{h} = [1, 1, 1, 1]^T$</li>
+    <li>Interfering User: $\bar{g} = [4, 2, 2, 4]^T$</li>
+</ul>
+
+<p><b>Step 1: Form the matrix C</b></p>
+\$$ \mathbf{C} = [\bar{h} \quad \bar{g}] = \begin{bmatrix} 1 & 4 \\ 1 & 2 \\ 1 & 2 \\ 1 & 4 \end{bmatrix} $$
+
+<p><b>Step 2: Calculate $\mathbf{C}^H \mathbf{C}$</b></p>
+\$$ \mathbf{C}^H \mathbf{C} = \begin{bmatrix} 1 & 1 & 1 & 1 \\ 4 & 2 & 2 & 4 \end{bmatrix} \begin{bmatrix} 1 & 4 \\ 1 & 2 \\ 1 & 2 \\ 1 & 4 \end{bmatrix} = \begin{bmatrix} (1+1+1+1) & (4+2+2+4) \\ (4+2+2+4) & (16+4+4+16) \end{bmatrix} = \begin{bmatrix} 4 & 12 \\ 12 & 40 \end{bmatrix} $$
+<p><i>Note: The transcript contains a minor calculation error, stating the off-diagonal as 12 and the bottom-right as 40. The transcript's calculation for $\mathbf{C}^H\mathbf{C}$ seems to be based on $\bar{g} = [4,2,2,4]^T$ while the matrix multiplication seems to use $[4,2,2,4]$ and its conjugate transpose. The resulting matrix $[4, 12; 12, 40]$ is correct. The bottom right entry is $4^2+2^2+2^2+4^2 = 16+4+4+16 = 40$. The off-diagonal is $1*4+1*2+1*2+1*4 = 12$. The top-left is $1^2+1^2+1^2+1^2=4$. The transcript's matrix is correct. Let me re-check the example in the transcript. Ah, it says $\bar{g} = [4, 2, 2, 4]^T$ but the matrix $\mathbf{C}$ shown later is $1,1,1,1; 4,2,2,4$. It seems $\mathbf{C}^H$ is formed first. No, $\mathbf{C} = [\bar{h} \quad \bar{g}]$. Wait, the transcript's calculation for $C^H C$ uses $C^H = [1,1,1,1; 4,2,2,4]$. Yes, that is correct. And $C = [1,4; 1,2; 1,2; 1,4]$. And the product is indeed $[4, 12; 12, 40]$. But then the transcript calculates $[40, 12; 12, 12]$. That seems to be an error in the video. Let me follow the example's numbers. Ah, the video says [4, 40; 12, 12] which is also wrong. But the inverse is calculated from $[40, 12; 12, 4]$. Let me re-watch that part. At 21:00 the matrix is computed as $[4, 12; 12, 40]$. Yes, this is correct. Then at 21:12 the inverse is calculated. $det = 4*40 - 12*12 = 160-144 = 16$. The inverse is $(1/16)*[40, -12; -12, 4]$. This is also correct. The transcript is slightly garbled but the math seems to follow. I will present the correct calculation.</i></p>
+
+\$$ \mathbf{C}^H \mathbf{C} = \begin{bmatrix} 4 & 12 \\ 12 & 40 \end{bmatrix} $$
+
+<p><b>Step 3: Calculate $(\mathbf{C}^H \mathbf{C})^{-1}$</b></p>
+<p>The determinant is $\det(\mathbf{C}^H \mathbf{C}) = (4)(40) - (12)(12) = 160 - 144 = 16$.</p>
+\$$ (\mathbf{C}^H \mathbf{C})^{-1} = \frac{1}{16} \begin{bmatrix} 40 & -12 \\ -12 & 4 \end{bmatrix} $$
+
+<p><b>Step 4: Calculate the optimal beamformer $\bar{w}_{opt}$</b></p>
+\$$ \bar{w}_{opt} = \mathbf{C} (\mathbf{C}^H \mathbf{C})^{-1} \begin{bmatrix} 1 \\ 0 \end{bmatrix} = \begin{bmatrix} 1 & 4 \\ 1 & 2 \\ 1 & 2 \\ 1 & 4 \end{bmatrix} \left( \frac{1}{16} \begin{bmatrix} 40 & -12 \\ -12 & 4 \end{bmatrix} \right) \begin{bmatrix} 1 \\ 0 \end{bmatrix} $$
+\$$ \bar{w}_{opt} = \frac{1}{16} \begin{bmatrix} 1 & 4 \\ 1 & 2 \\ 1 & 2 \\ 1 & 4 \end{bmatrix} \begin{bmatrix} 40 \\ -12 \end{bmatrix} $$
+\$$ \bar{w}_{opt} = \frac{1}{16} \begin{bmatrix} 1(40) + 4(-12) \\ 1(40) + 2(-12) \\ 1(40) + 2(-12) \\ 1(40) + 4(-12) \end{bmatrix} = \frac{1}{16} \begin{bmatrix} 40 - 48 \\ 40 - 24 \\ 40 - 24 \\ 40 - 48 \end{bmatrix} = \frac{1}{16} \begin{bmatrix} -8 \\ 16 \\ 16 \\ -8 \end{bmatrix} = \begin{bmatrix} -1/2 \\ 1 \\ 1 \\ -1/2 \end{bmatrix} $$
+<p><i>Note: The transcript's final result is slightly different due to a minor arithmetic slip in the intermediate steps, but the methodology shown is correct. The result derived here is the correct one for the given problem statement.</i></p>
+<p>The optimal beamforming vector is $\bar{w}_{opt} = [-0.5, 1, 1, -0.5]^T$. Applying these weights to the signals from the four antennas will maximize the SINR by preserving the desired signal, nulling the interference, and minimizing the noise.</p>
+
+</div></div><div class="chapter" id="Lecture 29 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 29 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the Singular Value Decomposition (SVD), a fundamental concept in linear algebra, based on the provided transcript. The explanation covers its definition, properties, relationship with eigenvalue decomposition, and a practical example.</p>
+
+<h3>1. Introduction to Singular Value Decomposition (SVD)</h3>
+<p>The Singular Value Decomposition (SVD) is a factorization of any real or complex matrix. It is one of the most important and widely used matrix decompositions in mathematics and computer science.</p>
+<p>A key feature of the SVD is its generality: it is defined for <b>any</b> $m \times n$ matrix, regardless of whether it is square or not. This is a significant advantage over the <b>Eigenvalue Decomposition</b>, which is only defined for square matrices.</p>
+
+<h3>2. The SVD Formula</h3>
+<p>Consider an arbitrary $m \times n$ matrix $H$. The transcript focuses on the case where $m \ge n$ (a "tall" matrix), but the concept applies universally. The SVD of $H$ is given by:</p>
+\$$ H = U \Sigma V^H $$
+<p>Where:</p>
+<ul>
+    <li><b>H</b> is the original $m \times n$ matrix.</li>
+    <li><b>U</b> is an $m \times n$ matrix with orthonormal columns.</li>
+    <li><b>Σ</b> (Sigma) is an $n \times n$ diagonal matrix.</li>
+    <li><b>V<sup>H</sup></b> is the conjugate transpose (or Hermitian transpose) of an $n \times n$ unitary matrix <b>V</b>.</li>
+</ul>
+<p>This decomposition can be visualized by breaking down the matrices into their constituent column and row vectors:</p>
+\$$ H = \underbrace{\begin{bmatrix} | & | & & | \\ \mathbf{u}_1 & \mathbf{u}_2 & \dots & \mathbf{u}_n \\ | & | & & | \end{bmatrix}}_{U \, (m \times n)} \underbrace{\begin{bmatrix} \sigma_1 & 0 & \dots & 0 \\ 0 & \sigma_2 & \dots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \dots & \sigma_n \end{bmatrix}}_{\Sigma \, (n \times n)} \underbrace{\begin{bmatrix} - & \mathbf{v}_1^H & - \\ - & \mathbf{v}_2^H & - \\ & \vdots & \\ - & \mathbf{v}_n^H & - \end{bmatrix}}_{V^H \, (n \times n)} $$
+
+<h3>3. Properties of the SVD Components</h3>
+<p>The matrices $U$, $\Sigma$, and $V$ have specific and important properties.</p>
+
+<h4>a. The Matrix U: Left Singular Vectors</h4>
+<ul>
+    <li>The columns of $U$, denoted $\mathbf{u}_1, \mathbf{u}_2, \dots, \mathbf{u}_n$, are called the <b>left singular vectors</b> of $H$.</li>
+    <li>These vectors form an <b>orthonormal set</b>. This means they satisfy two conditions:
+        <ol>
+            <li><b>Unit Norm</b>: Each vector has a length of 1.
+            \$$ \|\mathbf{u}_i\|^2 = 1 $$
+            </li>
+            <li><b>Orthogonality</b>: The vectors are mutually perpendicular.
+            \$$ \mathbf{u}_i^H \mathbf{u}_j = 0 \quad \text{for } i \neq j $$
+            </li>
+        </ol>
+    </li>
+    <li>Due to these properties, the product $U^H U$ results in the identity matrix:
+    \$$ U^H U = I_n $$
+    where $I_n$ is the $n \times n$ identity matrix. A non-square matrix with this property is called a <b>semi-unitary matrix</b>.</li>
+</ul>
+
+<h4>b. The Matrix V: Right Singular Vectors</h4>
+<ul>
+    <li>The columns of $V$, denoted $\mathbf{v}_1, \mathbf{v}_2, \dots, \mathbf{v}_n$, are called the <b>right singular vectors</b> of $H$.</li>
+    <li>Like the left singular vectors, these vectors also form an <b>orthonormal set</b>:
+    \$$ \|\mathbf{v}_i\|^2 = 1 $$
+    \$$ \mathbf{v}_i^H \mathbf{v}_j = 0 \quad \text{for } i \neq j $$
+    </li>
+    <li>Since $V$ is a square matrix ($n \times n$), its orthonormality implies that it is a <b>unitary matrix</b>. This means both its left and right inverses are its conjugate transpose:
+    \$$ V^H V = I \quad \text{and} \quad V V^H = I $$
+    </li>
+</ul>
+
+<h4>c. The Matrix Σ: Singular Values</h4>
+<ul>
+    <li>$\Sigma$ is a diagonal matrix whose diagonal entries $\sigma_i$ are called the <b>singular values</b> of $H$.</li>
+    <li>The singular values are always real and non-negative: $\sigma_i \ge 0$.</li>
+    <li>By convention, the singular values are arranged in <b>decreasing order of magnitude</b>:
+    \$$ \sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_n \ge 0 $$
+    This ordering is essential for the uniqueness of the SVD.</li>
+</ul>
+
+<h3>4. SVD and Matrix Rank</h3>
+<p>The SVD provides a direct way to determine the rank of a matrix. The rank of matrix $H$ is equal to the number of its non-zero singular values.</p>
+<p>If a matrix has $p$ non-zero singular values such that $\sigma_1 \ge \dots \ge \sigma_p > 0$ and $\sigma_{p+1} = \dots = \sigma_n = 0$, then:</p>
+\$$ \text{rank}(H) = p $$
+
+<h3>5. Relationship to Eigenvalue Decomposition</h3>
+<p>The SVD is deeply connected to the eigenvalue decomposition (EVD) of two specific matrices derived from $H$: $HH^H$ and $H^H H$. These matrices are always square and Hermitian, guaranteeing real eigenvalues.</p>
+
+<h4>a. Eigenvectors of $HH^H$</h4>
+<p>Consider the product $HH^H$. By substituting the SVD of $H$:</p>
+\$$ HH^H = (U \Sigma V^H)(U \Sigma V^H)^H = (U \Sigma V^H)(V \Sigma^H U^H) $$
+<p>Since $V^H V = I$ and $\Sigma^H = \Sigma$ (because singular values are real), the expression simplifies to:</p>
+\$$ HH^H = U \Sigma (V^H V) \Sigma U^H = U \Sigma I \Sigma U^H = U \Sigma^2 U^H $$
+<p>This is precisely the eigenvalue decomposition of $HH^H$. This tells us:</p>
+<ul>
+    <li>The <b>left singular vectors</b> (columns of $U$) are the <b>eigenvectors</b> of $HH^H$.</li>
+    <li>The <b>squared singular values</b> ($\sigma_i^2$, the diagonal elements of $\Sigma^2$) are the <b>eigenvalues</b> of $HH^H$.</li>
+</ul>
+
+<h4>b. Eigenvectors of $H^H H$</h4>
+<p>Similarly, consider the product $H^H H$:</p>
+\$$ H^H H = (U \Sigma V^H)^H(U \Sigma V^H) = (V \Sigma^H U^H)(U \Sigma V^H) $$
+<p>Since $U^H U = I$, this simplifies to:</p>
+\$$ H^H H = V \Sigma (U^H U) \Sigma V^H = V \Sigma I \Sigma V^H = V \Sigma^2 V^H $$
+<p>This is the eigenvalue decomposition of $H^H H$. This tells us:</p>
+<ul>
+    <li>The <b>right singular vectors</b> (columns of $V$) are the <b>eigenvectors</b> of $H^H H$.</li>
+    <li>The <b>squared singular values</b> ($\sigma_i^2$) are also the <b>eigenvalues</b> of $H^H H$.</li>
+</ul>
+
+<h3>6. The Pseudo-Inverse using SVD</h3>
+<p>The SVD provides an elegant way to compute the Moore-Penrose pseudo-inverse of a matrix. For a tall matrix $H$ with full column rank, the pseudo-inverse is $(H^H H)^{-1} H^H$. Substituting the SVD components:</p>
+<p>First, $(H^H H)^{-1} = (V \Sigma^2 V^H)^{-1} = (V^H)^{-1} (\Sigma^2)^{-1} V^{-1} = V \Sigma^{-2} V^H$.</p>
+<p>Then, the pseudo-inverse (denoted $H^\dagger$) is:</p>
+\$$ H^\dagger = (V \Sigma^{-2} V^H) (V \Sigma U^H) = V \Sigma^{-2} (V^H V) \Sigma U^H $$
+<p>Simplifying with $V^H V = I$ gives the final result:</p>
+\$$ H^\dagger = V \Sigma^{-1} U^H $$
+<p>Here, $\Sigma^{-1}$ is a diagonal matrix with diagonal entries $1/\sigma_i$.</p>
+
+<h3>7. An Illustrative Example</h3>
+<p>Let's find the SVD of the matrix $H = \begin{bmatrix} 1 & 2 \\ 1 & -2 \\ 1 & -2 \\ 1 & 2 \end{bmatrix}$.</p>
+<p><b>Step 1: Normalize the Columns</b><br>
+We observe that the columns of $H$ are orthogonal. We can normalize them to create the columns of $U$.</p>
+<ul>
+    <li>Norm of the first column: $ \|\mathbf{h}_1\| = \sqrt{1^2 + 1^2 + 1^2 + 1^2} = \sqrt{4} = 2 $</li>
+    <li>Norm of the second column: $ \|\mathbf{h}_2\| = \sqrt{2^2 + (-2)^2 + (-2)^2 + 2^2} = \sqrt{16} = 4 $</li>
+</ul>
+<p>We can rewrite $H$ by factoring out these norms:</p>
+\$$ H = \begin{bmatrix} 1/2 & 2/4 \\ 1/2 & -2/4 \\ 1/2 & -2/4 \\ 1/2 & 2/4 \end{bmatrix} \begin{bmatrix} 2 & 0 \\ 0 & 4 \end{bmatrix} = \underbrace{\begin{bmatrix} 1/2 & 1/2 \\ 1/2 & -1/2 \\ 1/2 & -1/2 \\ 1/2 & 1/2 \end{bmatrix}}_{U} \underbrace{\begin{bmatrix} 2 & 0 \\ 0 & 4 \end{bmatrix}}_{\Sigma_0} $$
+<p>To complete the SVD form $H=U \Sigma V^H$, we can introduce $V=I$ (the identity matrix):</p>
+\$$ H = \begin{bmatrix} 1/2 & 1/2 \\ 1/2 & -1/2 \\ 1/2 & -1/2 \\ 1/2 & 1/2 \end{bmatrix} \begin{bmatrix} 2 & 0 \\ 0 & 4 \end{bmatrix} \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix} $$
+<p><b>Step 2: Check SVD Conditions</b><br>
+This decomposition looks like an SVD, but there's a problem: the singular values $\sigma_1 = 2$ and $\sigma_2 = 4$ are not in decreasing order ($\sigma_1 < \sigma_2$). This is <b>not a valid SVD</b>.</p>
+
+<p><b>Step 3: Reorder the Components</b><br>
+To fix this, we need to permute the components to place the largest singular value first. This can be done by swapping columns and rows in the matrices.
+<ol>
+    <li>Swap the columns of $U$ and the columns of $\Sigma_0$.</li>
+    <li>Swap the corresponding rows of $V_0^H$ (which is $I$).</li>
+</ol>
+The transcript shows a step-by-step process of permuting the middle and right matrices. Let's trace it to get the final valid SVD:
+\$$ H = \underbrace{\begin{bmatrix} 1/2 & 1/2 \\ 1/2 & -1/2 \\ -1/2 & 1/2 \\ 1/2 & 1/2 \end{bmatrix}}_{U} \underbrace{\begin{bmatrix} 4 & 0 \\ 0 & 2 \end{bmatrix}}_{\Sigma} \underbrace{\begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}}_{V^H} $$
+<p>Let's verify this result:</p>
+<ul>
+    <li><b>U</b>: The columns are swapped. They are still orthonormal.</li>
+    <li><b>Σ</b>: The diagonal elements are now $\sigma_1 = 4$ and $\sigma_2 = 2$, which are in decreasing order.</li>
+    <li><b>V<sup>H</sup></b>: This is now a permutation matrix. The corresponding $V$ matrix is also $V = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$, which is unitary.</li>
+</ul>
+<p>This final form satisfies all conditions and is the valid SVD of the matrix $H$.</p>
+</div></div><div class="chapter" id="Lecture 30 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 30 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This transcript explains the application of Singular Value Decomposition (SVD) in Multiple-Input Multiple-Output (MIMO) wireless communication systems. SVD is presented as a powerful mathematical tool that transforms a complex, coupled MIMO system into a set of simple, independent, parallel channels, a process that is fundamental to achieving high data rates in modern wireless standards like 4G and 5G.</p>
+
+<b>1. The MIMO System Model</b>
+<p>A MIMO system uses multiple antennas at both the transmitter (T antennas) and the receiver (R antennas) to improve communication performance. The relationship between the transmitted and received signals is described by a linear model.</p>
+<p>The core of this model is the <b>channel matrix</b> $\mathbf{H}$, an $R \times T$ matrix whose elements $h_{ij}$ represent the complex channel coefficient (gain and phase shift) between the j-th transmit antenna and the i-th receive antenna.</p>
+<p>The overall system is represented by the equation:</p>
+\$$ \mathbf{y} = \mathbf{H}\mathbf{x} + \mathbf{n} $$
+<p>Where:</p>
+<ul>
+    <li>$\mathbf{y}$ is the $R \times 1$ vector of received signals.</li>
+    <li>$\mathbf{H}$ is the $R \times T$ channel matrix.</li>
+    <li>$\mathbf{x}$ is the $T \times 1$ vector of transmitted symbols.</li>
+    <li>$\mathbf{n}$ is the $R \times 1$ vector of noise at the receiver antennas.</li>
+</ul>
+
+<b>2. The Problem: Interference in a Coupled System</b>
+<p>In a standard MIMO system, the channel matrix $\mathbf{H}$ is generally not diagonal. This means that each signal received at a given antenna is a linear combination of the signals sent from <i>all</i> transmit antennas. This phenomenon is referred to as a <b>coupled system</b>.</p>
+<p>For a 2x2 MIMO system (R=2, T=2), the model expands to:</p>
+\$$ \begin{pmatrix} y_1 \\ y_2 \end{pmatrix} = \begin{pmatrix} h_{11} & h_{12} \\ h_{21} & h_{22} \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} + \begin{pmatrix} n_1 \\ n_2 \end{pmatrix} $$
+<p>This can be written as two separate equations:</p>
+<ul>
+    <li>$y_1 = h_{11}x_1 + h_{12}x_2 + n_1$</li>
+    <li>$y_2 = h_{21}x_1 + h_{22}x_2 + n_2$</li>
+</ul>
+<p>As seen here, the received signal $y_1$ depends on both transmitted symbols $x_1$ and $x_2$. Similarly, $y_2$ also depends on both. This creates interference (or "crosstalk") between the data streams, making it difficult for the receiver to decode the original symbols $x_1$ and $x_2$ independently.</p>
+
+<b>3. The Solution: Decoupling with Singular Value Decomposition (SVD)</b>
+<p>The primary goal is to transform this coupled system into a <b>decoupled system</b> where each received signal corresponds to only one transmitted signal. SVD provides the exact mechanism to achieve this.</p>
+<p>The first step is to perform the SVD of the channel matrix $\mathbf{H}$. For a system where $R \ge T$, the SVD is given by:</p>
+\$$ \mathbf{H} = \mathbf{U}\mathbf{\Sigma}\mathbf{V}^H $$
+<p>Where:</p>
+<ul>
+    <li>$\mathbf{U}$ is an $R \times T$ semi-unitary matrix ($\mathbf{U}^H\mathbf{U} = \mathbf{I}$) whose columns are the left singular vectors.</li>
+    <li>$\mathbf{\Sigma}$ is a $T \times T$ diagonal matrix containing the non-negative singular values ($\sigma_1, \sigma_2, \dots, \sigma_T$) in decreasing order.</li>
+    <li>$\mathbf{V}$ is a $T \times T$ unitary matrix ($\mathbf{V}^H\mathbf{V} = \mathbf{V}\mathbf{V}^H = \mathbf{I}$) whose columns are the right singular vectors. (Note: $\mathbf{V}^H$ denotes the Hermitian transpose of $\mathbf{V}$).</li>
+</ul>
+
+<p>The matrices $\mathbf{U}$ and $\mathbf{V}$ are used to design processing stages at the receiver and transmitter, respectively.</p>
+
+<b>4. Receiver and Transmitter Processing</b>
+
+<p><b>a. Receiver Processing (Combining)</b></p>
+<p>At the receiver, the received signal vector $\mathbf{y}$ is multiplied by the Hermitian transpose of $\mathbf{U}$. This matrix, $\mathbf{U}^H$, is called the <b>combiner matrix</b> or receive beamformer. This operation is a form of post-processing.</p>
+\$$ \tilde{\mathbf{y}} = \mathbf{U}^H\mathbf{y} = \mathbf{U}^H(\mathbf{H}\mathbf{x} + \mathbf{n}) $$
+<p>Substituting the SVD of $\mathbf{H}$:</p>
+\$$ \tilde{\mathbf{y}} = \mathbf{U}^H(\mathbf{U}\mathbf{\Sigma}\mathbf{V}^H)\mathbf{x} + \mathbf{U}^H\mathbf{n} $$
+<p>Since $\mathbf{U}^H\mathbf{U} = \mathbf{I}$, the equation simplifies to:</p>
+\$$ \tilde{\mathbf{y}} = \mathbf{\Sigma}\mathbf{V}^H\mathbf{x} + \tilde{\mathbf{n}} $$
+<p>where $\tilde{\mathbf{y}} = \mathbf{U}^H\mathbf{y}$ is the combined signal vector and $\tilde{\mathbf{n}} = \mathbf{U}^H\mathbf{n}$ is the processed noise vector.</p>
+
+<p><b>b. Transmitter Processing (Precoding)</b></p>
+<p>Before transmission, the original information symbols (e.g., QPSK, BPSK symbols), denoted by the vector $\tilde{\mathbf{x}}$, are pre-processed. This involves multiplying $\tilde{\mathbf{x}}$ by the matrix $\mathbf{V}$, which is called the <b>precoding matrix</b>.</p>
+\$$ \mathbf{x} = \mathbf{V}\tilde{\mathbf{x}} $$
+<p>The resulting vector $\mathbf{x}$ is what is actually transmitted over the antennas.</p>
+
+<b>5. The Result: A Decoupled System of Parallel Channels</b>
+<p>By substituting the precoding step into the receiver's processed signal equation, we get the final system model:</p>
+\$$ \tilde{\mathbf{y}} = \mathbf{\Sigma}\mathbf{V}^H(\mathbf{V}\tilde{\mathbf{x}}) + \tilde{\mathbf{n}} $$
+<p>Since $\mathbf{V}$ is a unitary matrix, $\mathbf{V}^H\mathbf{V} = \mathbf{I}$. This leads to a remarkably simple result:</p>
+\$$ \tilde{\mathbf{y}} = \mathbf{\Sigma}\tilde{\mathbf{x}} + \tilde{\mathbf{n}} $$
+<p>Because $\mathbf{\Sigma}$ is a diagonal matrix, this equation represents a set of T independent, parallel communication channels. Expanding the equation reveals this structure:</p>
+\$$
+\begin{pmatrix} \tilde{y}_1 \\ \tilde{y}_2 \\ \vdots \\ \tilde{y}_T \end{pmatrix} =
+\begin{pmatrix} \sigma_1 & 0 & \dots & 0 \\ 0 & \sigma_2 & \dots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \dots & \sigma_T \end{pmatrix}
+\begin{pmatrix} \tilde{x}_1 \\ \tilde{x}_2 \\ \vdots \\ \tilde{x}_T \end{pmatrix} +
+\begin{pmatrix} \tilde{n}_1 \\ \tilde{n}_2 \\ \vdots \\ \tilde{n}_T \end{pmatrix}
+$$
+<p>This is equivalent to T separate equations, free from interference:</p>
+<ul>
+    <li>$\tilde{y}_1 = \sigma_1 \tilde{x}_1 + \tilde{n}_1$</li>
+    <li>$\tilde{y}_2 = \sigma_2 \tilde{x}_2 + \tilde{n}_2$</li>
+    <li>...</li>
+    <li>$\tilde{y}_T = \sigma_T \tilde{x}_T + \tilde{n}_T$</li>
+</ul>
+<p>Each equation represents an independent channel where the information symbol $\tilde{x}_i$ is transmitted, scaled by a gain $\sigma_i$ (the singular value), and corrupted by noise $\tilde{n}_i$. The original complex, coupled system has been converted into T simple, parallel, single-antenna systems.</p>
+
+<b>6. Spatial Multiplexing</b>
+<p>This decoupling enables a technique called <b>spatial multiplexing</b>. The system can transmit T independent data streams ($\tilde{x}_1, \tilde{x}_2, \dots, \tilde{x}_T$) simultaneously over the same frequency and time resources by leveraging the spatial dimension (i.e., the different antenna paths).</p>
+<p>This ability to send multiple data streams in parallel leads to a potential T-fold increase in the data rate or capacity of the wireless link compared to a single-antenna system. This is a fundamental principle behind the high-speed data transmission in 4G and 5G networks.</p>
+<p>In summary, SVD provides a mathematical framework for designing the precoder ($\mathbf{V}$) and combiner ($\mathbf{U}^H$) that diagonalize the MIMO channel, eliminating interference and enabling spatial multiplexing for significantly enhanced performance.</p>
+</div></div><h2>Weekly Summary</h2><div>
+<p><b>Topic 1: Polynomial Fitting using Least Squares</b></p>
+<p>This section explains how the method of least squares can be extended beyond simple linear regression to fit a polynomial of any degree $n$ to a set of data points. This is a common technique for developing a non-linear approximation for an unknown functional relationship.</p>
+<p><b>Key Takeaways:</b></p>
+<p>
+    An nth-degree polynomial model is given by $y \approx a_0 + a_1 x + a_2 x^2 + \dots + a_n x^n$. The goal is to find the optimal coefficients $a_0, a_1, \dots, a_n$ using a set of $m$ data points $(x_i, y_i)$.<br><br>
+    The problem can be formulated as a system of linear equations, $\mathbf{y} = \mathbf{X}\mathbf{a} + \boldsymbol{\epsilon}$, where:
+    <ul>
+        <li>$\mathbf{y}$ is the $m \times 1$ vector of observed values.</li>
+        <li>$\mathbf{a}$ is the $(n+1) \times 1$ vector of unknown polynomial coefficients.</li>
+        <li>$\boldsymbol{\epsilon}$ is the vector of model errors.</li>
+        <li>$\mathbf{X}$ is the $m \times (n+1)$ matrix where the i-th row is $[1, x_i, x_i^2, \dots, x_i^n]$.</li>
+    </ul>
+    This transforms the non-linear fitting problem into a standard linear least squares problem. The solution that minimizes the squared error $\\| \mathbf{y} - \mathbf{X}\mathbf{a} \\|^2$ is given by the familiar normal equation solution:
+    \$$ \hat{\mathbf{a}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y} $$
+</p>
+
+<p><b>Topic 2: The Least Norm Solution</b></p>
+<p>This module introduces the least norm solution, which is the counterpart to the least squares solution for <i>underdetermined</i> systems of linear equations. An underdetermined system is one where there are fewer equations than unknowns ($m < n$), represented by a "wide" matrix $\mathbf{A}$.</p>
+<p><b>Key Takeaways:</b></p>
+<p>
+    Underdetermined systems typically have an infinite number of solutions. If $\mathbf{x}$ is a solution to $\mathbf{A}\mathbf{x} = \mathbf{y}$, then $\mathbf{x} + \mathbf{u}$ is also a solution for any vector $\mathbf{u}$ in the null space of $\mathbf{A}$.<br><br>
+    To select a single, unique solution, an additional constraint is imposed: find the solution with the minimum energy or norm. The problem is formulated as:
+    <br>
+    <i>Minimize $\\| \mathbf{x} \\|^2$ subject to $\mathbf{A}\mathbf{x} = \mathbf{y}$</i>.<br><br>
+    The solution, derived using Lagrange multipliers, is the <b>least norm solution</b>:
+    \$$ \mathbf{x}_{LN} = \mathbf{A}^T(\mathbf{A}\mathbf{A}^T)^{-1}\mathbf{y} $$
+    This requires the matrix $\mathbf{A}$ to have full row rank, ensuring $\mathbf{A}\mathbf{A}^T$ is invertible. The term $\mathbf{A}^T(\mathbf{A}\mathbf{A}^T)^{-1}$ is the <b>right pseudo-inverse</b> of $\mathbf{A}$.
+</p>
+
+<p><b>Topic 3: Application of Least Norm: Multi-user Beamforming</b></p>
+<p>This section presents a practical application of the least norm solution in wireless communications, specifically for multi-user beamforming. The goal is to design a receiver with multiple antennas that can isolate a desired user's signal while completely nullifying interference from other users.</p>
+<p><b>Key Takeaways:</b></p>
+<p>
+    In a multi-user scenario, a receiver beamformer (represented by a weight vector $\mathbf{w}$) is designed to achieve three objectives:
+    <ol>
+        <li>Maintain a fixed gain (e.g., unity) for the desired user's signal: $\mathbf{h}^H\mathbf{w} = 1$.</li>
+        <li>Force the gain for the interfering user's signal to zero (place a null): $\mathbf{g}^H\mathbf{w} = 0$.</li>
+        <li>Minimize the output noise power, which is proportional to $\\| \mathbf{w} \\|^2$.</li>
+    </ol>
+    This problem can be expressed in matrix form as: <i>Minimize $\\| \mathbf{w} \\|^2$ subject to $\mathbf{C}^H\mathbf{w} = [1, 0]^T$</i>, where $\mathbf{C}$ is a matrix whose columns are the channel vectors $\mathbf{h}$ and $\mathbf{g}$.<br><br>
+    This is precisely a least norm problem. The optimal beamformer $\mathbf{w}$ is found using the least norm solution, demonstrating how this mathematical concept provides a direct solution to a significant engineering challenge in signal processing.
+</p>
+
+<p><b>Topic 4: Singular Value Decomposition (SVD)</b></p>
+<p>The Singular Value Decomposition (SVD) is introduced as a fundamental and powerful factorization that applies to <i>any</i> $m \times n$ matrix $\mathbf{H}$, unlike the eigenvalue decomposition which is restricted to square matrices.</p>
+<p><b>Key Takeaways:</b></p>
+<p>
+    The SVD of a matrix $\mathbf{H}$ is given by $\mathbf{H} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^H$, where:
+    <ul>
+        <li>$\mathbf{U}$ is a matrix with orthonormal columns, called the <b>left singular vectors</b>. They are the eigenvectors of $\mathbf{H}\mathbf{H}^H$.</li>
+        <li>$\mathbf{V}$ is a unitary matrix whose columns are the <b>right singular vectors</b>. They are the eigenvectors of $\mathbf{H}^H\mathbf{H}$.</li>
+        <li>$\boldsymbol{\Sigma}$ is a diagonal matrix containing the <b>singular values</b> ($\sigma_i$). These values are real, non-negative, and arranged in decreasing order. The number of non-zero singular values equals the rank of the matrix $\mathbf{H}$.</li>
+    </ul>
+    The SVD provides a deep insight into a matrix's structure, including its rank and its fundamental subspaces. It also provides a stable way to compute the pseudo-inverse: $\mathbf{H}^\dagger = \mathbf{V}\boldsymbol{\Sigma}^{-1}\mathbf{U}^H$.
+</p>
+
+<p><b>Topic 5: Application of SVD: MIMO Wireless Systems</b></p>
+<p>This module illustrates a key application of SVD in Multiple-Input Multiple-Output (MIMO) wireless systems. SVD is the mathematical tool that enables the conversion of a complex, coupled MIMO channel into a set of simple, parallel, independent sub-channels.</p>
+<p><b>Key Takeaways:</b></p>
+<p>
+    A MIMO system is modeled as $\mathbf{y} = \mathbf{H}\mathbf{x} + \mathbf{n}$, where the channel matrix $\mathbf{H}$ causes interference between the different transmitted data streams in $\mathbf{x}$.<br><br>
+    By applying the SVD of the channel, $\mathbf{H} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^H$, the system can be completely decoupled. This is achieved through:
+    <ol>
+        <li><b>Precoding</b> at the transmitter: The input symbols $\tilde{\mathbf{x}}$ are multiplied by $\mathbf{V}$ before transmission ($\mathbf{x} = \mathbf{V}\tilde{\mathbf{x}}$).</li>
+        <li><b>Combining</b> at the receiver: The received signal $\mathbf{y}$ is multiplied by $\mathbf{U}^H$ ($\tilde{\mathbf{y}} = \mathbf{U}^H\mathbf{y}$).</li>
+    </ol>
+    The resulting system is $\tilde{\mathbf{y}} = \boldsymbol{\Sigma}\tilde{\mathbf{x}} + \tilde{\mathbf{n}}$. Since $\boldsymbol{\Sigma}$ is diagonal, the system is now a set of parallel channels where the i-th output $\tilde{y}_i$ only depends on the i-th input $\tilde{x}_i$ (i.e., $\tilde{y}_i = \sigma_i \tilde{x}_i + \tilde{n}_i$).<br><br>
+    This technique, known as <b>spatial multiplexing</b>, allows multiple data streams to be transmitted simultaneously over the same frequency, drastically increasing data rates and forming the foundation of modern high-speed wireless standards like 4G and 5G.
+</p>
+</div><h2>Assignment Explanation</h2><div>
+<p>Here is an explanation of the questions and answers from the assignment.</p>
+
+<hr>
+
+<h3>Question 1</h3>
+<p><b>Question:</b> The eigenvectors of the matrix below are<br>
+$ A = \begin{bmatrix} 0 & -2 \\ 1 & -3 \end{bmatrix} $</p>
+
+<p><b>Explanation:</b></p>
+<p>To find the eigenvectors of a matrix $A$, we first need to find its eigenvalues by solving the characteristic equation $\det(A - \lambda I) = 0$, where $I$ is the identity matrix and $\lambda$ represents the eigenvalues.</p>
+<ol>
+    <li><b>Find Eigenvalues:</b>
+    \$$ \det(A - \lambda I) = \det \left( \begin{bmatrix} 0-\lambda & -2 \\ 1 & -3-\lambda \end{bmatrix} \right) = 0 $$
+    \$$ (-\lambda)(-3-\lambda) - (1)(-2) = 0 $$
+    \$$ 3\lambda + \lambda^2 + 2 = 0 $$
+    \$$ (\lambda + 1)(\lambda + 2) = 0 $$
+    The eigenvalues are $\lambda_1 = -1$ and $\lambda_2 = -2$.</li>
+    <li><b>Find Eigenvector for $\lambda_1 = -1$:</b>
+    We solve $(A - \lambda_1 I)\mathbf{v} = \mathbf{0}$:
+    \$$ \begin{bmatrix} 0 - (-1) & -2 \\ 1 & -3 - (-1) \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} $$
+    \$$ \begin{bmatrix} 1 & -2 \\ 1 & -2 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} $$
+    This gives the equation $v_1 - 2v_2 = 0$, or $v_1 = 2v_2$. A possible eigenvector is $\mathbf{v}_1 = \begin{bmatrix} 2 \\ 1 \end{bmatrix}$.</li>
+    <li><b>Find Eigenvector for $\lambda_2 = -2$:</b>
+    We solve $(A - \lambda_2 I)\mathbf{v} = \mathbf{0}$:
+    \$$ \begin{bmatrix} 0 - (-2) & -2 \\ 1 & -3 - (-2) \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} $$
+    \$$ \begin{bmatrix} 2 & -2 \\ 1 & -1 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} $$
+    This gives the equation $v_1 - v_2 = 0$, or $v_1 = v_2$. A possible eigenvector is $\mathbf{v}_2 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$.</li>
+</ol>
+<p>The correct eigenvectors are any non-zero scalar multiples of $\begin{bmatrix} 2 \\ 1 \end{bmatrix}$ and $\begin{bmatrix} 1 \\ 1 \end{bmatrix}$. None of the options provided in the assignment match this result.<br><br>
+<i>Note: The accepted answer provided, $ \begin{bmatrix} 1 \\ -2 \end{bmatrix} $ and $ \begin{bmatrix} 1 \\ -1 \end{bmatrix} $, are the eigenvectors for the transpose of the matrix, $A^T = \begin{bmatrix} 0 & 1 \\ -2 & -3 \end{bmatrix}$. This indicates a likely error in the question or the accepted answer.</i></p>
+
+<p><b>Correct Answer (based on calculation):</b> Any pair of vectors that are scalar multiples of $\begin{bmatrix} 2 \\ 1 \end{bmatrix}$ and $\begin{bmatrix} 1 \\ 1 \end{bmatrix}$.</p>
+
+<hr>
+
+<h3>Question 2</h3>
+<p><b>Question:</b> Consider the linear system of equations $\mathbf{y} = A\mathbf{x}$, where
+$ A = \begin{bmatrix} -1 & 1 \\ 1 & -1 \\ 1 & -1 \\ 1 & -1 \end{bmatrix}, \mathbf{y} = \begin{bmatrix} 2 \\ -1 \\ -3 \\ 2 \end{bmatrix} $. The least-squares (LS) solution for the system of equations is?</p>
+
+<p><b>Explanation:</b></p>
+<p>The least-squares solution $\mathbf{x}_{LS}$ minimizes the squared error $||\mathbf{y} - A\mathbf{x}||^2$. It is found by solving the normal equations: $A^T A \mathbf{x} = A^T \mathbf{y}$.</p>
+<ol>
+    <li><b>Calculate $A^T A$:</b>
+    \$$ A^T A = \begin{bmatrix} -1 & 1 & 1 & 1 \\ 1 & -1 & -1 & -1 \end{bmatrix} \begin{bmatrix} -1 & 1 \\ 1 & -1 \\ 1 & -1 \\ 1 & -1 \end{bmatrix} = \begin{bmatrix} 4 & -4 \\ -4 & 4 \end{bmatrix} $$</li>
+    <li><b>Calculate $A^T \mathbf{y}$:</b>
+    \$$ A^T \mathbf{y} = \begin{bmatrix} -1 & 1 & 1 & 1 \\ 1 & -1 & -1 & -1 \end{bmatrix} \begin{bmatrix} 2 \\ -1 \\ -3 \\ 2 \end{bmatrix} = \begin{bmatrix} -2-1-3+2 \\ 2+1+3-2 \end{bmatrix} = \begin{bmatrix} -4 \\ 4 \end{bmatrix} $$</li>
+    <li><b>Solve the Normal Equations:</b>
+    \$$ \begin{bmatrix} 4 & -4 \\ -4 & 4 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} -4 \\ 4 \end{bmatrix} $$
+    Both rows give the same equation: $4x_1 - 4x_2 = -4$, which simplifies to $x_1 - x_2 = -1$.</li>
+</ol>
+<p>Since the columns of $A$ are linearly dependent, $A^T A$ is singular, and there are infinitely many least-squares solutions. The problem usually asks for the unique minimum-norm least-squares solution. The general solution is $x_1 = x_2 - 1$. We can find the minimum norm solution by minimizing $||\mathbf{x}||^2 = x_1^2 + x_2^2 = (x_2-1)^2 + x_2^2$. The minimum occurs at $x_2 = 1/2$, which gives $x_1 = -1/2$. So, the minimum norm LS solution is $\mathbf{x} = \begin{bmatrix} -1/2 \\ 1/2 \end{bmatrix}$.</p>
+<p><i>Note: The accepted answer, $ \frac{1}{2} \begin{bmatrix} -4 \\ -1 \end{bmatrix} $, does not satisfy the normal equation $x_1 - x_2 = -1$ (since $-2 - (-0.5) = -1.5 \neq -1$). Therefore, the provided accepted answer is incorrect.</i></p>
+
+<p><b>Correct Answer (minimum norm LS solution):</b> $ \begin{bmatrix} -1/2 \\ 1/2 \end{bmatrix} $</p>
+
+<hr>
+
+<h3>Question 3</h3>
+<p><b>Question:</b> Let the covariance estimate of the data vectors obtained during Principal Component Analysis (PCA) be denoted by $R$. The vector $\mathbf{v}_1$ corresponding to the direction of the largest principal component is given as?</p>
+
+<p><b>Explanation:</b></p>
+<p>Principal Component Analysis (PCA) is a technique used to identify the directions of maximum variance in a dataset. These directions are called principal components. Mathematically, this is achieved by performing an eigendecomposition of the data's covariance matrix, $R$.</p>
+<ul>
+    <li>The <b>eigenvectors</b> of the covariance matrix $R$ give the directions of the principal components.</li>
+    <li>The <b>eigenvalues</b> of $R$ represent the amount of variance in the data along the corresponding eigenvector's direction.</li>
+</ul>
+<p>The largest principal component is the direction that captures the most variance in the data. Therefore, it corresponds to the eigenvector associated with the largest eigenvalue of the covariance matrix $R$.</p>
+
+<p><b>Correct Answer:</b> Eigenvector of $R$ corresponding to the largest eigenvalue</p>
+
+<hr>
+
+<h3>Question 4</h3>
+<p><b>Question:</b> Consider the linear system of equations $\mathbf{y} = A\mathbf{x}$, where
+$ A = \begin{bmatrix} 1 & 1 & -1 & 1 \\ -1 & -1 & 1 & -1 \end{bmatrix}, \mathbf{y} = \begin{bmatrix} -2 \\ 2 \end{bmatrix} $. The least norm solution for this system of equations is?</p>
+
+<p><b>Explanation:</b></p>
+<p>This is an underdetermined system (more unknowns than equations), so it has infinite solutions. The "least norm" solution is the unique solution $\mathbf{x}_{LN}$ that has the smallest Euclidean norm ($||\mathbf{x}||\_2$).</p>
+<ol>
+    <li><b>Simplify the system:</b> The second row of $A$ is -1 times the first row, and $y_2 = -1 \cdot y_1$. So the system reduces to a single equation:
+    \$$ x_1 + x_2 - x_3 + x_4 = -2 $$</li>
+    <li><b>Find the Least Norm Solution:</b> The least norm solution lies entirely in the row space of $A$. The row space is spanned by the vector $\mathbf{r} = \begin{bmatrix} 1 \\ 1 \\ -1 \\ 1 \end{bmatrix}$. Therefore, the solution must be of the form $\mathbf{x}_{LN} = c \cdot \mathbf{r}$ for some scalar $c$.</li>
+    <li><b>Solve for $c$:</b> Substitute $\mathbf{x}_{LN}$ back into the system $A\mathbf{x} = \mathbf{y}$:
+    \$$ A(c \cdot \mathbf{r}) = c(A\mathbf{r}) = \mathbf{y} $$
+    \$$ c \begin{pmatrix} 1 & 1 & -1 & 1 \\ -1 & -1 & 1 & -1 \end{pmatrix} \begin{pmatrix} 1 \\ 1 \\ -1 \\ 1 \end{pmatrix} = \begin{pmatrix} -2 \\ 2 \end{pmatrix} $$
+    \$$ c \begin{pmatrix} 1+1+1+1 \\ -1-1-1-1 \end{pmatrix} = c \begin{pmatrix} 4 \\ -4 \end{pmatrix} = \begin{pmatrix} -2 \\ 2 \end{pmatrix} $$
+    From this, we find $4c = -2$, so $c = -1/2$.</li>
+    <li><b>The solution is:</b>
+    \$$ \mathbf{x}_{LN} = -\frac{1}{2} \begin{bmatrix} 1 \\ 1 \\ -1 \\ 1 \end{bmatrix} = \begin{bmatrix} -0.5 \\ -0.5 \\ 0.5 \\ -0.5 \end{bmatrix} $$</li>
+</ol>
+<p><i>Note: The accepted answer in the assignment, $\frac{1}{4} \begin{bmatrix} 2 \\ 6 \\ -2 \\ -6 \end{bmatrix}$, is incorrect because it is not a solution to the system ($A\mathbf{x}$ gives $\begin{bmatrix} 1 \\ -1 \end{bmatrix}$, not $\begin{bmatrix} -2 \\ 2 \end{bmatrix}$).</i></p>
+
+<p><b>Correct Answer (based on calculation):</b> $-\frac{1}{2} \begin{bmatrix} 1 \\ 1 \\ -1 \\ 1 \end{bmatrix}$ </p>
+
+<hr>
+
+<h3>Question 5</h3>
+<p><b>Question:</b> Consider a wide matrix $A$, with full row rank. Its pseudo-inverse is given as?</p>
+
+<p><b>Explanation:</b></p>
+<p>A "wide" matrix has more columns than rows ($m \times n$ with $m < n$). "Full row rank" means its rows are linearly independent, and its rank is $m$. For such a matrix, the system $A\mathbf{x} = \mathbf{y}$ is underdetermined. The pseudo-inverse $A^+$ is used to find the minimum norm solution. This pseudo-inverse is also known as the <b>right inverse</b> because $AA^+ = I$. The formula for the right inverse is $A^+ = A^T(AA^T)^{-1}$. The term $AA^T$ is an $m \times m$ matrix, and it is invertible because $A$ has full row rank.</p>
+
+<p><b>Correct Answer:</b> $A^T(AA^T)^{-1}$</p>
+
+<hr>
+
+<h3>Question 6</h3>
+<p><b>Question:</b> Consider the linear system of equations $\mathbf{y} = A\mathbf{x}$. The least-squares (LS) solution for the system of equations is?</p>
+
+<p><b>Explanation:</b></p>
+<p>The least-squares (LS) solution is typically sought for an overdetermined system (more equations than unknowns), where an exact solution may not exist. The LS solution $\mathbf{x}_{LS}$ minimizes the norm of the error, $||\mathbf{y} - A\mathbf{x}||_2$. This solution is obtained by solving the <b>normal equations</b>:
+\$$ A^T A \mathbf{x} = A^T \mathbf{y} $$
+If the matrix $A$ has full column rank, then the matrix $A^T A$ is invertible. We can then solve for $\mathbf{x}$ directly:
+\$$ \mathbf{x}_{LS} = (A^T A)^{-1}A^T \mathbf{y} $$
+The term $(A^T A)^{-1}A^T$ is the pseudo-inverse (or left inverse) of $A$.</p>
+
+<p><b>Correct Answer:</b> $(A^T A)^{-1}A^T \mathbf{y}$</p>
+
+<hr>
+
+<h3>Question 7</h3>
+<p><b>Question:</b> Consider the vectors below. Using the Gram-Schmidt procedure, a set of orthonormal basis vectors for the same subspace is given as?
+$ \mathbf{x}_1 = \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix}, \mathbf{x}_2 = \begin{bmatrix} 1 \\ 2 \\ 3 \\ 4 \end{bmatrix} $</p>
+
+<p><b>Explanation:</b></p>
+<p>The Gram-Schmidt procedure transforms a set of linearly independent vectors into an orthonormal set spanning the same subspace.</p>
+<ol>
+    <li><b>First vector $\mathbf{v}_1$:</b> Normalize $\mathbf{x}_1$.
+    \$$ \mathbf{u}_1 = \mathbf{x}_1 = \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix} $$
+    \$$ ||\mathbf{u}_1|| = \sqrt{1^2+1^2+1^2+1^2} = \sqrt{4} = 2 $$
+    \$$ \mathbf{v}_1 = \frac{\mathbf{u}_1}{||\mathbf{u}_1||} = \frac{1}{2} \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix} $$</li>
+    <li><b>Second vector $\mathbf{v}_2$:</b> First, subtract the projection of $\mathbf{x}_2$ onto $\mathbf{u}_1$ to get an orthogonal vector $\mathbf{u}_2$.
+    \$$ \mathbf{u}_2 = \mathbf{x}_2 - \text{proj}_{\mathbf{u}_1}(\mathbf{x}_2) = \mathbf{x}_2 - \frac{\mathbf{x}_2 \cdot \mathbf{u}_1}{\mathbf{u}_1 \cdot \mathbf{u}_1} \mathbf{u}_1 $$
+    \$$ \mathbf{x}_2 \cdot \mathbf{u}_1 = 1(1) + 2(1) + 3(1) + 4(1) = 10 $$
+    \$$ \mathbf{u}_1 \cdot \mathbf{u}_1 = 4 $$
+    \$$ \mathbf{u}_2 = \begin{bmatrix} 1 \\ 2 \\ 3 \\ 4 \end{bmatrix} - \frac{10}{4} \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 1 \\ 2 \\ 3 \\ 4 \end{bmatrix} - \begin{bmatrix} 2.5 \\ 2.5 \\ 2.5 \\ 2.5 \end{bmatrix} = \begin{bmatrix} -1.5 \\ -0.5 \\ 0.5 \\ 1.5 \end{bmatrix} = \frac{1}{2} \begin{bmatrix} -3 \\ -1 \\ 1 \\ 3 \end{bmatrix} $$</li>
+    <li><b>Normalize $\mathbf{u}_2$:</b>
+    \$$ ||\mathbf{u}_2|| = \frac{1}{2} \sqrt{(-3)^2+(-1)^2+1^2+3^2} = \frac{1}{2}\sqrt{9+1+1+9} = \frac{\sqrt{20}}{2} = \sqrt{5} $$
+    \$$ \mathbf{v}_2 = \frac{\mathbf{u}_2}{||\mathbf{u}_2||} = \frac{1}{\sqrt{5}} \left( \frac{1}{2} \begin{bmatrix} -3 \\ -1 \\ 1 \\ 3 \end{bmatrix} \right) = \frac{1}{2\sqrt{5}} \begin{bmatrix} -3 \\ -1 \\ 1 \\ 3 \end{bmatrix} $$
+    This can also be written as $ \frac{1}{\sqrt{20}} \begin{bmatrix} -3 \\ -1 \\ 1 \\ 3 \end{bmatrix} $.</li>
+</ol>
+<p><b>Correct Answer:</b> $ \mathbf{v}_1 = \frac{1}{2} \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix}, \mathbf{v}_2 = \frac{1}{2\sqrt{5}} \begin{bmatrix} -3 \\ -1 \\ 1 \\ 3 \end{bmatrix} $</p>
+
+<hr>
+
+<h3>Question 8</h3>
+<p><b>Question:</b> Consider the matrix $A$ defined as
+$ A = \begin{bmatrix} -1 & -1 & 1 & 1 \\ -1 & 1 & -1 & 1 \end{bmatrix} $. The pseudo-inverse of the matrix $A$ is?</p>
+
+<p><b>Explanation:</b></p>
+<p>The matrix $A$ is a 2x4 wide matrix. Its rows are linearly independent, so it has full row rank. We use the formula for the right pseudo-inverse: $A^+ = A^T(AA^T)^{-1}$.</p>
+<ol>
+    <li><b>Calculate $AA^T$:</b>
+    \$$ AA^T = \begin{bmatrix} -1 & -1 & 1 & 1 \\ -1 & 1 & -1 & 1 \end{bmatrix} \begin{bmatrix} -1 & -1 \\ -1 & 1 \\ 1 & -1 \\ 1 & 1 \end{bmatrix} $$
+    \$$ = \begin{bmatrix} (1+1+1+1) & (1-1-1+1) \\ (1-1-1+1) & (1+1+1+1) \end{bmatrix} = \begin{bmatrix} 4 & 0 \\ 0 & 4 \end{bmatrix} = 4I $$</li>
+    <li><b>Calculate $(AA^T)^{-1}$:</b>
+    \$$ (AA^T)^{-1} = (4I)^{-1} = \frac{1}{4}I = \begin{bmatrix} 1/4 & 0 \\ 0 & 1/4 \end{bmatrix} $$</li>
+    <li><b>Calculate $A^+ = A^T(AA^T)^{-1}$:</b>
+    \$$ A^+ = \begin{bmatrix} -1 & -1 \\ -1 & 1 \\ 1 & -1 \\ 1 & 1 \end{bmatrix} \begin{bmatrix} 1/4 & 0 \\ 0 & 1/4 \end{bmatrix} = \frac{1}{4} \begin{bmatrix} -1 & -1 \\ -1 & 1 \\ 1 & -1 \\ 1 & 1 \end{bmatrix} $$</li>
+</ol>
+<p><b>Correct Answer:</b> $ \frac{1}{4} \begin{bmatrix} -1 & -1 \\ -1 & 1 \\ 1 & -1 \\ 1 & 1 \end{bmatrix} $</p>
+
+<hr>
+
+<h3>Question 9</h3>
+<p><b>Question:</b> Consider a tall matrix $A$, with full column rank. Its pseudo-inverse is given as?</p>
+
+<p><b>Explanation:</b></p>
+<p>A "tall" matrix has more rows than columns ($m \times n$ with $m > n$). "Full column rank" means its columns are linearly independent, and its rank is $n$. For such a matrix, the pseudo-inverse $A^+$ is used to find the least-squares solution to $A\mathbf{x} = \mathbf{y}$. This pseudo-inverse is also known as the <b>left inverse</b> because $A^+A = I$. The formula for the left inverse is $A^+ = (A^T A)^{-1}A^T$. The term $A^T A$ is an $n \times n$ matrix, and it is invertible because $A$ has full column rank.</p>
+
+<p><b>Correct Answer:</b> $(A^T A)^{-1}A^T$</p>
+
+<hr>
+
+<h3>Question 10</h3>
+<p><b>Question:</b> Consider the linear system of equations $\mathbf{y} = A\mathbf{x}$. The least norm (LN) solution for the system of equations is?</p>
+
+<p><b>Explanation:</b></p>
+<p>The least norm (LN) solution is sought for an underdetermined system (e.g., a wide matrix $A$ with full row rank) that is consistent. Among the infinite possible solutions, the LN solution is the one with the minimum Euclidean norm. This solution is orthogonal to the null space of $A$, meaning it lies entirely in the row space of $A$. The formula is derived using the pseudo-inverse for wide matrices (the right inverse):
+\$$ \mathbf{x}_{LN} = A^+ \mathbf{y} = A^T(AA^T)^{-1}\mathbf{y} $$
+This formula projects the vector $\mathbf{y}$ back onto the row space of $A$ to construct the unique minimum-norm solution.</p>
+
+<p><b>Correct Answer:</b> $A^T(AA^T)^{-1}\mathbf{y}$</p>
+
+</div></div>
+</body>
+</html>

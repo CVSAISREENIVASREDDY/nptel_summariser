@@ -1,0 +1,863 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week8</title>
+
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+      };
+    </script>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 2em;
+        }
+        .mjx-display {
+            margin: 2.5em 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="week" id="week_8"><h1 class="week-title">Week 8</h1><h2>Transcript Explanations</h2><div class="chapter" id="Lecture 37 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 37 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts and formulas presented in the transcript, focusing on the application of the Linear Minimum Mean Square Error (LMMSE) estimation principle to a linear input-output system.</p>
+
+<h3>1. The Linear System Model</h3>
+<p>The analysis begins by defining a general linear input-output system. This model is widely used in various fields, including wireless communications and machine learning.</p>
+<p>The system is described by the equation:</p>
+\$$ \bar{y} = H \bar{x} + \bar{n} $$
+<p>Where the components are:</p>
+<ul>
+    <li>$\bar{y}$: The output vector (e.g., received signals in a wireless system, or the set of explanatory/independent variables in a regression model).</li>
+    <li>$\bar{x}$: The input vector, which we want to estimate (e.g., transmitted symbols or the response/dependent variables to be predicted).</li>
+    <li>$\bar{n}$: The noise vector, representing random error or interference (e.g., measurement noise).</li>
+    <li>$H$: The system matrix that defines the linear transformation between the input and output (e.g., the wireless channel matrix or the design matrix in regression).</li>
+</ul>
+<p>A key point emphasized is that the LMMSE estimator is, by definition, the <i>best linear estimator</i>. It always produces a linear estimate, regardless of whether the underlying system model is linear or non-linear. This analysis explores the specific case where the system itself is linear.</p>
+
+<h3>2. The LMMSE Estimator</h3>
+<p>The goal is to find an estimate, $\hat{\bar{x}}$, of the input $\bar{x}$ using a linear function of the output $\bar{y}$. The form of this linear estimator is:</p>
+\$$ \hat{\bar{x}} = C \bar{y} $$
+<p>Here, $C$ is a matrix of coefficients that minimizes the mean squared error between the true input $\bar{x}$ and the estimate $\hat{\bar{x}}$. For the LMMSE principle, this optimal coefficient matrix $C$ is given by the formula:</p>
+\$$ C = R_{xy} R_{yy}^{-1} $$
+<p>Where:</p>
+<ul>
+    <li>$R_{xy} = E[\bar{x} \bar{y}^T]$ is the cross-covariance matrix between the input $\bar{x}$ and the output $\bar{y}$.</li>
+    <li>$R_{yy} = E[\bar{y} \bar{y}^T]$ is the auto-covariance matrix of the output $\bar{y}$.</li>
+</ul>
+<p>To find the specific estimator for our linear system, we must first calculate $R_{xy}$ and $R_{yy}$ based on the model $\bar{y} = H \bar{x} + \bar{n}$.</p>
+
+<h3>3. Derivation of Covariance Matrices</h3>
+<p>The derivation relies on a few standard statistical assumptions about the input and noise signals.</p>
+
+<p><b>Assumptions:</b></p>
+<ol>
+    <li><b>Input Covariance (Signal Power):</b> The components of the input vector $\bar{x}$ are uncorrelated and have the same variance (or power), $\gamma$.
+    \$$ R_{xx} = E[\bar{x} \bar{x}^T] = \gamma I $$
+    where $I$ is the identity matrix.</li>
+    <li><b>Noise Covariance (Noise Power):</b> The components of the noise vector $\bar{n}$ are uncorrelated and have the same variance (or power), $\epsilon$.
+    \$$ R_{nn} = E[\bar{n} \bar{n}^T] = \epsilon I $$</li>
+    <li><b>Uncorrelated Signal and Noise:</b> The input signal $\bar{x}$ and the noise $\bar{n}$ are uncorrelated. This means their cross-covariance is zero.
+    \$$ E[\bar{x} \bar{n}^T] = E[\bar{n} \bar{x}^T] = 0 $$</li>
+</ol>
+
+<p><b>Deriving $R_{yy}$ (Output Covariance):</b></p>
+<p>We start with the definition of $R_{yy}$ and substitute the linear model for $\bar{y}$.</p>
+\$$ R_{yy} = E[\bar{y} \bar{y}^T] = E[(H \bar{x} + \bar{n})(H \bar{x} + \bar{n})^T] $$
+<p>Expanding the expression gives:</p>
+\$$ R_{yy} = E[H \bar{x} \bar{x}^T H^T + H \bar{x} \bar{n}^T + \bar{n} \bar{x}^T H^T + \bar{n} \bar{n}^T] $$
+<p>Using the linearity of the expectation operator and the assumption that the signal and noise are uncorrelated (the middle two terms become zero):</p>
+\$$ R_{yy} = H E[\bar{x} \bar{x}^T] H^T + E[\bar{n} \bar{n}^T] = H R_{xx} H^T + R_{nn} $$
+<p>Substituting the assumed covariance structures for $R_{xx}$ and $R_{nn}$:</p>
+\$$ R_{yy} = \gamma H H^T + \epsilon I $$
+
+<p><b>Deriving $R_{xy}$ (Cross-Covariance):</b></p>
+<p>Similarly, we substitute the linear model into the definition of $R_{xy}$.</p>
+\$$ R_{xy} = E[\bar{x} \bar{y}^T] = E[\bar{x}(H \bar{x} + \bar{n})^T] $$
+<p>Expanding this expression:</p>
+\$$ R_{xy} = E[\bar{x}(\bar{x}^T H^T + \bar{n}^T)] = E[\bar{x} \bar{x}^T H^T + \bar{x} \bar{n}^T] $$
+<p>Applying the expectation operator and the uncorrelatedness assumption:</p>
+\$$ R_{xy} = E[\bar{x} \bar{x}^T] H^T = R_{xx} H^T $$
+<p>Substituting the assumed structure for $R_{xx}$:</p>
+\$$ R_{xy} = \gamma H^T $$
+
+<h3>4. The LMMSE Estimator Formula and Simplification</h3>
+<p>Now we can construct the LMMSE estimator by plugging the derived covariance matrices into the formula $\hat{\bar{x}} = R_{xy} R_{yy}^{-1} \bar{y}$.</p>
+\$$ \hat{\bar{x}} = (\gamma H^T)(\gamma H H^T + \epsilon I)^{-1} \bar{y} $$
+<p>This formula is correct, but it can be simplified into a more common and computationally efficient form using a matrix identity. The identity (a form of the Woodbury matrix identity, also known as the push-through rule) shown in the transcript is:</p>
+\$$ (\gamma H^T H + \epsilon I)^{-1} H^T = H^T (\gamma H H^T + \epsilon I)^{-1} $$
+<p>Using this identity, we can rewrite the estimator. Let's focus on the matrix part of our estimator expression: $H^T(\gamma H H^T + \epsilon I)^{-1}$. Applying the identity, this becomes $(\gamma H^T H + \epsilon I)^{-1} H^T$.</p>
+<p>Substituting this back into the estimator equation:</p>
+\$$ \hat{\bar{x}} = \gamma [(\gamma H^T H + \epsilon I)^{-1} H^T] \bar{y} $$
+<p>We can bring the scalar $\gamma$ inside the inverse term (where it becomes $1/\gamma$):</p>
+\$$ \hat{\bar{x}} = (H^T H + \frac{\epsilon}{\gamma} I)^{-1} H^T \bar{y} $$
+<p>The ratio $\gamma / \epsilon$ represents the ratio of signal power to noise power, which is the <b>Signal-to-Noise Ratio (SNR)</b>. Therefore, $\epsilon / \gamma = 1 / \text{SNR}$.</p>
+<p>This gives the final, widely recognized form of the LMMSE estimator for a linear system:</p>
+\$$ \hat{\bar{x}} = \left(H^T H + \frac{1}{\text{SNR}} I\right)^{-1} H^T \bar{y} $$
+<p>This is known as the <b>LMMSE receiver</b> in wireless communications or the <b>LMMSE regressor</b> in machine learning (it is mathematically equivalent to Ridge Regression).</p>
+
+<p>For systems involving complex numbers (common in communications), the transpose operation ($T$) is replaced by the Hermitian (conjugate transpose) operation ($H$):</p>
+\$$ \hat{\bar{x}} = \left(H^H H + \frac{1}{\text{SNR}} I\right)^{-1} H^H \bar{y} $$
+
+<h3>5. Estimation Error Covariance and Mean Squared Error (MSE)</h3>
+<p>The performance of the estimator is measured by its error. The estimation error covariance matrix, $R_{ee}$, is given by the general formula:</p>
+\$$ R_{ee} = R_{xx} - R_{xy} R_{yy}^{-1} R_{yx} $$
+<p>where $R_{yx} = R_{xy}^T$. Substituting our derived matrices:</p>
+\$$ R_{ee} = \gamma I - (\gamma H^T)(\gamma H H^T + \epsilon I)^{-1}(\gamma H) $$
+<p>Using the same matrix identity to simplify, this becomes:</p>
+\$$ R_{ee} = \gamma I - \gamma^2 (\gamma H^T H + \epsilon I)^{-1} H^T H $$
+<p>A mathematical trick is used to simplify this further. We can write $\gamma^2 H^T H = \gamma [(\gamma H^T H + \epsilon I) - \epsilon I]$. Substituting this in:</p>
+\$$ R_{ee} = \gamma I - \gamma (\gamma H^T H + \epsilon I)^{-1} [(\gamma H^T H + \epsilon I) - \epsilon I] $$
+\$$ R_{ee} = \gamma I - \gamma \left[I - \epsilon (\gamma H^T H + \epsilon I)^{-1}\right] $$
+\$$ R_{ee} = \gamma I - \gamma I + \gamma \epsilon (\gamma H^T H + \epsilon I)^{-1} $$
+<p>This simplifies to the final expression for the error covariance matrix:</p>
+\$$ R_{ee} = \gamma \epsilon (\gamma H^T H + \epsilon I)^{-1} $$
+<p>This can also be expressed as:</p>
+\$$ R_{ee} = \epsilon \left(H^T H + \frac{\epsilon}{\gamma} I\right)^{-1} = \epsilon \left(H^T H + \frac{1}{\text{SNR}} I\right)^{-1} $$
+
+<p>The overall <b>Mean Squared Error (MSE)</b> is the trace of this covariance matrix (the sum of its diagonal elements), as this represents the sum of the variances of the individual error components.</p>
+\$$ \text{MSE} = \text{Tr}(R_{ee}) = \text{Tr}\left(\epsilon \left(H^T H + \frac{1}{\text{SNR}} I\right)^{-1}\right) $$
+
+</div></div><div class="chapter" id="Lecture 38 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 38 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts presented in the transcript, focusing on the application of the Linear Minimum Mean Squared Error (LMMSE) principle to channel estimation in a wireless communication system.</p>
+
+<b>1. The MISO System Model</b>
+<p>The transcript begins by introducing a specific type of wireless system used for the application: a <b>Multiple-Input Single-Output (MISO)</b> system. This system is characterized by:</p>
+<ul>
+    <li><b>Multiple Inputs:</b> There are $T$ transmit antennas.</li>
+    <li><b>Single Output:</b> There is one receive antenna.</li>
+</ul>
+<p>The signal travels from each of the $T$ transmit antennas to the single receive antenna. The path from each transmit antenna $i$ to the receiver is characterized by a channel coefficient, $h_i$. The collection of all these coefficients forms the <b>channel vector</b>.</p>
+<p>At a specific time instant $k$, the system can be described by the following linear model:</p>
+\$$ y(k) = \begin{bmatrix} x_1(k) & x_2(k) & \dots & x_T(k) \end{bmatrix} \begin{bmatrix} h_1 \\ h_2 \\ \vdots \\ h_T \end{bmatrix} + n(k) $$
+<p>This can be written more compactly in vector form:</p>
+\$$ y(k) = \mathbf{x}^T(k) \mathbf{h} + n(k) $$
+<p>Where:</p>
+<ul>
+    <li>$y(k)$ is the scalar symbol received at time $k$.</li>
+    <li>$\mathbf{x}(k)$ is the $T \times 1$ vector of symbols transmitted at time $k$. In the context of channel estimation, this is often a known sequence called a "pilot vector".</li>
+    <li>$\mathbf{h}$ is the $T \times 1$ channel vector that we want to estimate.</li>
+    <li>$n(k)$ is the scalar additive noise sample at time $k$.</li>
+</ul>
+
+<b>2. The Channel Estimation Model</b>
+<p>To estimate the channel vector $\mathbf{h}$, the transmitter sends a sequence of $L$ known pilot vectors over $L$ consecutive time instants. This generates $L$ corresponding received symbols. We can stack these $L$ equations:</p>
+\$$ y_1 = \mathbf{x}_1^T \mathbf{h} + n_1 $$
+\$$ y_2 = \mathbf{x}_2^T \mathbf{h} + n_2 $$
+\$$ \vdots $$
+\$$ y_L = \mathbf{x}_L^T \mathbf{h} + n_L $$
+<p>Using the principles of linear algebra, this system of scalar equations can be elegantly represented in a single matrix-vector equation:</p>
+\$$ \mathbf{y} = \mathbf{Xh} + \mathbf{n} $$
+<p>Where:</p>
+<ul>
+    <li>$\mathbf{y}$ is the $L \times 1$ vector of received symbols: $ \mathbf{y} = [y_1, y_2, \dots, y_L]^T $.</li>
+    <li>$\mathbf{X}$ is the $L \times T$ <b>pilot matrix</b>, where each row is a transposed pilot vector: $ \mathbf{X} = [\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_L]^T $.</li>
+    <li>$\mathbf{h}$ is the unknown $T \times 1$ channel vector to be estimated.</li>
+    <li>$\mathbf{n}$ is the $L \times 1$ vector of noise samples: $ \mathbf{n} = [n_1, n_2, \dots, n_L]^T $.</li>
+</ul>
+<p>This is the fundamental linear model for channel estimation.</p>
+
+<b>3. Least Squares (LS) vs. LMMSE Estimation</b>
+<p>The transcript contrasts two methods for estimating $\mathbf{h}$ from the model $\mathbf{y} = \mathbf{Xh} + \mathbf{n}$.</p>
+
+<p><b>A. The Least Squares (LS) Estimator</b></p>
+<p>The LS approach finds an estimate $\hat{\mathbf{h}}$ that minimizes the squared Euclidean distance between the received vector $\mathbf{y}$ and the model's prediction $\mathbf{Xh}$. It solves:</p>
+\$$ \min_{\mathbf{h}} ||\mathbf{y} - \mathbf{Xh}||^2 $$
+<p>The solution, which requires no statistical information about $\mathbf{h}$ or $\mathbf{n}$, is:</p>
+\$$ \hat{\mathbf{h}}_{LS} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y} $$
+<p><i>(Note: If the quantities are complex, the transpose $(\cdot)^T$ is replaced by the Hermitian (conjugate transpose) $(\cdot)^H$.)</i></p>
+
+<p><b>B. The LMMSE Estimator</b></p>
+<p>The LMMSE estimator is more sophisticated because it incorporates <b>prior statistical information</b> about the unknown channel $\mathbf{h}$ and the noise $\mathbf{n}$. The key assumptions made in the transcript are:</p>
+<ul>
+    <li>The mean of the channel vector is zero: $ E[\mathbf{h}] = \mathbf{0} $.</li>
+    <li>The channel coefficients are uncorrelated with equal variance $\sigma_h^2$. This gives a covariance matrix: $ E[\mathbf{h}\mathbf{h}^H] = \sigma_h^2 \mathbf{I} $.</li>
+    <li>The noise samples are uncorrelated with equal variance $\sigma^2$. This gives a covariance matrix: $ E[\mathbf{n}\mathbf{n}^H] = \sigma^2 \mathbf{I} $.</li>
+</ul>
+<p>Under these assumptions, the LMMSE estimate of $\mathbf{h}$ is given by:</p>
+\$$ \hat{\mathbf{h}}_{LMMSE} = (\mathbf{X}^T \mathbf{X} + \frac{1}{\text{SNR}}\mathbf{I})^{-1} \mathbf{X}^T \mathbf{y} $$
+<p>Here, the <b>Signal-to-Noise Ratio (SNR)</b> is defined as the ratio of the variance of the parameter being estimated (the signal) to the variance of the measurement noise:</p>
+\$$ \text{SNR} = \frac{\sigma_h^2}{\sigma^2} $$
+
+<b>4. Analysis of the LMMSE Estimator</b>
+
+<p><b>High SNR Behavior ($\text{SNR} \to \infty$)</b></p>
+<p>When the SNR is very high, it means the noise power ($\sigma^2$) is negligible compared to the channel power ($\sigma_h^2$). In this case:</p>
+\$$ \text{As SNR} \to \infty, \quad \frac{1}{\text{SNR}} \to 0 $$
+<p>The LMMSE formula then simplifies:</p>
+\$$ \hat{\mathbf{h}}_{LMMSE} \to (\mathbf{X}^T \mathbf{X} + 0 \cdot \mathbf{I})^{-1} \mathbf{X}^T \mathbf{y} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y} = \hat{\mathbf{h}}_{LS} $$
+<p><b>Insight:</b> At high SNR, the LMMSE estimator converges to the LS estimator. This is because the prior information about the channel becomes less important when the observations (data) are very clean and reliable.</p>
+
+<p><b>Low SNR Behavior ($\text{SNR} \to 0$)</b></p>
+<p>When the SNR is very low, the noise power dominates. The term $\frac{1}{\text{SNR}}$ becomes very large. The matrix to be inverted, $\mathbf{X}^T \mathbf{X} + \frac{1}{\text{SNR}}\mathbf{I}$, is dominated by the second term. Consequently, the estimate $\hat{\mathbf{h}}_{LMMSE}$ is pulled towards zero.</p>
+\$$ \hat{\mathbf{h}}_{LMMSE} \to \mathbf{0} $$
+<p><b>Insight:</b> At low SNR, the observations are swamped by noise and provide no useful information. The LMMSE estimator wisely discards the noisy data and defaults to the best guess based only on prior information, which is the prior mean of the channel (assumed to be $\mathbf{0}$).</p>
+
+<b>5. Error Covariance of the LMMSE Estimator</b>
+<p>The error covariance matrix, $\mathbf{R}_{ee} = E[(\hat{\mathbf{h}} - \mathbf{h})(\hat{\mathbf{h}} - \mathbf{h})^H]$, measures the uncertainty in the estimate. For the LMMSE estimator, it is given by:</p>
+\$$ \mathbf{R}_{ee} = \left( \frac{1}{\sigma^2}\mathbf{X}^T\mathbf{X} + \frac{1}{\sigma_h^2}\mathbf{I} \right)^{-1} $$
+<ul>
+    <li>At <b>high SNR</b> ($\sigma_h^2 \gg \sigma^2$), this approaches $\sigma^2(\mathbf{X}^T\mathbf{X})^{-1}$, which is the error covariance of the LS estimator.</li>
+    <li>At <b>low SNR</b> ($\sigma_h^2 \ll \sigma^2$), this approaches $\sigma_h^2\mathbf{I}$, which is the original (prior) covariance of the channel. This confirms that at low SNR, making observations does not reduce our uncertainty about the channel.</li>
+</ul>
+
+<b>6. Numerical Example</b>
+<p>The transcript provides a concrete example with the following parameters:</p>
+<ul>
+    <li>Pilot Matrix: $ \mathbf{X} = \begin{bmatrix} 1 & -1 \\ 1 & -1 \\ -1 & 1 \\ -1 & 1 \end{bmatrix} $ <i>(Note: There is a discrepancy in the transcript text vs. calculation. The calculation uses $ \mathbf{X} = \begin{bmatrix} 1 & -1 \\ -1 & -1 \\ 1 & 1 \\ -1 & 1 \end{bmatrix} $. The explanation below follows the matrix used in the calculation.)</i> Let's assume the matrix used in calculation is correct: $ \mathbf{X} = \begin{bmatrix} 1 & -1 \\ -1 & -1 \\ 1 & 1 \\ -1 & 1 \end{bmatrix} $</li>
+    <li>Received Vector: $ \mathbf{y} = [1, -2, -1, -2]^T $</li>
+    <li>Channel Variance: $ \sigma_h^2 = 1 $</li>
+    <li>Noise Variance: $ \sigma^2 = 2 $</li>
+</ul>
+
+<p><b>Step 1: Calculate SNR</b></p>
+\$$ \text{SNR} = \frac{\sigma_h^2}{\sigma^2} = \frac{1}{2} $$
+
+<p><b>Step 2: Compute $\mathbf{X}^T\mathbf{X}$</b></p>
+\$$ \mathbf{X}^T\mathbf{X} = \begin{bmatrix} 1 & -1 & 1 & -1 \\ -1 & -1 & 1 & 1 \end{bmatrix} \begin{bmatrix} 1 & -1 \\ -1 & -1 \\ 1 & 1 \\ -1 & 1 \end{bmatrix} = \begin{bmatrix} 4 & 0 \\ 0 & 4 \end{bmatrix} = 4\mathbf{I} $$
+
+<p><b>Step 3: Compute the matrix to be inverted</b></p>
+\$$ \mathbf{X}^T\mathbf{X} + \frac{1}{\text{SNR}}\mathbf{I} = 4\mathbf{I} + \frac{1}{1/2}\mathbf{I} = 4\mathbf{I} + 2\mathbf{I} = 6\mathbf{I} $$
+<p>The inverse is simply $(6\mathbf{I})^{-1} = \frac{1}{6}\mathbf{I}$.</p>
+
+<p><b>Step 4: Compute $\mathbf{X}^T\mathbf{y}$</b></p>
+\$$ \mathbf{X}^T\mathbf{y} = \begin{bmatrix} 1 & -1 & 1 & -1 \\ -1 & -1 & 1 & 1 \end{bmatrix} \begin{bmatrix} 1 \\ -2 \\ -1 \\ -2 \end{bmatrix} = \begin{bmatrix} 1+2-1+2 \\ -1+2-1-2 \end{bmatrix} = \begin{bmatrix} 4 \\ -2 \end{bmatrix} $$
+
+<p><b>Step 5: Calculate the LMMSE Estimate</b></p>
+\$$ \hat{\mathbf{h}}_{LMMSE} = (\frac{1}{6}\mathbf{I}) (\mathbf{X}^T\mathbf{y}) = \frac{1}{6} \begin{bmatrix} 4 \\ -2 \end{bmatrix} = \begin{bmatrix} 4/6 \\ -2/6 \end{bmatrix} = \begin{bmatrix} 2/3 \\ -1/3 \end{bmatrix} $$
+
+<p><b>Step 6: Calculate the Error Covariance and MSE</b></p>
+\$$ \mathbf{R}_{ee} = \left( \frac{1}{\sigma^2}\mathbf{X}^T\mathbf{X} + \frac{1}{\sigma_h^2}\mathbf{I} \right)^{-1} = \left( \frac{1}{2}(4\mathbf{I}) + \frac{1}{1}\mathbf{I} \right)^{-1} = (2\mathbf{I} + \mathbf{I})^{-1} = (3\mathbf{I})^{-1} = \frac{1}{3}\mathbf{I} $$
+\$$ \mathbf{R}_{ee} = \begin{bmatrix} 1/3 & 0 \\ 0 & 1/3 \end{bmatrix} $$
+<p>The <b>Mean Squared Error (MSE)</b> is the sum of the variances of the estimation errors for each component, which is the trace of the error covariance matrix.</p>
+\$$ \text{MSE} = \text{Tr}(\mathbf{R}_{ee}) = \frac{1}{3} + \frac{1}{3} = \frac{2}{3} $$
+</div></div><div class="chapter" id="Lecture 39 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 39 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts of Autoregression, Linear Prediction, and their connection to the Linear Minimum Mean Square Error (LMSE) principle, as presented in the transcript.</p>
+
+<b>1. Introduction to Autoregression (AR)</b>
+<p>
+Autoregression, often abbreviated as AR, is a statistical method used for modeling time-series data. The name itself breaks down into two parts:
+<ul>
+<li><b>Auto</b>: This signifies "self," implying that the model uses the variable's own past values.</li>
+<li><b>Regression</b>: This refers to the process of prediction or approximation.</li>
+</ul>
+Therefore, autoregression is a method of <b>self-prediction</b>, where future values of a process are predicted based on a linear combination of its own past values. This falls under the broader theory of <b>Linear Prediction</b>, which has wide-ranging applications in fields like speech processing (e.g., Linear Predictive Coding or LPC) and data compression.
+</p>
+
+<b>2. AR Models and Time Series</b>
+<p>
+Autoregression is particularly well-suited for the analysis of a <b>time series</b>. A time series is a sequence of data points collected at successive, equally spaced points in time. It can be represented as:
+\$$ x_0, x_1, x_2, \dots, x_n, \dots $$
+where $n$ is the time index. Examples include daily stock prices, monthly rainfall measurements, or hourly temperature readings.
+</p>
+<p>
+The central goal in time series analysis is often to forecast future values. Autoregression achieves this by modeling the current value of the series, $x(n)$, as a function of its previous values. An <b>L-th order AR model</b> uses the $L$ most recent past samples to make a prediction, $\hat{x}(n)$. The model is expressed as a linear combination:
+\$$ \hat{x}(n) = a_1 x(n-1) + a_2 x(n-2) + \dots + a_L x(n-L) $$
+The coefficients $a_1, a_2, \dots, a_L$ are the <b>regression coefficients</b> that define the model. The core problem is to find the optimal values for these coefficients.
+</p>
+
+<b>3. Optimal AR Coefficients via LMSE</b>
+<p>
+To find the best regression coefficients, we use the <b>Linear Minimum Mean Square Error (LMSE)</b> principle. The goal is to choose the coefficients $a_k$ such that the average squared difference between the actual value $x(n)$ and the predicted value $\hat{x}(n)$ is minimized.
+</p>
+<p>
+Following the LMSE framework, we define:
+<ul>
+    <li>The quantity to be estimated: $x(n)$</li>
+    <li>The vector of known quantities (the past samples): $\bar{x} = [x(n-1), x(n-2), \dots, x(n-L)]^T$</li>
+</ul>
+The optimal vector of regression coefficients, denoted $\bar{a} = [a_1, a_2, \dots, a_L]^T$, is given by the formula:
+\$$ \bar{a}^T = \mathbf{R}_{x(n)\bar{x}} \mathbf{R}_{\bar{x}\bar{x}}^{-1} $$
+where:
+<ul>
+    <li>$\mathbf{R}_{x(n)\bar{x}}$ is the cross-correlation vector between the quantity to be estimated, $x(n)$, and the vector of known data, $\bar{x}$.</li>
+    <li>$\mathbf{R}_{\bar{x}\bar{x}}$ is the autocorrelation matrix of the known data vector $\bar{x}$.</li>
+</ul>
+</p>
+
+<b>4. The Wide-Sense Stationary (WSS) Assumption</b>
+<p>
+To calculate the correlation vector and matrix, a key assumption is made about the time series: it is a <b>Wide-Sense Stationary (WSS)</b> process. A WSS process has statistical properties that do not change over time. Specifically, its autocorrelation function depends only on the time difference (or lag) between two samples, not on their absolute position in time.
+</p>
+<p>
+Mathematically, for any two time indices $i$ and $j$, the correlation is:
+\$$ E[x(i)x(j)] = R_{xx}(i-j) $$
+where $R_{xx}(k)$ is the autocorrelation function at lag $k$. This property greatly simplifies the structure of the required correlation matrices.
+</p>
+
+<b>5. Deriving the Correlation and Cross-Correlation</b>
+
+<p><b>A. The Autocorrelation Matrix $\mathbf{R}_{\bar{x}\bar{x}}$</b></p>
+<p>
+The autocorrelation matrix is defined as $\mathbf{R}_{\bar{x}\bar{x}} = E[\bar{x}\bar{x}^T]$. Using the WSS property, each element $(i, j)$ of this matrix is calculated as:
+\$$ (\mathbf{R}_{\bar{x}\bar{x}})_{ij} = E[x(n-i)x(n-j)] = R_{xx}((n-i)-(n-j)) = R_{xx}(j-i) $$
+Since $R_{xx}(-k) = R_{xx}(k)$ for a real process, this becomes $R_{xx}(|i-j|)$. This results in a highly structured matrix where all elements along any given diagonal are identical.
+<br><br>
+For an L-th order model, the matrix is:
+\$$ \mathbf{R}_{\bar{x}\bar{x}} = 
+\begin{pmatrix}
+R_{xx}(0) & R_{xx}(1) & R_{xx}(2) & \dots & R_{xx}(L-1) \\
+R_{xx}(1) & R_{xx}(0) & R_{xx}(1) & \dots & R_{xx}(L-2) \\
+R_{xx}(2) & R_{xx}(1) & R_{xx}(0) & \dots & R_{xx}(L-3) \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+R_{xx}(L-1) & R_{xx}(L-2) & R_{xx}(L-3) & \dots & R_{xx}(0)
+\end{pmatrix}
+$$
+A matrix with this constant-diagonal structure is known as a <b>Toeplitz matrix</b>.
+</p>
+
+<p><b>B. The Cross-Correlation Vector $\mathbf{R}_{x(n)\bar{x}}$</b></p>
+<p>
+The cross-correlation vector is defined as $\mathbf{R}_{x(n)\bar{x}} = E[x(n)\bar{x}^T]$. Its elements are calculated using the WSS property:
+\$$ E[x(n)x(n-k)] = R_{xx}(n-(n-k)) = R_{xx}(k) $$
+This gives the vector:
+\$$ \mathbf{R}_{x(n)\bar{x}} = [R_{xx}(1), R_{xx}(2), \dots, R_{xx}(L)] $$
+</p>
+
+<b>6. The Optimal Autoregression Coefficients</b>
+<p>
+By substituting the derived Toeplitz matrix and cross-correlation vector into the LMSE formula, we get the expression for the optimal regression coefficients:
+\$$ \bar{a}^T = [R_{xx}(1), R_{xx}(2), \dots, R_{xx}(L)] \begin{pmatrix}
+R_{xx}(0) & R_{xx}(1) & \dots & R_{xx}(L-1) \\
+R_{xx}(1) & R_{xx}(0) & \dots & R_{xx}(L-2) \\
+\vdots & \vdots & \ddots & \vdots \\
+R_{xx}(L-1) & R_{xx}(L-2) & \dots & R_{xx}(0)
+\end{pmatrix}^{-1} $$
+Solving this system of linear equations (known as the Yule-Walker equations) provides the coefficients for the best linear predictor that minimizes the mean squared error.
+</p>
+
+<b>7. Characterizing the Prediction Error</b>
+<p>
+A predictor is only useful if we can quantify its performance. The LMSE principle also provides a formula for the minimum mean squared error (MMSE), which is the variance of the prediction error, $\sigma_e^2$.
+\$$ \sigma_e^2 = R_{x(n)x(n)} - \mathbf{R}_{x(n)\bar{x}} \mathbf{R}_{\bar{x}\bar{x}}^{-1} \mathbf{R}_{\bar{x}x(n)} $$
+Recognizing that $R_{x(n)x(n)} = R_{xx}(0)$ and $\bar{a}^T = \mathbf{R}_{x(n)\bar{x}} \mathbf{R}_{\bar{x}\bar{x}}^{-1}$, the formula simplifies to:
+\$$ \sigma_e^2 = R_{xx}(0) - \bar{a}^T \mathbf{R}_{\bar{x}x(n)} $$
+Expanding this dot product gives:
+\$$ \sigma_e^2 = R_{xx}(0) - [a_1 R_{xx}(1) + a_2 R_{xx}(2) + \dots + a_L R_{xx}(L)] $$
+or
+\$$ \sigma_e^2 = R_{xx}(0) - \sum_{k=1}^{L} a_k R_{xx}(k) $$
+This formula shows how the prediction error depends on the signal's variance ($R_{xx}(0)$) and how well the past values are correlated with the present value.
+</p>
+
+<b>8. Example: The First-Order AR(1) Model</b>
+<p>
+The simplest case is the first-order AR model, denoted AR(1), where $L=1$. The prediction is based on only the single most recent sample:
+\$$ \hat{x}(n) = \beta x(n-1) $$
+Here, $\beta$ is the single regression coefficient ($a_1$).
+
+<p><b>A. Calculating the AR(1) Coefficient</b></p>
+<p>
+Using the general formulas, the vector and matrix become scalars:
+<ul>
+    <li>$\mathbf{R}_{x(n)\bar{x}} = R_{xx}(1)$</li>
+    <li>$\mathbf{R}_{\bar{x}\bar{x}} = R_{xx}(0)$</li>
+</ul>
+The coefficient $\beta$ is then:
+\$$ \beta = R_{xx}(1) \times (R_{xx}(0))^{-1} = \frac{R_{xx}(1)}{R_{xx}(0)} $$
+So, the optimal first-order predictor is:
+\$$ \hat{x}(n) = \left(\frac{R_{xx}(1)}{R_{xx}(0)}\right) x(n-1) $$
+
+<p><b>B. Calculating the AR(1) Regression Error</b></p>
+<p>
+The regression error for the AR(1) model is found using the general error formula with $L=1$ and $a_1 = \beta$:
+\$$ \sigma_e^2 = R_{xx}(0) - a_1 R_{xx}(1) = R_{xx}(0) - \left(\frac{R_{xx}(1)}{R_{xx}(0)}\right) R_{xx}(1) $$
+\$$ \sigma_e^2 = R_{xx}(0) - \frac{R_{xx}(1)^2}{R_{xx}(0)} $$
+This represents the residual variance of the time series after accounting for the information contained in the previous sample.
+</p>
+</div></div><div class="chapter" id="Lecture 40 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 40 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts and formulas discussed in the transcript regarding <b>Recommender Systems</b>, a significant application of linear algebra in data analytics and machine learning.</p>
+
+<h3>1. Introduction to Recommender Systems</h3>
+<p>A recommender system is an algorithm designed to suggest relevant items (e.g., products, movies, articles) to users. These systems are a critical component of modern commercial websites like Amazon (for products) and Netflix (for movies and series). The primary goal is to predict a user's preference for an item they have not yet seen or purchased.</p>
+<p>The core idea is to analyze historical data, such as:</p>
+<ul>
+    <li><b>E-commerce:</b> A user's search and purchase history is compared with the histories of other users with similar tastes. The system then recommends products that these similar users have purchased and liked.</li>
+    <li><b>Video Streaming:</b> The system analyzes a user's viewing history to recommend movies or series that have been enjoyed by other users with similar viewing patterns.</li>
+</ul>
+<p>By making relevant suggestions, these systems aim to enhance user experience and increase engagement or sales.</p>
+
+<h3>2. The Matrix Completion Problem</h3>
+<p>At its heart, the recommender system problem can be modeled as a <b>matrix completion problem</b>. We can organize the user-item interaction data into a large matrix.</p>
+<ul>
+    <li>The <b>rows</b> of the matrix represent the users (let's say there are $l$ users).</li>
+    <li>The <b>columns</b> represent the items, such as movies (let's say there are $k$ movies).</li>
+    <li>The entry in the $i$-th row and $j$-th column, denoted as $r_{ij}$, is the rating user $i$ has given to movie $j$.</li>
+</ul>
+<p>A key characteristic of this matrix is that it is <b>sparse</b>, meaning most of its entries are unknown. This is because a typical user has only seen and rated a very small fraction of the total number of available movies. The task is to predict these missing entries.</p>
+<p><b>Example Matrix:</b></p>
+<p>
+    \$$
+    \begin{pmatrix}
+     ? & r_{12} & ? & r_{14} & \dots \\
+     r_{21} & r_{22} & ? & ? & \dots \\
+     ? & ? & r_{33} & ? & \dots \\
+     \vdots & \vdots & \vdots & \vdots & \ddots
+    \end{pmatrix}
+    $$
+</p>
+<p>Here, entries like $r_{12}$ and $r_{21}$ are <b>known ratings</b>, while entries marked with '?' are <b>unknown ratings</b> that we need to predict. The process of filling in these blanks is called matrix completion.</p>
+
+<h3>3. A Simple Recommender Algorithm using Linear Algebra</h3>
+<p>The transcript outlines a linear model to solve the matrix completion problem. The process involves several steps:</p>
+
+<h4>Step 1: Calculate and Remove the Overall Bias</h4>
+<p>First, we compute the average of all known ratings in the matrix. This value, $r_a$, represents the overall bias of the system (e.g., the tendency for all ratings to be around 3.5 on a 5-point scale).</p>
+<p>The formula for this overall average rating is:</p>
+\$$
+r_a = \frac{\sum_{i,j \text{ s.t. } r_{ij} \text{ is known}} r_{ij}}{\text{Number of known ratings}}
+$$
+<p>Next, we create a new "unbiased" rating, $\tilde{r}_{ij}$, for each known rating by subtracting this overall average. This centers the data around zero.</p>
+\$$
+\tilde{r}_{ij} = r_{ij} - r_a
+$$
+
+<h4>Step 2: A First-Order Model for Ratings</h4>
+<p>We assume a simple, linear model to explain the unbiased ratings. The model proposes that a user's rating for a movie depends on two main factors:</p>
+<ul>
+    <li><b>User Bias ($u_i$):</b> The specific tendency of user $i$. Some users are generally lenient and give high ratings, while others are critical and give low ratings.</li>
+    <li><b>Movie Bias ($m_j$):</b> The inherent quality or characteristic of movie $j$. Some movies are critically acclaimed and tend to receive high ratings from everyone, while others are widely disliked.</li>
+</ul>
+<p>The model expresses the unbiased rating as the sum of these two biases:</p>
+\$$
+\tilde{r}_{ij} \approx u_i + m_j
+$$
+<p>Our goal is to find the unknown values of $u_i$ for all users and $m_j$ for all movies.</p>
+
+<h4>Step 3: Formulating a System of Linear Equations</h4>
+<p>For every known rating $r_{ij}$, we can write an equation based on our model. For example:</p>
+<ul>
+    <li>$\tilde{r}_{12} = u_1 + m_2$</li>
+    <li>$\tilde{r}_{14} = u_1 + m_4$</li>
+    <li>$\tilde{r}_{21} = u_2 + m_1$</li>
+</ul>
+<p>By collecting all such equations for every known rating, we can form a large system of linear equations. This system can be written in matrix form as:</p>
+\$$
+\mathbf{\tilde{r}} = C \mathbf{b}
+$$
+<p>Where:</p>
+<ul>
+    <li>$\mathbf{\tilde{r}}$ is a column vector containing all the known, unbiased ratings $\tilde{r}_{ij}$.</li>
+    <li>$\mathbf{b}$ is a column vector containing all the unknown biases we want to find. It is formed by stacking the user biases and movie biases: $ \mathbf{b} = [u_1, u_2, \dots, u_l, m_1, m_2, \dots, m_k]^T $. The size of this vector is $(l+k) \times 1$.</li>
+    <li>$C$ is a large, sparse matrix consisting of only 0s and 1s. Each row of $C$ corresponds to one known rating and has exactly two '1's to pick out the correct user bias $u_i$ and movie bias $m_j$ for that rating's equation.</li>
+</ul>
+
+<h4>Step 4: Solving the System with Least Squares</h4>
+<p>Typically, the number of known ratings (the number of equations) is much larger than the number of unknowns ($l+k$, the number of users plus movies). This makes the system <b>overdetermined</b>, meaning there is usually no exact solution for $\mathbf{b}$. Instead, we find the "best fit" solution that minimizes the error between our model's predictions ($C\mathbf{b}$) and the actual data ($\mathbf{\tilde{r}}$). This is achieved using the <b>least squares method</b>.</p>
+<p>The least squares solution for the bias vector $\mathbf{b}$ is given by the formula:</p>
+\$$
+\mathbf{b} = (C^T C)^{-1} C^T \mathbf{\tilde{r}}
+$$
+<p>Solving this equation gives us the estimated values for all user biases $u_i$ and movie biases $m_j$.</p>
+
+<h4>Step 5: Prediction and Recommendation</h4>
+<p>Once we have the bias vector $\mathbf{b}$, we can predict any unknown rating. The predicted rating, $\hat{r}_{ij}$, for a movie user $i$ has not seen is calculated by adding the overall bias back to our model's output:</p>
+\$$
+\hat{r}_{ij} = r_a + u_i + m_j
+$$
+<p>With these predicted ratings, the final step is to make a recommendation. For a given user $i$, the system will:</p>
+<ol>
+    <li>Identify all movies $j$ that user $i$ has <b>not</b> seen.</li>
+    <li>Calculate the predicted rating $\hat{r}_{ij}$ for each of these unseen movies.</li>
+    <li>Recommend the unseen movie with the <b>highest predicted rating</b>.</li>
+</ol>
+
+<h3>4. Relevance and Conclusion</h3>
+<p>This method demonstrates a powerful application of linear algebra to a modern, complex problem. While real-world recommender systems employ more sophisticated models (e.g., matrix factorization techniques like Singular Value Decomposition), this first-order bias model illustrates the fundamental principles. The ability to process vast amounts of user data using techniques like least squares is central to the success of today's e-commerce, social media, and streaming platforms.</p>
+</div></div><div class="chapter" id="Lecture 41 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 41 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts and formulas used in the transcript to build a simple movie recommender system. The method is based on linear algebra and aims to predict a user's rating for a movie they have not yet seen.</p>
+
+<h3>1. Problem Setup: The Ratings Matrix</h3>
+<p>The core of a recommender system is a matrix of user ratings. In this example, we have a small system to illustrate the principles.</p>
+<ul>
+    <li><b>Number of Movies (k):</b> The example sets $k=3$.</li>
+    <li><b>Number of Users (l):</b> The example sets $l=3$.</li>
+</ul>
+<p>The ratings are organized into a matrix, which we can call $R$, where the rows represent users and the columns represent movies. The entry $r_{ij}$ is the rating given by user $i$ to movie $j$.</p>
+<p>The sample ratings matrix is:</p>
+<table border="1" style="border-collapse: collapse; text-align: center; margin: 1em;">
+    <tr>
+        <th style="padding: 5px;"></th>
+        <th style="padding: 5px;">Movie 1</th>
+        <th style="padding: 5px;">Movie 2</th>
+        <th style="padding: 5px;">Movie 3</th>
+    </tr>
+    <tr>
+        <td style="padding: 5px;"><b>User 1</b></td>
+        <td style="padding: 5px;">4</td>
+        <td style="padding: 5px;">3</td>
+        <td style="padding: 5px;">2</td>
+    </tr>
+    <tr>
+        <td style="padding: 5px;"><b>User 2</b></td>
+        <td style="padding: 5px;">2</td>
+        <td style="padding: 5px;">?</td>
+        <td style="padding: 5px;">3</td>
+    </tr>
+    <tr>
+        <td style="padding: 5px;"><b>User 3</b></td>
+        <td style="padding: 5px;">2</td>
+        <td style="padding: 5px;">4</td>
+        <td style="padding: 5px;">5</td>
+    </tr>
+</table>
+<p>The goal is to predict the unknown rating, $r_{22}$, which is the rating User 2 would have given to Movie 2. This prediction is denoted as $\hat{r}_{22}$.</p>
+
+<h3>2. Step 1: Calculating the Overall Bias</h3>
+<p>The first step is to calculate the overall bias or the average rating across all available entries in the system. This value, denoted $r_a$, serves as a baseline for all predictions.</p>
+<p><b>Formula:</b></p>
+\$$ r_a = \frac{\text{Sum of all available ratings}}{\text{Total number of available ratings}} $$
+<p>Using the data from the matrix (8 available ratings):</p>
+\$$ r_a = \frac{4+3+2+2+3+2+4+5}{8} = \frac{25}{8} = 3.125 $$
+<p>This value represents the average tendency of all users' ratings in this specific system.</p>
+
+<h3>3. Step 2: Normalizing the Ratings by Removing the Bias</h3>
+<p>To isolate the specific preferences of users and inherent qualities of movies, the overall bias is subtracted from each known rating. The resulting bias-removed ratings are denoted by $\tilde{r}_{ij}$.</p>
+<p><b>Formula:</b></p>
+\$$ \tilde{r}_{ij} = r_{ij} - r_a $$
+<p>For example, for User 1's rating of Movie 1:</p>
+\$$ \tilde{r}_{11} = r_{11} - r_a = 4 - 3.125 = 0.875 $$
+<p>Applying this to all known ratings gives the following matrix of bias-removed ratings, $\tilde{R}$:</p>
+<table border="1" style="border-collapse: collapse; text-align: center; margin: 1em;">
+    <tr>
+        <th style="padding: 5px;"></th>
+        <th style="padding: 5px;">Movie 1</th>
+        <th style="padding: 5px;">Movie 2</th>
+        <th style="padding: 5px;">Movie 3</th>
+    </tr>
+    <tr>
+        <td style="padding: 5px;"><b>User 1</b></td>
+        <td style="padding: 5px;">0.875</td>
+        <td style="padding: 5px;">-0.125</td>
+        <td style="padding: 5px;">-1.125</td>
+    </tr>
+    <tr>
+        <td style="padding: 5px;"><b>User 2</b></td>
+        <td style="padding: 5px;">-1.125</td>
+        <td style="padding: 5px;">?</td>
+        <td style="padding: 5px;">-0.125</td>
+    </tr>
+    <tr>
+        <td style="padding: 5px;"><b>User 3</b></td>
+        <td style="padding: 5px;">-1.125</td>
+        <td style="padding: 5px;">0.875</td>
+        <td style="padding: 5px;">1.875</td>
+    </tr>
+</table>
+
+<h3>4. Step 3: The Linear Model for Biases</h3>
+<p>The core assumption of this model is that a user's deviation from the average rating for a movie can be broken down into two components: the user's personal bias and the movie's inherent bias.</p>
+<p><b>Formula:</b></p>
+\$$ \tilde{r}_{ij} = u_i + m_j $$
+<ul>
+    <li>$u_i$: The bias for user $i$. This captures if a user is generally a harsh critic (negative $u_i$) or a lenient one (positive $u_i$).</li>
+    <li>$m_j$: The bias for movie $j$. This reflects the movie's overall quality or appeal relative to the average. A popular, highly-rated movie would have a positive $m_j$.</li>
+</ul>
+<p>For each known rating, we can write an equation. For example, for $\tilde{r}_{11}$:</p>
+\$$ 0.875 = u_1 + m_1 $$
+
+<h3>5. Step 4: Forming a System of Linear Equations</h3>
+<p>We can express all the relationships from the previous step as a single matrix equation. This system relates the known bias-removed ratings to the unknown user and movie biases.</p>
+<p><b>Matrix Equation:</b></p>
+\$$ \tilde{\mathbf{r}} = C \mathbf{\bar{b}} $$
+<p>Where:</p>
+<ul>
+    <li>$\tilde{\mathbf{r}}$ is a column vector of all 8 known bias-removed ratings.</li>
+    <li>$\mathbf{\bar{b}}$ is a column vector of all the unknown biases: $u_1, u_2, u_3, m_1, m_2, m_3$.</li>
+    <li>$C$ is a coefficient matrix that maps the biases to the ratings. Each row in $C$ has exactly two '1's, corresponding to the user and movie for that rating.</li>
+</ul>
+<p>The complete system is:</p>
+\$$
+\begin{bmatrix}
+0.875 \\ 
+-0.125 \\ 
+-1.125 \\ 
+-1.125 \\ 
+-0.125 \\ 
+-1.125 \\ 
+0.875 \\ 
+1.875
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 & 0 & 0 & 1 & 0 & 0 \\
+1 & 0 & 0 & 0 & 1 & 0 \\
+1 & 0 & 0 & 0 & 0 & 1 \\
+0 & 1 & 0 & 1 & 0 & 0 \\
+0 & 1 & 0 & 0 & 0 & 1 \\
+0 & 0 & 1 & 1 & 0 & 0 \\
+0 & 0 & 1 & 0 & 1 & 0 \\
+0 & 0 & 1 & 0 & 0 & 1 
+\end{bmatrix}
+\begin{bmatrix}
+u_1 \\ u_2 \\ u_3 \\ m_1 \\ m_2 \\ m_3
+\end{bmatrix}
+$$
+<p>This is an <b>overdetermined system</b> because there are more equations (8 ratings) than unknowns (6 biases). This is typical for recommender systems, as the number of ratings is usually much larger than the sum of users and movies.</p>
+
+<h3>6. Step 5: Solving for the Biases using the Pseudo-Inverse</h3>
+<p>Since the system is overdetermined, an exact solution that satisfies all equations simultaneously is unlikely. Instead, we find the best-fit solution that minimizes the error (the least-squares solution). This is achieved using the <b>pseudo-inverse</b> of matrix $C$, denoted $C^\dagger$.</p>
+<p><b>Formula for the solution:</b></p>
+\$$ \mathbf{\bar{b}} = C^\dagger \tilde{\mathbf{r}} $$
+<p>For a tall matrix $C$ with linearly independent columns, the pseudo-inverse is calculated as:</p>
+\$$ C^\dagger = (C^T C)^{-1} C^T $$
+<p>Solving this system yields the values for the user and movie biases:</p>
+\$$ \mathbf{\bar{b}} = 
+\begin{bmatrix}
+u_1 \\ u_2 \\ u_3 \\ m_1 \\ m_2 \\ m_3
+\end{bmatrix}
+=
+\begin{bmatrix}
+-0.1042 \\
+-0.5208 \\
+0.5625 \\
+-0.4375 \\
+0.1458 \\
+0.2292
+\end{bmatrix}
+$$
+
+<h3>7. Step 6: Predicting the Unknown Rating</h3>
+<p>Now that the user and movie biases are known, we can predict the missing rating $r_{22}$. The prediction, $\hat{r}_{22}$, is made by first applying the linear model to find the bias-removed prediction and then adding the overall bias $r_a$ back.</p>
+<p><b>Formula:</b></p>
+\$$ \hat{r}_{22} = r_a + u_2 + m_2 $$
+<p>Substituting the calculated values:</p>
+\$$ \hat{r}_{22} = 3.125 + (-0.5208) + 0.1458 $$
+\$$ \hat{r}_{22} = 2.75 $$
+<p>The predicted rating for User 2 on Movie 2 is <b>2.75</b>.</p>
+
+<h3>Conclusion</h3>
+<p>This example demonstrates a foundational method for collaborative filtering. By modeling ratings as a combination of an overall average, user-specific biases, and item-specific biases, we can formulate a system of linear equations. Even when there are more ratings than biases (an overdetermined system), we can find the best-fit solution using the pseudo-inverse to estimate these biases. These estimates are then used to predict ratings for user-item pairs that have not yet occurred.</p>
+<p>In a full-scale recommender system, this process would be performed for all unseen movies for a given user. The system would then recommend the movie with the highest predicted rating.</p>
+</div></div><h2>Weekly Summary</h2><div>
+<p>This week's lectures explore the application of the Linear Minimum Mean Square Error (LMMSE) principle across various domains, demonstrating its power and versatility in estimation and prediction problems. The topics progress from the foundational theory for linear systems to specific applications in wireless communications, time series analysis, and data analytics.</p>
+
+<p><b>1. LMMSE Estimation for Linear Systems</b></p>
+<p>This module introduces the application of the LMMSE principle to a general linear input-output model, often encountered in communications and machine learning. The system is modeled as $\bar{y} = H\bar{x} + \bar{n}$, where $\bar{x}$ is the input vector to be estimated, $\bar{y}$ is the observed output, $H$ is the system matrix, and $\bar{n}$ is noise.</p>
+<ul>
+    <li><b>Key Takeaway:</b> The LMMSE estimate for $\bar{x}$ is derived, resulting in a famous and elegant formula known as the LMMSE (or MMSE) receiver. The estimate incorporates prior statistical knowledge of the signal and noise powers (variances) through the Signal-to-Noise Ratio (SNR).</li>
+    <li><b>Key Formula (LMMSE Estimate):</b> The estimate $\hat{x}$ is given by:
+    \$$ \hat{x} = \left(H^T H + \frac{1}{\text{SNR}} I\right)^{-1} H^T \bar{y} $$
+    where $\text{SNR} = \gamma / \epsilon$ is the ratio of signal power ($\gamma$) to noise power ($\epsilon$). For complex-valued systems, the transpose ($H^T$) is replaced by the Hermitian transpose ($H^H$).</li>
+    <li><b>Key Formula (Error Covariance):</b> The covariance of the estimation error is also derived, providing a way to quantify the performance of the estimator.</li>
+</ul>
+
+<p><b>2. Application: LMMSE for MISO Channel Estimation</b></p>
+<p>This module provides a practical application of the LMMSE framework to estimate the wireless channel in a Multiple-Input Single-Output (MISO) communication system. The problem is formulated as a linear model $\bar{y} = X\bar{h} + \bar{n}$, where the goal is to estimate the unknown channel vector $\bar{h}$.</p>
+<ul>
+    <li><b>Key Takeaway:</b> The LMMSE estimator serves as a regularized version of the classical Least Squares (LS) estimator. At high SNR, the LMMSE estimate converges to the LS estimate, as the data from observations is trusted more. At low SNR, the LMMSE estimate wisely defaults towards the prior mean of the channel (assumed to be zero), as the noisy observations provide little useful information.</li>
+    <li><b>Comparison to LS:</b> Unlike the LS estimate, $\hat{h}_{LS} = (X^T X)^{-1} X^T \bar{y}$, the LMMSE estimate avoids issues with ill-conditioned matrices and provides more robust performance, especially in noisy conditions, by leveraging prior statistics of the channel and noise.</li>
+</ul>
+
+<p><b>3. Application: Autoregression and Linear Prediction</b></p>
+<p>The LMMSE principle is applied to time series analysis for the problem of autoregression (AR), or "self-prediction." The goal is to predict the next value in a time series as a linear combination of its own past values.</p>
+<ul>
+    <li><b>Key Takeaway:</b> By assuming the time series is Wide-Sense Stationary (WSS), the covariance matrix of the past samples exhibits a special, highly structured form known as a <b>Toeplitz matrix</b> (all elements on a given diagonal are identical). This structure is fundamental to the theory of linear prediction.</li>
+    <li><b>AR(1) Model Example:</b> For a simple first-order model $\hat{x}_n = \beta x_{n-1}$, the optimal prediction coefficient is derived using the LMMSE principle as the ratio of the autocorrelation at lag 1 to the autocorrelation at lag 0 (the signal power): $\beta = r_{xx}(1) / r_{xx}(0)$.</li>
+</ul>
+
+<p><b>4. Application: Recommender Systems and Matrix Completion</b></p>
+<p>The final topic shifts to a modern data analytics problem: building a recommender system (e.g., for movies or products). This is framed as a <b>matrix completion</b> problem, where the goal is to predict unknown user ratings in a very large, sparse user-item rating matrix.</p>
+<ul>
+    <li><b>Key Takeaway:</b> A simple but powerful model for a rating is introduced, where a rating is a sum of an overall average rating (global bias), a user-specific bias, and an item-specific bias. Determining these unknown biases from the known ratings leads to a large, overdetermined system of linear equations.</li>
+    <li><b>Least Squares Solution:</b> This linear system is solved using the method of least squares to find the best-fit values for all user and item biases. Once found, these biases can be used to predict any unknown rating.</li>
+    <li><b>Recommendation Process:</b> After predicting the ratings for items a user has not yet seen, the system recommends the item with the highest predicted rating. This demonstrates a direct and practical application of linear algebra and least squares to a core problem in e-commerce and media streaming.</li>
+</ul>
+</div><h2>Assignment Explanation</h2><div>
+<h3>Question 1: Regression Error in a Time-Series</h3>
+<p><b>Question:</b> Consider a zero-mean wide sense stationary time-series $x(n)$ with auto-correlation $r_{xx}(n) = 0.9^n$. The regression error for the best prediction of $x(n)$ based on $x(n-1)$ is given as...</p>
+<p><b>Explanation:</b> This question asks for the minimum mean squared error (MMSE) when predicting the current value of a time-series, $x(n)$, using only its previous value, $x(n-1)$. This is a first-order auto-regressive (AR(1)) model.</p>
+<p>1. <b>The Predictor:</b> The best linear predictor has the form $\hat{x}(n) = a \cdot x(n-1)$. The optimal coefficient $a$ is found using the Yule-Walker equation, which for this simple case is:
+\$$ a = \frac{r_{xx}(1)}{r_{xx}(0)} $$
+</p>
+<p>2. <b>Calculate Auto-correlation Values:</b> From the given auto-correlation function $r_{xx}(n) = 0.9^n$:
+<ul>
+    <li>$r_{xx}(0) = 0.9^0 = 1$ (This is the variance of the signal).</li>
+    <li>$r_{xx}(1) = 0.9^1 = 0.9$.</li>
+</ul>
+</p>
+<p>3. <b>Calculate the Coefficient:</b>
+\$$ a = \frac{0.9}{1} = 0.9 $$
+So the best prediction is $\hat{x}(n) = 0.9 \cdot x(n-1)$.</p>
+<p>4. <b>Calculate the Regression Error (MMSE):</b> The formula for the minimum prediction error variance is:
+\$$ E_{min} = r_{xx}(0) - a \cdot r_{xx}(1) $$
+Plugging in the values:
+\$$ E_{min} = 1 - (0.9)(0.9) = 1 - 0.81 = 0.19 $$
+Thus, the regression error is <b>0.19</b>.</p>
+
+<hr>
+
+<h3>Question 2: Projection Matrix</h3>
+<p><b>Question:</b> Consider the matrix A defined as... The projection matrix $P_A$ for the subspace spanned by the columns of A is...</p>
+<p><b>Explanation:</b> The formula for the projection matrix $P_A$ onto the column space of a matrix $A$ is:
+\$$ P_A = A(A^T A)^{-1} A^T $$
+</p>
+<p><i>Note: There appears to be a typo in the question's matrix A. Calculating the projection matrix for the given A does not result in any of the options. However, the accepted answer is the correct projection matrix for a different, related matrix. We will show the calculation for the matrix that correctly produces the answer.</i></p>
+<p>Let's assume the columns of $A$ were intended to be the orthogonal vectors $v_1 = [1, -1, 0, 0]^T$ and $v_2 = [0, 0, 1, -1]^T$.
+So, let's use the matrix:
+\$$ A = \begin{bmatrix} 1 & 0 \\ -1 & 0 \\ 0 & 1 \\ 0 & -1 \end{bmatrix} $$
+</p>
+<p>1. <b>Calculate $A^T A$:</b>
+\$$ A^T A = \begin{bmatrix} 1 & -1 & 0 & 0 \\ 0 & 0 & 1 & -1 \end{bmatrix} \begin{bmatrix} 1 & 0 \\ -1 & 0 \\ 0 & 1 \\ 0 & -1 \end{bmatrix} = \begin{bmatrix} (1+1) & 0 \\ 0 & (1+1) \end{bmatrix} = \begin{bmatrix} 2 & 0 \\ 0 & 2 \end{bmatrix} $$
+</p>
+<p>2. <b>Calculate $(A^T A)^{-1}$:</b>
+\$$ (A^T A)^{-1} = \begin{bmatrix} 2 & 0 \\ 0 & 2 \end{bmatrix}^{-1} = \begin{bmatrix} 1/2 & 0 \\ 0 & 1/2 \end{bmatrix} = \frac{1}{2}I $$
+</p>
+<p>3. <b>Calculate $P_A = A(A^T A)^{-1} A^T$:</b>
+\$$ P_A = \begin{bmatrix} 1 & 0 \\ -1 & 0 \\ 0 & 1 \\ 0 & -1 \end{bmatrix} \left( \frac{1}{2}I \right) \begin{bmatrix} 1 & -1 & 0 & 0 \\ 0 & 0 & 1 & -1 \end{bmatrix} = \frac{1}{2} \begin{bmatrix} 1 & 0 \\ -1 & 0 \\ 0 & 1 \\ 0 & -1 \end{bmatrix} \begin{bmatrix} 1 & -1 & 0 & 0 \\ 0 & 0 & 1 & -1 \end{bmatrix} $$
+\$$ P_A = \frac{1}{2} \begin{bmatrix} 1 & -1 & 0 & 0 \\ -1 & 1 & 0 & 0 \\ 0 & 0 & 1 & -1 \\ 0 & 0 & -1 & 1 \end{bmatrix} $$
+This matches the accepted answer.</p>
+
+<hr>
+
+<h3>Question 3: MUSIC Algorithm</h3>
+<p><b>Question:</b> MUSIC (Multiple Signal Classification) algorithm is used for...</p>
+<p><b>Explanation:</b> MUSIC is a high-resolution, subspace-based signal processing algorithm. Its primary and most famous application is in sensor array processing for determining the <b>Direction of Arrival (DOA)</b> of multiple signals impinging on the array. It works by separating the observation space into a "signal subspace" and a "noise subspace" using an eigendecomposition of the data's covariance matrix. It then searches for directions where the array's steering vectors are orthogonal to the noise subspace, which correspond to the DOAs of the incoming signals.</p>
+
+<hr>
+
+<h3>Question 4: Minimum Mean Square Error (MSE) for LMMSE</h3>
+<p><b>Question:</b> Consider the vectors $\bar{x}, \bar{y}$ with respective means $\bar{\mu}_x, \bar{\mu}_y$ and covariance matrices $R_{xx}, R_{yy}$. Let the cross-covariance matrix be given as $E\{\bar{x}\bar{y}^H\} = R_{xy}$. The minimum mean square error (MSE) corresponding to the Linear Minimum Mean Square Error (LMMSE) estimate of $\bar{x}$, is given as...</p>
+<p><b>Explanation:</b> This question asks for the formula for the total MSE when estimating a random vector $\bar{x}$ from a random vector $\bar{y}$.</p>
+<p>1. <b>Error Covariance Matrix:</b> The LMMSE estimate, $\hat{\bar{x}}$, is designed to minimize the mean squared error. The covariance matrix of the estimation error $\bar{e} = \bar{x} - \hat{\bar{x}}$ is given by the formula:
+\$$ R_{ee} = R_{xx} - R_{xy}R_{yy}^{-1}R_{yx} $$
+where $R_{yx} = R_{xy}^H$.</p>
+<p>2. <b>Total MSE:</b> The total Mean Square Error (MSE) is the sum of the variances of the error in each component of the vector. This is equivalent to the trace of the error covariance matrix.
+\$$ \text{MSE} = E\{||\bar{e}||^2\} = \text{Tr}(R_{ee}) $$
+Substituting the expression for $R_{ee}$:
+\$$ \text{MSE} = \text{Tr}(R_{xx} - R_{xy}R_{yy}^{-1}R_{yx}) $$
+This matches the accepted answer.</p>
+
+<hr>
+
+<h3>Question 5: Best Prediction in a Time-Series</h3>
+<p><b>Question:</b> Consider a zero-mean wide sense stationary time-series $x(n)$ with auto-correlation $r_{xx}(n) = 0.75^n$. The best prediction of $x(n)$ based on $x(n-1)$ is given as...</p>
+<p><b>Explanation:</b> This is similar to Question 1, but instead of asking for the error, it asks for the prediction itself. The best linear prediction of $x(n)$ from $x(n-1)$ is $\hat{x}(n) = a \cdot x(n-1)$.</p>
+<p>1. <b>Find the coefficient $a$:</b>
+\$$ a = \frac{r_{xx}(1)}{r_{xx}(0)} $$
+</p>
+<p>2. <b>Calculate Auto-correlation Values:</b>
+<ul>
+    <li>$r_{xx}(0) = 0.75^0 = 1$</li>
+    <li>$r_{xx}(1) = 0.75^1 = 0.75$</li>
+</ul>
+</p>
+<p>3. <b>Calculate the Coefficient:</b>
+\$$ a = \frac{0.75}{1} = 0.75 $$
+</p>
+<p>4. <b>Form the Predictor:</b> The best prediction is therefore:
+\$$ \hat{x}(n) = 0.75 \cdot x(n-1) $$
+This matches the accepted answer.</p>
+
+<hr>
+
+<h3>Question 6: LMMSE Estimate Formula</h3>
+<p><b>Question:</b> Consider vectors $\bar{x}, \bar{y}$ with respective means $\bar{\mu}_x, \bar{\mu}_y$ and covariance matrices $R_{xx}, R_{yy}$. Let the cross-covariance matrix be given as $E\{\bar{x}\bar{y}^H\} = R_{xy}$. The Linear Minimum Mean Square Error (LMMSE) estimate of $\bar{x}$ is given as...</p>
+<p><b>Explanation:</b> This question asks for the general formula for the LMMSE estimator. The estimator is an affine transformation of the observation vector $\bar{y}$, of the form $\hat{\bar{x}} = W\bar{y} + \bar{b}$. The optimal $W$ (the Wiener filter) and $\bar{b}$ are chosen to minimize the MSE. The resulting formula is:
+\$$ \hat{\bar{x}} = \bar{\mu}_x + R_{xy}R_{yy}^{-1}(\bar{y} - \bar{\mu}_y) $$
+This formula intuitively adjusts the estimate based on the observed deviation of $\bar{y}$ from its mean $(\bar{y} - \bar{\mu}_y)$, scaled by the optimal Wiener filter $R_{xy}R_{yy}^{-1}$, and then adds back the mean of $\bar{x}$.</p>
+
+<hr>
+
+<h3>Question 7: Circulant Channel Matrix</h3>
+<p><b>Question:</b> Consider the Inter Symbol Interference (ISI) channel with channel taps $h(0) = 1, h(1) = -3, h(2) = -1, h(3) = 2$. The circulant matrix corresponding to this channel for N = 4 subcarriers is given as...</p>
+<p><b>Explanation:</b> In systems like OFDM, a circular convolution between the input signal and the channel response can be represented by multiplication with a circulant matrix. An $N \times N$ circulant matrix is defined by its first column. Each subsequent column is a downward cyclic shift of the previous column.</p>
+<p>1. <b>Define the first column:</b> The first column is the vector of channel taps, $\bar{h} = [h(0), h(1), h(2), h(3)]^T$.
+\$$ \text{col}_1 = \begin{bmatrix} 1 \\ -3 \\ -1 \\ 2 \end{bmatrix} $$
+</p>
+<p>2. <b>Generate subsequent columns:</b>
+<ul>
+    <li><b>Column 2:</b> Cyclically shift column 1 down. The last element (2) moves to the top.
+    \$$ \text{col}_2 = \begin{bmatrix} 2 \\ 1 \\ -3 \\ -1 \end{bmatrix} $$
+    </li>
+    <li><b>Column 3:</b> Cyclically shift column 2 down. The last element (-1) moves to the top.
+    \$$ \text{col}_3 = \begin{bmatrix} -1 \\ 2 \\ 1 \\ -3 \end{bmatrix} $$
+    </li>
+    <li><b>Column 4:</b> Cyclically shift column 3 down. The last element (-3) moves to the top.
+    \$$ \text{col}_4 = \begin{bmatrix} -3 \\ -1 \\ 2 \\ 1 \end{bmatrix} $$
+    </li>
+</ul>
+</p>
+<p>3. <b>Assemble the matrix:</b>
+\$$ H = \begin{bmatrix} 1 & 2 & -1 & -3 \\ -3 & 1 & 2 & -1 \\ -1 & -3 & 1 & 2 \\ 2 & -1 & -3 & 1 \end{bmatrix} $$
+This matches the accepted answer.</p>
+
+<hr>
+
+<h3>Question 8: Eigenvalue Decomposition</h3>
+<p><b>Question:</b> The eigenvalue decomposition of an arbitrary $n \times n$ square matrix A is given as...</p>
+<p><b>Explanation:</b> The eigenvalue decomposition factorizes a matrix $A$ into a product of three matrices related to its eigenvectors and eigenvalues. For this decomposition to exist, the matrix $A$ must be diagonalizable (i.e., it must have $n$ linearly independent eigenvectors).</p>
+<p>The general form of the decomposition is:
+\$$ A = U\Lambda U^{-1} $$
+where:
+<ul>
+    <li>$U$ is a square matrix whose columns are the eigenvectors of $A$.</li>
+    <li>$\Lambda$ is a diagonal matrix whose diagonal entries are the corresponding eigenvalues of $A$.</li>
+    <li>$U^{-1}$ is the inverse of the matrix $U$.</li>
+</ul>
+The other options are special cases: $A = U\Lambda U^T$ is for real symmetric matrices (where $U$ is orthogonal, so $U^{-1}=U^T$), and $A = U\Lambda U^H$ is for Hermitian matrices (where $U$ is unitary, so $U^{-1}=U^H$). The most general form for an arbitrary diagonalizable matrix is $A = U\Lambda U^{-1}$.</p>
+
+<hr>
+
+<h3>Question 9: Affine Transformation of a Gaussian Vector</h3>
+<p><b>Question:</b> Consider a 2D random vector $\bar{x}$ that has a multi-variate Gaussian distribution with mean $\bar{\mu}$ and covariance $\Sigma$... Consider the vector $\bar{y} = A\bar{x} + \bar{b}$... is Gaussian with mean $\bar{\mu}_y$ and covariance matrix $\Sigma_y$.</p>
+<p><b>Explanation:</b> An affine transformation of a Gaussian random vector results in another Gaussian random vector. If $\bar{x} \sim \mathcal{N}(\bar{\mu}_x, \Sigma_x)$ and $\bar{y} = A\bar{x} + \bar{b}$, the new mean and covariance are given by:
+\$$ \bar{\mu}_y = A\bar{\mu}_x + \bar{b} $$
+\$$ \Sigma_y = A \Sigma_x A^T $$
+</p>
+<p>Given:
+\$$ \bar{\mu}_x = \begin{bmatrix} -3 \\ 2 \end{bmatrix}, \quad \Sigma_x = \begin{bmatrix} 2 & 0 \\ 0 & 4 \end{bmatrix}, \quad A = \begin{bmatrix} -2 & 1 \\ -3 & 2 \end{bmatrix}, \quad \bar{b} = \begin{bmatrix} 1 \\ -2 \end{bmatrix} $$
+</p>
+<p>1. <b>Calculate the new mean $\bar{\mu}_y$:</b>
+\$$ \bar{\mu}_y = \begin{bmatrix} -2 & 1 \\ -3 & 2 \end{bmatrix} \begin{bmatrix} -3 \\ 2 \end{bmatrix} + \begin{bmatrix} 1 \\ -2 \end{bmatrix} = \begin{bmatrix} (-2)(-3) + (1)(2) \\ (-3)(-3) + (2)(2) \end{bmatrix} + \begin{bmatrix} 1 \\ -2 \end{bmatrix} = \begin{bmatrix} 8 \\ 13 \end{bmatrix} + \begin{bmatrix} 1 \\ -2 \end{bmatrix} = \begin{bmatrix} 9 \\ 11 \end{bmatrix} $$
+</p>
+<p>2. <b>Calculate the new covariance $\Sigma_y$:</b>
+\$$ \Sigma_y = \begin{bmatrix} -2 & 1 \\ -3 & 2 \end{bmatrix} \begin{bmatrix} 2 & 0 \\ 0 & 4 \end{bmatrix} \begin{bmatrix} -2 & -3 \\ 1 & 2 \end{bmatrix} $$
+First multiply $A\Sigma_x$:
+\$$ A\Sigma_x = \begin{bmatrix} -4 & 4 \\ -6 & 8 \end{bmatrix} $$
+Then multiply by $A^T$:
+\$$ \Sigma_y = \begin{bmatrix} -4 & 4 \\ -6 & 8 \end{bmatrix} \begin{bmatrix} -2 & -3 \\ 1 & 2 \end{bmatrix} = \begin{bmatrix} (-4)(-2)+(4)(1) & (-4)(-3)+(4)(2) \\ (-6)(-2)+(8)(1) & (-6)(-3)+(8)(2) \end{bmatrix} = \begin{bmatrix} 12 & 20 \\ 20 & 34 \end{bmatrix} $$
+The correct answer is $\bar{\mu}_y = [9, 11]^T$ and $\Sigma_y = \begin{bmatrix} 12 & 20 \\ 20 & 34 \end{bmatrix}$.</p>
+
+<hr>
+
+<h3>Question 10: LMMSE Estimate with SNR</h3>
+<p><b>Question:</b> Consider the linear model $\bar{y} = H\bar{x} + \bar{n}$, where $E\{\bar{x}\bar{x}^T\} = R_{xx} = \gamma I$ and noise covariance $E\{\bar{n}\bar{n}^T\} = \epsilon I$. The SNR is $\frac{\gamma}{\epsilon}$. The Linear Minimum Mean Square Error (LMMSE) estimate of $\bar{x}$ for this system becomes...</p>
+<p><b>Explanation:</b> We need to find the LMMSE estimate $\hat{\bar{x}}$ for the given linear model. A common form for this estimator, also known as the regularized least squares or Wiener filter solution, is:
+\$$ \hat{\bar{x}} = (H^T R_{nn}^{-1} H + R_{xx}^{-1})^{-1} H^T R_{nn}^{-1} \bar{y} $$
+</p>
+<p>1. <b>Find the inverse covariance matrices:</b>
+<ul>
+    <li>$R_{xx} = \gamma I \implies R_{xx}^{-1} = \frac{1}{\gamma}I$</li>
+    <li>$R_{nn} = \epsilon I \implies R_{nn}^{-1} = \frac{1}{\epsilon}I$</li>
+</ul>
+</p>
+<p>2. <b>Substitute into the formula:</b>
+\$$ \hat{\bar{x}} = \left(H^T \left(\frac{1}{\epsilon}I\right) H + \frac{1}{\gamma}I\right)^{-1} H^T \left(\frac{1}{\epsilon}I\right) \bar{y} $$
+\$$ \hat{\bar{x}} = \left(\frac{1}{\epsilon}H^T H + \frac{1}{\gamma}I\right)^{-1} \frac{1}{\epsilon}H^T \bar{y} $$
+</p>
+<p>3. <b>Simplify the expression:</b> Factor $\frac{1}{\epsilon}$ out of the term in the inverse.
+\$$ \hat{\bar{x}} = \left[ \frac{1}{\epsilon} \left(H^T H + \frac{\epsilon}{\gamma}I\right) \right]^{-1} \frac{1}{\epsilon}H^T \bar{y} $$
+Using the property $(cA)^{-1} = c^{-1}A^{-1}$:
+\$$ \hat{\bar{x}} = \epsilon \left(H^T H + \frac{\epsilon}{\gamma}I\right)^{-1} \frac{1}{\epsilon}H^T \bar{y} $$
+The $\epsilon$ and $\frac{1}{\epsilon}$ terms cancel out:
+\$$ \hat{\bar{x}} = \left(H^T H + \frac{\epsilon}{\gamma}I\right)^{-1} H^T \bar{y} $$
+</p>
+<p>4. <b>Substitute SNR:</b> We are given that $SNR = \frac{\gamma}{\epsilon}$, so $\frac{\epsilon}{\gamma} = \frac{1}{SNR}$.
+\$$ \hat{\bar{x}} = \left(H^T H + \frac{1}{SNR}I\right)^{-1} H^T \bar{y} $$
+This matches the accepted answer.</p>
+</div></div>
+</body>
+</html>

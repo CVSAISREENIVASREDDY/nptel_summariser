@@ -1,0 +1,837 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week11</title>
+
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+      };
+    </script>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 2em;
+        }
+        .mjx-display {
+            margin: 2.5em 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="week" id="week_11"><h1 class="week-title">Week 11</h1><h2>Transcript Explanations</h2><div class="chapter" id="Lecture 56 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 56 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts from the transcript concerning stochastic processes, particularly focusing on Discrete-Time Markov Chains (DTMCs). The explanation breaks down the core ideas, theories, and the mathematical notation used.</p>
+
+<b><h3>1. Introduction to Stochastic Processes</h3></b>
+<p>A <b>stochastic process</b> is a mathematical and probabilistic model used to describe a system that evolves randomly over time. Instead of the system's future state being completely predictable, it is described in terms of probabilities.</p>
+
+<p><b>Key Characteristics:</b></p>
+<ul>
+    <li><b>Randomness:</b> The evolution of the system has an element of chance. For example, we cannot predict tomorrow's exact stock price with 100% certainty.</li>
+    <li><b>Temporal Correlation:</b> The future state, while random, is often correlated with its past states. For instance, tomorrow's temperature is likely to be close to today's temperature. It is highly unlikely to jump from 35°C to 50°C overnight. The history of the process provides valuable information for predicting its future behavior.</li>
+</ul>
+
+<p><b>Examples of Stochastic Processes:</b></p>
+<ul>
+    <li>The daily temperature of a city.</li>
+    <li>The price of a stock or a stock market index over time.</li>
+    <li>The inventory level of a product in a warehouse.</li>
+    <li>The status of a machine in a factory (e.g., functional or faulty).</li>
+</ul>
+
+<b><h3>2. Modeling Stochastic Processes</h3></b>
+<p>A stochastic process can be modeled as a time series, which is a sequence of observations at different points in time.</p>
+
+<p><b>Discrete-Time vs. Continuous-Time Processes:</b></p>
+<ul>
+    <li><b>Discrete-Time Stochastic Process:</b> The state of the system is observed at distinct, separate points in time. This is represented by a sequence $x_n$, where $n$ is an integer index representing time steps (e.g., $n = 0, 1, 2, \ldots$). The time unit for $n$ can be hours, days, seconds, etc. This is the focus of the transcript.</li>
+    <li><b>Continuous-Time Stochastic Process:</b> The state of the system is observed at every instant over a continuous time interval. This is represented by $x(t)$, where $t$ is a real number.</li>
+</ul>
+
+<p><b>State and State Space:</b></p>
+<ul>
+    <li>The value $x_n$ is called the <b>state</b> of the system at time $n$.</li>
+    <li>The set of all possible values that $x_n$ can take is called the <b>state space</b>, denoted by $S$.</li>
+</ul>
+
+<p>The state space can be infinite or finite. For practical analysis, an infinite state space is often simplified into a finite one through a process called <b>quantization</b> or <b>discretization</b>. For example:</p>
+<ul>
+    <li><b>Temperature:</b> The theoretical state space might be a continuous interval, like $[-10°C, 50°C]$. For practical purposes, this can be quantized into discrete values with a step size of 0.1°C, resulting in a finite state space: $\{ \ldots, 49.8, 49.9, 50.0 \}$.</li>
+    <li><b>Stock Index:</b> The theoretical state space could be $[0, \infty)$. This can be practically modeled by a finite set of values in a specific range with a fixed step size, for example, $\{ \ldots, 48000, 48010, 48020, \ldots \}$.</li>
+</ul>
+<p>Using a finite state space makes the analysis of the system more manageable.</p>
+
+<b><h3>3. The Markov Property and Markov Chains</h3></b>
+<p>The central goal in analyzing a stochastic process is to characterize its evolution, specifically to predict the future state $x_{n+1}$ based on its past history $(x_0, x_1, \ldots, x_n)$. This prediction is made in a probabilistic sense.</p>
+
+<p>A key simplifying assumption in many models is the <b>Markov property</b>. This property states that the future evolution of the process depends <i>only</i> on its current state, and not on the sequence of events that preceded it. In other words, the current state captures all the information from the past that is relevant for predicting the future.</p>
+
+<p>Mathematically, for any state $s_j$ in the state space $S$, the Markov property is defined as:</p>
+\$$ P(x_{n+1} = s_j \mid x_n, x_{n-1}, \ldots, x_0) = P(x_{n+1} = s_j \mid x_n) $$
+<p><b>Intuition:</b> Given the present state $x_n$, the past $(x_{n-1}, \ldots, x_0)$ becomes irrelevant for predicting the future state $x_{n+1}$. The future is "decoupled" from the past by the present.</p>
+
+<p>A discrete-time stochastic process that satisfies the Markov property is called a <b>Discrete-Time Markov Chain (DTMC)</b>.</p>
+
+<b><h3>4. Time-Homogeneous Markov Chains</h3></b>
+<p>In many practical scenarios, the rules governing the system's evolution do not change over time. This leads to the concept of time homogeneity.</p>
+
+<p>A DTMC is said to be <b>time-homogeneous</b> (or stationary) if the probability of transitioning from one state to another does not depend on the specific time $n$ at which the transition occurs. The probability only depends on the starting and ending states.</p>
+
+<p>Mathematically, this means that the conditional probability $P(x_{n+1} = s_j \mid x_n = s_i)$ is the same for all time steps $n$. For example:</p>
+\$$ P(x_1 = s_j \mid x_0 = s_i) = P(x_2 = s_j \mid x_1 = s_i) = P(x_3 = s_j \mid x_2 = s_i) = \ldots $$
+
+<b><h3>5. One-Step Transition Probabilities</h3></b>
+<p>For a time-homogeneous DTMC, the probability of moving from state $s_i$ to state $s_j$ in a single time step is a constant value. This constant is called the <b>one-step transition probability</b> and is denoted by $P_{ij}$.</p>
+
+<p>The formula is:</p>
+\$$ P_{ij} = P(x_{n+1} = s_j \mid x_n = s_i) $$
+<p>This value represents the probability of the system being in state $s_j$ at the next time step, given that it is currently in state $s_i$. Since the chain is time-homogeneous, this probability does not depend on $n$.</p>
+
+<p>These one-step transition probabilities are fundamental because they completely characterize the dynamic behavior of the DTMC. By collecting all these probabilities into a matrix (the transition probability matrix), one can analyze the long-term behavior of the system, make predictions, and understand its properties, which is a core application of linear algebra in this field.</p>
+
+</div></div><div class="chapter" id="Lecture 57 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 57 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts related to Discrete-Time Markov Chains (DTMCs) as presented in the transcript. The focus is on one-step transition probabilities, the transition probability matrix, and their properties, illustrated with examples.</p>
+
+<b>1. One-Step Transition Probability</b>
+<p>The core concept for describing the dynamics of a Markov chain is the <b>one-step transition probability</b>. This is the probability that the process will be in a specific state $ S_j $ at the next time step $ (n+1) $, given that it is currently in state $ S_i $ at time step $ n $.</p>
+<p>Mathematically, this conditional probability is expressed as:</p>
+\$$ P(X_{n+1} = S_j | X_n = S_i) $$
+<p>where:</p>
+<ul>
+<li>$ X_n $ is the random variable representing the state of the process at time $ n $.</li>
+<li>$ S_i $ and $ S_j $ are states from the state space.</li>
+</ul>
+
+<p>A key assumption for the models discussed is that they are <b>time-homogeneous</b>. This means the transition probability does not depend on the specific time step $ n $, only on the starting and ending states. Therefore, the probability of moving from state $ S_i $ to $ S_j $ is the same at any point in time.</p>
+\$$ P(X_{n+1} = S_j | X_n = S_i) = P(X_1 = S_j | X_0 = S_i) $$
+<p>Due to this property, we can use a simpler notation for the one-step transition probability:</p>
+\$$ p_{ij} = P(X_{n+1} = S_j | X_n = S_i) $$
+<p>Here, $ p_{ij} $ represents the probability of transitioning from state $ i $ to state $ j $ in a single time step.</p>
+
+<b>2. The Transition Probability Matrix (TPM)</b>
+<p>To characterize the entire DTMC, we can organize all the one-step transition probabilities into a matrix known as the <b>transition probability matrix</b>, denoted by $ \mathbf{P} $. If the system has $ N $ possible states, this will be an $ N \times N $ matrix.</p>
+<p>The element in the $ i $-th row and $ j $-th column of the matrix $ \mathbf{P} $ is the transition probability $ p_{ij} $.</p>
+\$$ \mathbf{P} = \begin{pmatrix} p_{11} & p_{12} & \cdots & p_{1n} \\ p_{21} & p_{22} & \cdots & p_{2n} \\ \vdots & \vdots & \ddots & \vdots \\ p_{n1} & p_{n2} & \cdots & p_{nn} \end{pmatrix} $$
+<p>The structure of this matrix has a clear interpretation:</p>
+<ul>
+<li><b>Rows</b> correspond to the <b>starting state</b> (the state at time $ n $). For example, the first row contains all the probabilities for transitions <i>out of</i> state 1.</li>
+<li><b>Columns</b> correspond to the <b>ending state</b> (the state at time $ n+1 $). For example, the first column contains all probabilities for transitions <i>into</i> state 1.</li>
+</ul>
+<p>For instance, the element $ p_{21} $ represents the probability of moving from state 2 to state 1 in one step:</p>
+\$$ p_{21} = P(X_{n+1} = S_1 | X_n = S_2) $$
+
+<b>3. Properties of the Transition Probability Matrix</b>
+<p>Since the elements of $ \mathbf{P} $ are probabilities, the matrix must satisfy two fundamental properties:</p>
+<ol>
+    <li><b>Non-negativity:</b> Every element of the matrix must be a valid probability, meaning it must be greater than or equal to zero.
+        \$$ p_{ij} \ge 0 \quad \text{for all } i, j $$
+    </li>
+    <li><b>Rows Sum to One:</b> If the process is in state $ S_i $, it must transition to <i>some</i> state in the next step (including possibly staying in state $ S_i $). Therefore, the sum of all transition probabilities from a given starting state $ S_i $ must be equal to 1. This means the sum of the elements in each row of the matrix $ \mathbf{P} $ must be 1.
+        \$$ \sum_{j=1}^{n} p_{ij} = 1 \quad \text{for each row } i = 1, 2, \ldots, n $$
+    </li>
+</ol>
+
+<b>4. State Transition Diagram</b>
+<p>A <b>state transition diagram</b> is a graphical tool used to visualize a DTMC. It provides a more intuitive representation than the matrix, especially for understanding the flow of the process.</p>
+<ul>
+    <li>Each state is represented by a node (e.g., a circle).</li>
+    <li>A directed edge (an arrow) from state $ S_i $ to state $ S_j $ represents a possible transition.</li>
+    <li>The arrow is labeled with the corresponding transition probability $ p_{ij} $.</li>
+    <li>If $ p_{ij} = 0 $, no arrow is drawn from state $ i $ to state $ j $.</li>
+</ul>
+<p>This diagram is very convenient for visualizing the behavior of the Markov chain, while the matrix is more suitable for mathematical computations.</p>
+
+<b>Example 1: A 3-State DTMC</b>
+<p>Consider a DTMC with 3 states and the following transition probability matrix:</p>
+\$$ \mathbf{P} = \begin{pmatrix} 0.35 & 0.35 & 0.3 \\ 0.2 & 0.7 & 0.1 \\ 0.4 & 0 & 0.6 \end{pmatrix} $$
+<p>Here:</p>
+<ul>
+    <li>$ p_{23} = 0.1 $ is the probability of moving from state 2 to state 3 in one step: $ P(X_{n+1}=3 | X_n=2) = 0.1 $.</li>
+    <li>$ p_{32} = 0 $ indicates that it is impossible to transition directly from state 3 to state 2.</li>
+</ul>
+<p>The state transition diagram for this matrix would look like this:</p>
+<center>
+    <img src="https://i.imgur.com/8Qn7l6w.png" alt="State Transition Diagram for 3-State DTMC" width="450">
+</center>
+<p>In the diagram: S1, S2, and S3 are the states. The arrows show the direction of transition and are labeled with their probabilities. For example, the arrow from S2 to S3 has the label 0.1, representing $p_{23}$. The loop on S2 represents $p_{22} = 0.7$.</p>
+
+
+<b>Example 2: Industrial Reliability Model</b>
+<p>This example models a machine that can be in one of two states:</p>
+<ul>
+    <li>$ S_1 $: Operational</li>
+    <li>$ S_2 $: Faulty</li>
+</ul>
+<p>The transition probabilities are defined as follows:</p>
+<ul>
+    <li>The probability that an operational machine remains operational in the next time step is 0.95.
+        \$$ p_{11} = P(X_{n+1} = S_1 | X_n = S_1) = 0.95 $$
+    </li>
+    <li>The probability of breakdown (operational to faulty) must be $ 1 - p_{11} $, since the machine must either stay operational or become faulty.
+        \$$ p_{12} = P(X_{n+1} = S_2 | X_n = S_1) = 1 - 0.95 = 0.05 $$
+    </li>
+    <li>The probability that a faulty machine remains faulty is 0.10.
+        \$$ p_{22} = P(X_{n+1} = S_2 | X_n = S_2) = 0.10 $$
+    </li>
+    <li>The probability of repair (faulty to operational) is $ 1 - p_{22} $.
+        \$$ p_{21} = P(X_{n+1} = S_1 | X_n = S_2) = 1 - 0.10 = 0.90 $$
+    </li>
+</ul>
+<p>These probabilities are collected into a $ 2 \times 2 $ transition probability matrix:</p>
+\$$ \mathbf{P} = \begin{pmatrix} 0.95 & 0.05 \\ 0.90 & 0.10 \end{pmatrix} $$
+<p>Here, the first row describes the transitions from the "Operational" state, and the second row describes transitions from the "Faulty" state. Both rows sum to 1, as required.</p>
+</div></div><div class="chapter" id="Lecture 58 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 58 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts and examples of Discrete Time Markov Chains (DTMCs) presented in the transcript. The focus is on modeling systems with multiple components and systems with boundary conditions.</p>
+
+<b>1. Industrial Reliability with Two Independent Machines</b>
+<p>The transcript extends a previous example of a single machine's reliability to a more complex system involving two machines. The core principles for this extension are the concept of a multi-component state space and the probabilistic rule for independent events.</p>
+
+<b>a. Key Assumption: Independence</b>
+<p>A crucial assumption is that the two machines operate <b>independently</b>. This means that the breakdown or repair of one machine has no influence on the status of the other. In probability theory, if two events, A and B, are independent, the probability of both events occurring is the product of their individual probabilities. This is a fundamental rule used throughout the calculations.</p>
+\$$ P(A \cap B) = P(A) \times P(B) $$
+
+<b>b. Defining the State Space</b>
+<p>With two machines, the state of the system is determined by the status of both. The transcript notes that since the machines are similar (interchangeable), we only care about the <i>number</i> of machines in each state, not <i>which specific machine</i>. This simplifies the state space to three possible states:</p>
+<ul>
+    <li><b>S1:</b> Both machines are operational.</li>
+    <li><b>S2:</b> One machine is operational, and one is faulty.</li>
+    <li><b>S3:</b> Both machines are faulty.</li>
+</ul>
+
+<b>c. Calculating One-Step Transition Probabilities</b>
+<p>The goal is to build a 3x3 transition probability matrix, $P$, where each element $P_{ij}$ is the probability of moving from state $S_i$ to state $S_j$ in one time step (one hour). The transcript illustrates the calculation for two specific transitions.</p>
+
+<p><b>i. Transition from S1 to S1 (Both Operational to Both Operational)</b></p>
+<p>This transition, denoted as $P_{11}$, occurs if Machine 1 remains operational AND Machine 2 remains operational. The probability for a single machine to remain operational is given as 0.95. Due to independence, we multiply the probabilities:</p>
+\$$ P_{11} = P(X_{n+1}=S_1 | X_n=S_1) $$
+\$$ P_{11} = P(\text{M1 stays op}) \times P(\text{M2 stays op}) $$
+\$$ P_{11} = 0.95 \times 0.95 = 0.9025 $$
+
+<p><b>ii. Transition from S3 to S2 (Both Faulty to One Operational/One Faulty)</b></p>
+<p>This transition, $P_{32}$, is more complex. It can happen in two mutually exclusive ways:</p>
+<ol>
+    <li>Machine 1 is repaired (Faulty → Operational) AND Machine 2 remains faulty (Faulty → Faulty).</li>
+    <li>Machine 1 remains faulty (Faulty → Faulty) AND Machine 2 is repaired (Faulty → Operational).</li>
+</ol>
+<p>From the single-machine data, we know:</p>
+<ul>
+    <li>Probability of repair (Faulty → Op) = 0.9</li>
+    <li>Probability of staying faulty (Faulty → Faulty) = 0.1</li>
+</ul>
+<p>Since the two scenarios are mutually exclusive, we add their probabilities. For each scenario, we multiply the probabilities of the machine events because they are independent.</p>
+\$$ P_{32} = P(X_{n+1}=S_2 | X_n=S_3) $$
+\$$ P_{32} = [P(\text{M1 repaired}) \times P(\text{M2 stays faulty})] + [P(\text{M1 stays faulty}) \times P(\text{M2 repaired})] $$
+\$$ P_{32} = (0.9 \times 0.1) + (0.1 \times 0.9) $$
+\$$ P_{32} = 0.09 + 0.09 = 0.18 $$
+
+<p>By computing all nine such probabilities, we can construct the full transition probability matrix for this system.</p>
+
+<b>d. The Transition Probability Matrix (P)</b>
+<p>The resulting 3x3 matrix, which characterizes the entire dynamic behavior of the two-machine system, is given as:</p>
+\$$ P = \begin{pmatrix} 0.9025 & 0.095 & 0.0025 \\ 0.855 & 0.14 & 0.005 \\ 0.81 & 0.18 & 0.01 \end{pmatrix} $$
+
+<b>2. Stock Market Price Modeling</b>
+<p>This example demonstrates how DTMCs can model systems with discrete states and defined transition rules, including boundary conditions.</p>
+
+<b>a. Problem Setup</b>
+<p>The system models the daily price of a stock, which is simplified to a finite number of states.</p>
+<ul>
+    <li><b>State Space (S):</b> The possible prices are $\$100, \$200, \$300, \$400, \$500$. These are denoted as states $S_1, S_2, S_3, S_4, S_5$ respectively.</li>
+    <li><b>Transition Rules:</b> From any non-boundary state, the price can change in one day as follows:
+        <ul>
+            <li>Increase by $\$100$ with probability $0.2$.</li>
+            <li>Decrease by $\$100$ with probability $0.2$.</li>
+            <li>Remain constant. Since the probabilities for any given starting state must sum to 1, this probability is $1 - 0.2 - 0.2 = 0.6$.</li>
+        </ul>
+    </li>
+    <li><b>Boundary Conditions:</b>
+        <ul>
+            <li>At $\$100$ (State S1), the price cannot decrease further.</li>
+            <li>At $\$500$ (State S5), the price cannot increase further.</li>
+        </ul>
+        This is a key feature. The probability that would normally be assigned to the impossible transition (e.g., decreasing from $\$100$) is reallocated to the "remain constant" transition.
+    </li>
+</ul>
+
+<b>b. Calculating Transition Probabilities</b>
+<p>Let's calculate the probabilities for a few rows of the transition matrix.</p>
+
+<p><b>i. From S3 ($\$300$)</b></p>
+<p>This is a standard, non-boundary state.</p>
+<ul>
+    <li>$P_{32}$ (Decrease to $\$200$): $ P(X_{n+1}=S_2 | X_n=S_3) = 0.2 $</li>
+    <li>$P_{34}$ (Increase to $\$400$): $ P(X_{n+1}=S_4 | X_n=S_3) = 0.2 $</li>
+    <li>$P_{33}$ (Remain at $\$300$): $ P(X_{n+1}=S_3 | X_n=S_3) = 1 - 0.2 - 0.2 = 0.6 $</li>
+    <li>$P_{31}$ and $P_{35}$ are 0, as a jump of $\$200$ in one step is not allowed.</li>
+</ul>
+
+<p><b>ii. From S1 ($\$100$) - A Boundary State</b></p>
+<p>Here, a decrease is impossible.</p>
+<ul>
+    <li>$P_{12}$ (Increase to $\$200$): $ P(X_{n+1}=S_2 | X_n=S_1) = 0.2 $</li>
+    <li>$P_{11}$ (Remain at $\$100$): The probability of increasing is 0.2. The probability of decreasing is 0. All remaining probability goes to staying constant. Therefore, $ P(X_{n+1}=S_1 | X_n=S_1) = 1 - 0.2 = 0.8 $.</li>
+</ul>
+
+<p><b>iii. From S5 ($\$500$) - A Boundary State</b></p>
+<p>Similarly, an increase is impossible.</p>
+<ul>
+    <li>$P_{54}$ (Decrease to $\$400$): $ P(X_{n+1}=S_4 | X_n=S_5) = 0.2 $</li>
+    <li>$P_{55}$ (Remain at $\$500$): $ P(X_{n+1}=S_5 | X_n=S_5) = 1 - 0.2 = 0.8 $.</li>
+</ul>
+
+<b>c. The Transition Probability Matrix (P)</b>
+<p>Combining all calculations gives the 5x5 transition matrix for the stock price model. The rows and columns correspond to the states $S_1$ through $S_5$.</p>
+\$$ P = \begin{pmatrix} 0.8 & 0.2 & 0 & 0 & 0 \\ 0.2 & 0.6 & 0.2 & 0 & 0 \\ 0 & 0.2 & 0.6 & 0.2 & 0 \\ 0 & 0 & 0.2 & 0.6 & 0.2 \\ 0 & 0 & 0 & 0.2 & 0.8 \end{pmatrix} $$
+
+<p>These examples illustrate the power and versatility of the DTMC framework for modeling a wide range of real-world systems, from industrial engineering to finance.</p>
+</div></div><div class="chapter" id="Lecture 59 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 59 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts discussed in the transcript, focusing on how to determine the <b>n-step transition probabilities</b> for a Discrete-Time Markov Chain (DTMC).</p>
+
+<h3>1. Characterizing n-Step Transition Probabilities</h3>
+<p>While the one-step transition probability matrix, <b>P</b>, describes the probability of moving from one state to another in a single time step, we are often interested in the probability of a transition over multiple steps. An <b>m-step transition probability</b> is the probability that the process will be in state $s_j$ after $m$ steps, given that it is currently in state $s_i$. This is denoted as:</p>
+\$$ P(X_{n+m} = s_j | X_n = s_i) $$
+<p>This probability is independent of the specific time $n$ due to the <b>time-homogeneity</b> property of the Markov chains being discussed. The core idea is to derive these multi-step probabilities from the known one-step probabilities.</p>
+
+<h3>2. The Two-Step Transition Probability and Matrix Multiplication</h3>
+<p>To understand the general case, we begin by analyzing the two-step transition (where $m=2$). The probability of moving from state $s_i$ to state $s_j$ in two steps is written as:</p>
+\$$ P(X_{n+2} = s_j | X_n = s_i) $$
+<p>To make this transition, the process must pass through some intermediate state $s_k$ at time $n+1$. The key insight is that the two-step transition probabilities can be found by squaring the one-step transition probability matrix, <b>P</b>.</p>
+
+<p>Let's examine the $(i, j)$-th element of the matrix $P^2 = P \times P$. Standard matrix multiplication gives us:</p>
+\$$ (P^2)_{ij} = \sum_{k=1}^{N} p_{ik} p_{kj} $$
+<p>where $N$ is the total number of states.</p>
+
+<p>We can interpret the terms in this summation probabilistically:</p>
+<ul>
+    <li>$p_{ik} = P(X_{n+1} = s_k | X_n = s_i)$ is the probability of going from state $i$ to state $k$ in one step.</li>
+    <li>$p_{kj} = P(X_{n+2} = s_j | X_{n+1} = s_k)$ is the probability of going from state $k$ to state $j$ in the next step. Note that we use the same probability value as $P(X_{n+1} = s_j | X_n = s_k)$ because of the time-homogeneity property.</li>
+</ul>
+
+<p>The product $p_{ik} p_{kj}$ represents the probability of the specific path $s_i \rightarrow s_k \rightarrow s_j$. Since the process must pass through one of the intermediate states $s_1, s_2, ..., s_N$, we sum the probabilities of all possible intermediate paths to find the total probability of transitioning from $s_i$ to $s_j$ in two steps.</p>
+
+<h4>Connection to the Total Probability Rule</h4>
+<p>This summation is a direct application of the <b>Law of Total Probability</b>. The rule states that the probability of an event A can be found by summing its conditional probabilities with respect to a set of mutually exclusive and exhaustive events $B_i$:</p>
+\$$ P(A) = \sum_{i=1}^{N} P(A \cap B_i) = \sum_{i=1}^{N} P(A | B_i) P(B_i) $$
+<p>In our context:</p>
+<ul>
+    <li>Event A is $\{X_{n+2} = s_j\}$ given $\{X_n = s_i\}$.</li>
+    <li>The set of events $B_k$ is $\{X_{n+1} = s_k\}$ for $k = 1, ..., N$. These are mutually exclusive (the process can only be in one state at time $n+1$) and exhaustive (it must be in one of the possible states).</li>
+</ul>
+<p>Applying this, we get:</p>
+\$$ P(X_{n+2} = s_j | X_n = s_i) = \sum_{k=1}^{N} P(X_{n+2}=s_j, X_{n+1}=s_k | X_n=s_i) $$
+\$$ = \sum_{k=1}^{N} P(X_{n+2}=s_j | X_{n+1}=s_k) \times P(X_{n+1}=s_k | X_n=s_i) $$
+\$$ = \sum_{k=1}^{N} p_{kj} \times p_{ik} = (P^2)_{ij} $$
+<p>Thus, the $(i, j)$-th element of $P^2$ is precisely the two-step transition probability from state $s_i$ to state $s_j$.</p>
+
+<h3>3. Generalization to m-Step Transitions</h3>
+<p>This logic extends naturally. The <b>m-step transition probability matrix</b> is obtained by raising the one-step transition matrix <b>P</b> to the power of $m$:</p>
+\$$ P^{(m)} = P^m = \underbrace{P \times P \times \dots \times P}_{m \text{ times}} $$
+<p>The $(i, j)$-th element of this matrix, $(P^m)_{ij}$, gives the probability of transitioning from state $s_i$ to state $s_j$ in exactly $m$ steps:</p>
+\$$ (P^m)_{ij} = P(X_{n+m} = s_j | X_n = s_i) $$
+
+<h3>4. Examples</h3>
+
+<h4>Example 1: Industrial Reliability</h4>
+<p>A machine can be in one of two states: 1 (Operational, O) or 2 (Faulty, F). The one-step transition matrix <b>P</b> is:</p>
+\$$ P = \begin{pmatrix} 0.95 & 0.05 \\ 0.90 & 0.10 \end{pmatrix} $$
+<p>The two-step transition matrix, $P^2$, is calculated as:</p>
+\$$ P^2 = P \times P = \begin{pmatrix} 0.95 & 0.05 \\ 0.90 & 0.10 \end{pmatrix} \begin{pmatrix} 0.95 & 0.05 \\ 0.90 & 0.10 \end{pmatrix} = \begin{pmatrix} 0.9475 & 0.0525 \\ 0.9450 & 0.0550 \end{pmatrix} $$
+<p>Let's interpret the element $(P^2)_{11} = 0.9475$. This is the probability that a machine starting in the Operational state is still Operational after two time steps. This can happen in two ways:</p>
+<ol>
+    <li>It stays Operational in the first step and stays Operational in the second (O → O → O). Probability = $0.95 \times 0.95 = 0.9025$.</li>
+    <li>It becomes Faulty in the first step and is repaired in the second (O → F → O). Probability = $0.05 \times 0.90 = 0.0450$.</li>
+</ol>
+<p>The sum is $0.9025 + 0.0450 = 0.9475$, matching our matrix calculation. This shows that over two steps, the probability of the machine being operational (0.9475) is slightly lower than after one step (0.95), and the probability of it becoming faulty (0.0525) is slightly higher than after one step (0.05).</p>
+
+<h4>Example 2: Stock Price</h4>
+<p>A stock price can be in one of five states: $s_1=\$100, s_2=\$200, s_3=\$300, s_4=\$400, s_5=\$500$. The one-step transition matrix is:</p>
+\$$ P = \begin{pmatrix} 0.8 & 0.2 & 0 & 0 & 0 \\ 0.2 & 0.6 & 0.2 & 0 & 0 \\ 0 & 0.2 & 0.6 & 0.2 & 0 \\ 0 & 0 & 0.2 & 0.6 & 0.2 \\ 0 & 0 & 0 & 0.2 & 0.8 \end{pmatrix} $$
+<p>The two-step transition matrix $P^2$ is:</p>
+\$$ P^2 = \begin{pmatrix} 0.68 & 0.28 & 0.04 & 0 & 0 \\ 0.28 & 0.44 & 0.24 & 0.04 & 0 \\ 0.04 & 0.24 & 0.44 & 0.24 & 0.04 \\ 0 & 0.04 & 0.24 & 0.44 & 0.28 \\ 0 & 0 & 0.04 & 0.28 & 0.68 \end{pmatrix} $$
+<p>Let's analyze the element $(P^2)_{35} = 0.04$. This is the probability of the stock price moving from $300 (state 3) to $500 (state 5) in two days. Based on the one-step matrix, the only way for this to happen is to move from state 3 to state 4, and then from state 4 to state 5.</p>
+<ul>
+    <li>Probability(3 → 4) = $p_{34} = 0.2$</li>
+    <li>Probability(4 → 5) = $p_{45} = 0.2$</li>
+</ul>
+<p>The total probability is $p_{34} \times p_{45} = 0.2 \times 0.2 = 0.04$, which matches the entry in the $P^2$ matrix.</p>
+
+<h3>5. A Fundamental Property of Transition Matrices</h3>
+<p>A crucial property that holds for <i>any</i> m-step transition probability matrix ($P, P^2, P^3, \dots$) is that <b>the sum of the elements in each row must equal 1</b>.</p>
+\$$ \sum_{j=1}^{N} (P^m)_{ij} = 1 \quad \text{for all rows } i $$
+<p>This is because if the process starts in state $s_i$, after $m$ steps it must end up in one of the possible states $s_1, s_2, \dots, s_N$. Summing the probabilities of transitioning to all possible destination states must therefore equal 1.</p>
+</div></div><div class="chapter" id="Lecture 60 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 60 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts discussed in the transcript, focusing on the limiting behavior of Discrete-Time Markov Chains (DTMCs) and the concept of a stationary distribution.</p>
+
+<h3>1. Limiting Behavior of a DTMC</h3>
+<p>The central question addressed is: What happens to the probability of a DTMC being in a particular state after a very long time? Let $X_n$ be the state of the DTMC at time step $n$. We are interested in the behavior of the probability $P(X_n = s_j)$ as $n \to \infty$.</p>
+
+<b>N-Step Transition Probabilities</b>
+<p>The analysis begins by examining the $n$-step transition probability matrix, denoted as $P^n$. The element $(i, j)$ of this matrix, $p_{ij}^{(n)}$, represents the probability of transitioning from state $s_i$ to state $s_j$ in exactly $n$ steps.</p>
+\$$ p_{ij}^{(n)} = P(X_n = s_j | X_0 = s_i) $$
+
+<p><b>Example: Industrial Reliability Problem</b></p>
+<p>The transcript uses an example of a machine with two states: Operational ($s_1$) and Faulty ($s_2$).</p>
+<ul>
+    <li>The <b>1-step transition matrix</b> $P$ is given by:
+        \$$ P = \begin{pmatrix} 0.95 & 0.05 \\ 0.10 & 0.90 \end{pmatrix} $$
+    </li>
+    <li>The <b>2-step transition matrix</b> $P^2$ is:
+        \$$ P^2 = \begin{pmatrix} 0.9025 + 0.005 & 0.0475 + 0.045 \\ 0.095 + 0.09 & 0.005 + 0.81 \end{pmatrix} = \begin{pmatrix} 0.9075 & 0.0925 \\ 0.185 & 0.815 \end{pmatrix} $$
+        <i>(Note: The transcript provides slightly different values for $P^2$, possibly from a different example, but the concept remains the same.)</i>
+    </li>
+    <li>As $n$ increases, for example to $n=10$, the matrix $P^{10}$ becomes:
+         \$$ P^{10} \approx \begin{pmatrix} 0.6688 & 0.3312 \\ 0.6624 & 0.3376 \end{pmatrix} $$
+        <i>(Again, the transcript uses a different numerical example where convergence is faster, showing $P^{10} \approx \begin{pmatrix} 0.9474 & 0.0526 \\ 0.9474 & 0.0526 \end{pmatrix}$. We will proceed using the conceptual point from the transcript.)</i>
+    </li>
+</ul>
+
+<p>The key observation is that as $n$ becomes very large, the rows of the matrix $P^n$ become identical.
+\$$ \lim_{n \to \infty} P^n = \begin{pmatrix} \pi_1 & \pi_2 & \dots & \pi_N \\ \pi_1 & \pi_2 & \dots & \pi_N \\ \vdots & \vdots & \ddots & \vdots \\ \pi_1 & \pi_2 & \dots & \pi_N \end{pmatrix} $$
+Each row of this limiting matrix is the same vector, which we can call $\bar{\pi} = (\pi_1, \pi_2, \dots, \pi_N)$.
+
+<p>This implies that after a long time, the probability of being in state $s_j$ is $\pi_j$, regardless of the initial state $s_i$.
+\$$ \pi_j = \lim_{n \to \infty} P(X_n = s_j | X_0 = s_i) \quad \text{for all } i $$
+The system's "memory" of its starting state fades over time.</p>
+
+<b>Unconditional Limiting Probability</b>
+<p>Using this result, we can find the unconditional probability of being in state $s_j$ at a very large time $n$. By the law of total probability:</p>
+\$$ P(X_n = s_j) = \sum_i P(X_n = s_j | X_0 = s_i) \cdot P(X_0 = s_i) $$
+Taking the limit as $n \to \infty$:
+\$$ \lim_{n \to \infty} P(X_n = s_j) = \sum_i \left( \lim_{n \to \infty} P(X_n = s_j | X_0 = s_i) \right) \cdot P(X_0 = s_i) $$
+Since the limit of the conditional probability is $\pi_j$ for all starting states $s_i$, we get:
+\$$ \lim_{n \to \infty} P(X_n = s_j) = \sum_i \pi_j \cdot P(X_0 = s_i) $$
+We can factor out $\pi_j$ as it does not depend on the summation index $i$:
+\$$ = \pi_j \sum_i P(X_0 = s_i) $$
+Since the sum of initial probabilities over all possible states is 1, we are left with:
+\$$ \lim_{n \to \infty} P(X_n = s_j) = \pi_j $$
+This powerful result shows that the long-run probability of the DTMC being in state $s_j$ converges to $\pi_j$, regardless of the initial probability distribution. This vector $\bar{\pi}$ is known as the <b>limiting distribution</b>.
+
+<h3>2. Stationary Distribution</h3>
+<p>The concept of a stationary distribution is closely related to the limiting behavior. A probability distribution $\bar{\pi}$ is called <b>stationary</b> if, once the system is in that distribution, it remains in that distribution for all subsequent time steps.</p>
+
+<p>Let's assume the initial state probabilities are given by the vector $\bar{\pi}$, so $P(X_0 = s_i) = \pi_i$. The probability of being in state $s_j$ at the next time step ($n=1$) is:</p>
+\$$ P(X_1 = s_j) = \sum_i P(X_1 = s_j | X_0 = s_i) \cdot P(X_0 = s_i) = \sum_i p_{ij} \cdot \pi_i $$
+For the distribution to be stationary, this probability must be equal to the initial probability $\pi_j$. Therefore, the condition for a stationary distribution is:
+\$$ \pi_j = \sum_{i} \pi_i p_{ij} \quad \text{for all } j $$
+
+<p>In matrix notation, if $\bar{\pi}$ is a row vector, this system of equations can be written as:</p>
+\$$ \bar{\pi} = \bar{\pi} P $$
+This equation means that if the DTMC starts with the probability distribution $\bar{\pi}$, the distribution of states at time $n=1$ will also be $\bar{\pi}$, and by extension, it will be $\bar{\pi}$ for all future times $n\). The distribution does not change with time, hence the term "stationary."</p>
+
+<b>Finding the Stationary Distribution via Linear Algebra</b>
+<p>The equation $\bar{\pi} = \bar{\pi} P$, or $\bar{\pi}^T = P^T \bar{\pi}^T$ for column vectors, reveals a deep connection to linear algebra. This equation states that $\bar{\pi}$ is a <b>left eigenvector</b> of the transition matrix $P$ corresponding to an <b>eigenvalue of 1</b>.</p>
+<p>To find the stationary distribution, we need to solve this eigenvector problem. However, eigenvectors are only unique up to a scalar multiple. Since $\bar{\pi}$ must be a valid probability distribution, its components must satisfy an additional constraint: they must sum to 1.</p>
+\$$ \sum_i \pi_i = 1 $$
+Therefore, the stationary distribution $\bar{\pi}$ is the unique left eigenvector of $P$ corresponding to the eigenvalue 1 whose components sum to 1.</p>
+
+<p>For many common types of DTMCs (specifically, irreducible and aperiodic ones, which are collectively called ergodic), the following is true:</p>
+<ol>
+    <li>A unique stationary distribution exists.</li>
+    <li>The limiting distribution exists and is equal to this unique stationary distribution.</li>
+</ol>
+<p>This explains why the rows of $P^n$ in the example converged to a vector that is also the stationary distribution of the system. Finding this eigenvector is often a more direct way to calculate the long-run probabilities than by raising the matrix $P$ to a high power.</p>
+
+</div></div><div class="chapter" id="Lecture 61 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 61 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts from the transcript, focusing on the least squares problem, the conditions for its standard solution, and the approach for solving it in more general cases.</p>
+
+<b><h3>1. The Least Squares Problem Revisited</h3></b>
+<p>The discussion begins by revisiting the fundamental least squares problem. This problem arises when we have an overdetermined system of linear equations, where there are more equations than unknowns.</p>
+<p>The system is represented as:</p>
+\$$ \mathbf{y} = A \mathbf{x} $$
+<p>Here:</p>
+<ul>
+    <li>$\mathbf{y}$ is a vector of $m$ observations or measurements, $\mathbf{y} \in \mathbb{R}^m$.</li>
+    <li>$A$ is an $m \times n$ matrix, where $m > n$. This is often called a "tall matrix" because it has more rows than columns.</li>
+    <li>$\mathbf{x}$ is a vector of $n$ unknown variables, $\mathbf{x} \in \mathbb{R}^n$.</li>
+</ul>
+<p>Expanded, the system looks like this:</p>
+\$$
+\begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_m \end{bmatrix} =
+\begin{bmatrix} | & | & & | \\ \mathbf{a}_1 & \mathbf{a}_2 & \dots & \mathbf{a}_n \\ | & | & & | \end{bmatrix}
+\begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix}
+\$$]
+<p>Because there are more equations ($m$) than unknowns ($n$), an exact solution $\mathbf{x}$ that satisfies all equations simultaneously typically does not exist. Instead, the goal is to find the vector $\mathbf{x}$ that makes the error (or residual) vector, $\mathbf{y} - A\mathbf{x}$, as small as possible. The "least squares" method minimizes the squared Euclidean norm of this error:</p>
+\$$ \min_{\mathbf{x}} ||\mathbf{y} - A\mathbf{x}||^2 $$
+
+<b><h3>2. The Standard Solution and the Pseudo-Inverse</h3></b>
+<p>For a specific class of problems, there is a well-known closed-form solution for the least squares estimate of $\mathbf{x}$, often denoted as $\hat{\mathbf{x}}$. This solution is given by the formula:</p>
+\$$ \hat{\mathbf{x}} = (A^T A)^{-1} A^T \mathbf{y} $$
+<p>The matrix term $(A^T A)^{-1} A^T$ is very important and is called the <b>pseudo-inverse</b> of $A$, denoted by $A^\dagger$. Using this notation, the solution can be written more compactly:</p>
+\$$ \hat{\mathbf{x}} = A^\dagger \mathbf{y} \quad \text{where} \quad A^\dagger = (A^T A)^{-1} A^T $$
+<p>A critical point highlighted in the transcript is that this formula is not universally applicable. Its existence hinges on whether the matrix $A^T A$ can be inverted.</p>
+
+<b><h3>3. Condition for the Existence of the Standard Solution</h3></b>
+<p>The central question addressed is: under what conditions is the matrix $A^T A$ invertible? The transcript presents and proves a fundamental theorem of linear algebra.</p>
+<p><b>Theorem:</b> The $n \times n$ matrix $A^T A$ is invertible if and only if the $m \times n$ matrix $A$ has <b>full column rank</b>.</p>
+<p>Full column rank means that all the columns of $A$ are linearly independent. For an $m \times n$ matrix, this is equivalent to saying that the rank of the matrix is equal to its number of columns:</p>
+\$$ \text{rank}(A) = n $$
+<p>A proof for this "if and only if" statement is provided in two parts.</p>
+
+<b><h4>Proof</h4></b>
+<p><b>Part 1: If A has full column rank, then $A^T A$ is invertible.</b></p>
+<p>This is proven by contradiction. </p>
+<ol>
+    <li><b>Assumption:</b> Let $A$ have full column rank, so $\text{rank}(A) = n$.</li>
+    <li><b>Contradictory Premise:</b> Assume that $A^T A$ is <i>not</i> invertible. This means it is a singular matrix.</li>
+    <li>A property of singular matrices is that they have a non-trivial null space. This implies there exists a non-zero vector $\mathbf{u} \neq \mathbf{0}$ such that:
+    \$$ A^T A \mathbf{u} = \mathbf{0} $$
+    </li>
+    <li>Pre-multiply both sides by $\mathbf{u}^T$:
+    \$$ \mathbf{u}^T (A^T A \mathbf{u}) = \mathbf{u}^T \mathbf{0} = 0 $$
+    </li>
+    <li>Using the properties of transposes, $\mathbf{u}^T A^T = (A\mathbf{u})^T$, we can rewrite the left side:
+    \$$ (A\mathbf{u})^T (A\mathbf{u}) = 0 $$
+    </li>
+    <li>The dot product of a vector with itself is the square of its norm. Therefore:
+    \$$ ||A\mathbf{u}||^2 = 0 $$
+    </li>
+    <li>This implies that the vector $A\mathbf{u}$ must be the zero vector:
+    \$$ A\mathbf{u} = \mathbf{0} $$
+    </li>
+    <li>We started with a non-zero vector $\mathbf{u}$ and found that $A\mathbf{u} = \mathbf{0}$. This means that $A$ has a non-trivial null space. However, a matrix with a non-trivial null space cannot have full column rank. This contradicts our initial assumption that $\text{rank}(A) = n$.</li>
+    <li>Therefore, our premise that $A^T A$ is not invertible must be false. Conclusion: If $A$ has full column rank, $A^T A$ must be invertible.</li>
+</ol>
+
+<p><b>Part 2: If $A^T A$ is invertible, then A has full column rank.</b></p>
+<p>This part is also proven by contradiction (or more formally, by proving the contrapositive).</p>
+<ol>
+    <li><b>Assumption:</b> Let $A^T A$ be invertible.</li>
+    <li><b>Contradictory Premise:</b> Assume that $A$ does <i>not</i> have full column rank. This means $\text{rank}(A) < n$.</li>
+    <li>If $A$ does not have full column rank, its columns are linearly dependent, which means it has a non-trivial null space. Thus, there exists a non-zero vector $\mathbf{u} \neq \mathbf{0}$ such that:
+    \$$ A\mathbf{u} = \mathbf{0} $$
+    </li>
+    <li>Pre-multiply both sides by $A^T$:
+    \$$ A^T(A\mathbf{u}) = A^T\mathbf{0} $$
+    \$$ A^T A \mathbf{u} = \mathbf{0} $$
+    </li>
+    <li>This result shows that the non-zero vector $\mathbf{u}$ is in the null space of $A^T A$. This means $A^T A$ has a non-trivial null space, which implies that $A^T A$ is singular and therefore <i>not</i> invertible.</li>
+    <li>This contradicts our initial assumption that $A^T A$ is invertible.</li>
+    <li>Therefore, our premise that $A$ does not have full column rank must be false. Conclusion: If $A^T A$ is invertible, $A$ must have full column rank.</li>
+</ol>
+<p>This completes the proof that $A^T A$ is invertible if and only if $A$ has full column rank.</p>
+
+<b><h3>4. The Rank-Deficient Case: What if A Does Not Have Full Column Rank?</h3></b>
+<p>The next logical question is what to do when $\text{rank}(A) < n$. In this scenario, $A^T A$ is not invertible, and the standard formula for the least squares solution cannot be used. This is known as the rank-deficient case.</p>
+<p>To solve the problem in this more general setting, the transcript proposes using the <b>Singular Value Decomposition (SVD)</b> of the matrix $A$.</p>
+<p>The SVD of an $m \times n$ matrix $A$ is given by:</p>
+\$$ A = U \Sigma V^T $$
+<p>For a "tall" matrix $A$ (where $m>n$), the dimensions of the SVD components are typically:</p>
+<ul>
+    <li>$U$ is an $m \times n$ matrix with orthonormal columns.</li>
+    <li>$\Sigma$ is an $n \times n$ diagonal matrix containing the singular values $\sigma_i$ in decreasing order: $\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_n \ge 0$.</li>
+    <li>$V$ is an $n \times n$ orthogonal matrix.</li>
+</ul>
+<p>If $A$ is rank-deficient with $\text{rank}(A) = r < n$, then only the first $r$ singular values will be positive, and the remaining $n-r$ will be zero.</p>
+\$$ \sigma_1 \ge \dots \ge \sigma_r > 0 \quad \text{and} \quad \sigma_{r+1} = \dots = \sigma_n = 0 $$
+
+<p>The transcript sets up the next step by constructing a full orthonormal basis for the $m$-dimensional space. The SVD provides the $m \times n$ matrix $U$. This can be extended to a square $m \times m$ orthogonal matrix $\bar{U}$ by finding $m-n$ additional orthonormal vectors that are orthogonal to the columns of $U$. These new vectors form a matrix $\tilde{U}$ of size $m \times (m-n)$, such that:</p>
+\$$ \bar{U} = \begin{bmatrix} U & | & \tilde{U} \end{bmatrix} $$
+<p>This new matrix $\tilde{U}$ has the properties:</p>
+<ul>
+    <li>$\tilde{U}^T \tilde{U} = I$ (its columns are orthonormal).</li>
+    <li>$U^T \tilde{U} = \mathbf{0}$ (it is orthogonal to the original basis from $U$).</li>
+</ul>
+<p>The transcript concludes by stating that this SVD framework will be used in the subsequent module to derive a solution for the least squares problem even when $A$ is rank-deficient.</p>
+
+</div></div><div class="chapter" id="Lecture 62 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 62 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts presented in the transcript, which revisits the least squares problem, particularly for scenarios where the matrix <b>A</b> does not have full column rank. In such cases, the matrix $ A^T A $ is not invertible, and the standard normal equation solution $ \mathbf{x} = (A^T A)^{-1} A^T \mathbf{y} $ cannot be used. The explanation below uses the Singular Value Decomposition (SVD) to derive a more general solution.</p>
+
+<h3>1. Revisiting the Least Squares Problem</h3>
+<p>The standard least squares problem aims to find a vector $ \mathbf{x} $ that minimizes the squared Euclidean norm of the residual vector $ \mathbf{y} - A\mathbf{x} $:</p>
+\$$ \min_{\mathbf{x}} \| \mathbf{y} - A\mathbf{x} \|^2 $$
+<p>When the matrix $A$ (of size $m \times n$, with $m > n$) does not have full column rank, it means its columns are linearly dependent. This implies that the matrix $A^T A$ is singular (not invertible), preventing the direct calculation of the solution using the normal equations.</p>
+
+<h3>2. Matrix Decomposition and Unitary Transformation</h3>
+<p>To handle this case, we use the Singular Value Decomposition (SVD) of $A$ and construct a special unitary matrix.</p>
+
+<b>Singular Value Decomposition (SVD):</b>
+<p>Any matrix $A$ can be decomposed as:</p>
+\$$ A = U \Sigma V^T $$
+<p>where:</p>
+<ul>
+    <li>$U$ is an $m \times n$ matrix with orthonormal columns (from the reduced SVD).</li>
+    <li>$\Sigma$ is an $n \times n$ diagonal matrix containing the singular values $\sigma_1, \sigma_2, \dots, \sigma_n$.</li>
+    <li>$V$ is an $n \times n$ unitary matrix ($V^T V = V V^T = I$).</li>
+</ul>
+
+<b>Constructing a Full Unitary Matrix $\bar{U}$:</b>
+<p>The $m \times n$ matrix $U$ can be extended into a full $m \times m$ square unitary matrix, denoted as $\bar{U}$. This is done by finding an $m \times (m-n)$ matrix $\tilde{U}$ whose columns are orthonormal and are orthogonal to the columns of $U$. This means:</p>
+<ul>
+    <li>$ \tilde{U}^T \tilde{U} = I $ (orthonormal columns)</li>
+    <li>$ \tilde{U}^T U = 0 $ (orthogonality to $U$)</li>
+</ul>
+<p>The full unitary matrix $\bar{U}$ is then constructed by concatenating $U$ and $\tilde{U}$:</p>
+\$$ \bar{U} = [U \quad \tilde{U}] $$
+<p>This resulting $m \times m$ matrix $\bar{U}$ is unitary. We can verify this by checking if $\bar{U}^T \bar{U} = I$:</p>
+\$$ \bar{U}^T \bar{U} = \begin{bmatrix} U^T \\ \tilde{U}^T \end{bmatrix} [U \quad \tilde{U}] = \begin{bmatrix} U^T U & U^T \tilde{U} \\ \tilde{U}^T U & \tilde{U}^T \tilde{U} \end{bmatrix} = \begin{bmatrix} I & 0 \\ 0 & I \end{bmatrix} = I_{m \times m} $$
+<p>Since $\bar{U}$ is a square matrix and $\bar{U}^T \bar{U} = I$, it is a unitary matrix, which also implies $\bar{U} \bar{U}^T = I$. A key property of unitary matrices is that they preserve the norm of a vector when they multiply it, as they represent rotations and/or reflections.</p>
+
+<h3>3. Reformulating the Cost Function</h3>
+<p>Using the property that unitary matrices preserve norms, we can pre-multiply the residual vector by $\bar{U}^T$ without changing the value of the cost function:</p>
+\$$ \| \mathbf{y} - A\mathbf{x} \|^2 = \| \bar{U}^T (\mathbf{y} - A\mathbf{x}) \|^2 $$
+<p>Let's expand the term inside the norm:</p>
+\$$ \bar{U}^T (\mathbf{y} - A\mathbf{x}) = \bar{U}^T \mathbf{y} - \bar{U}^T A \mathbf{x} $$
+<p>We can write $\bar{U}^T A \mathbf{x}$ by substituting $A = U \Sigma V^T$:</p>
+\$$ \bar{U}^T A = \begin{bmatrix} U^T \\ \tilde{U}^T \end{bmatrix} (U \Sigma V^T) = \begin{bmatrix} U^T U \\ \tilde{U}^T U \end{bmatrix} \Sigma V^T = \begin{bmatrix} I_n \\ 0 \end{bmatrix} \Sigma V^T = \begin{bmatrix} \Sigma V^T \\ 0 \end{bmatrix} $$
+<p>Next, we define new variables for the transformed vector $\mathbf{y}$:</p>
+<ul>
+    <li>$\hat{\mathbf{y}} = U^T \mathbf{y}$</li>
+    <li>$\tilde{\mathbf{y}} = \tilde{U}^T \mathbf{y}$</li>
+</ul>
+<p>So, $ \bar{U}^T \mathbf{y} = \begin{bmatrix} \hat{\mathbf{y}} \\ \tilde{\mathbf{y}} \end{bmatrix} $. The cost function now becomes:</p>
+\$$ \| \begin{bmatrix} \hat{\mathbf{y}} \\ \tilde{\mathbf{y}} \end{bmatrix} - \begin{bmatrix} \Sigma V^T \mathbf{x} \\ 0 \end{bmatrix} \|^2 = \| \begin{bmatrix} \hat{\mathbf{y}} - \Sigma V^T \mathbf{x} \\ \tilde{\mathbf{y}} \end{bmatrix} \|^2 $$
+<p>The squared norm of a block vector is the sum of the squared norms of its blocks. Therefore, the expression splits into two parts:</p>
+\$$ \| \hat{\mathbf{y}} - \Sigma V^T \mathbf{x} \|^2 + \| \tilde{\mathbf{y}} \|^2 $$
+<p>The second term, $\| \tilde{\mathbf{y}} \|^2$, is a constant value that does not depend on $\mathbf{x}$. Thus, to minimize the overall expression, we only need to minimize the first term.</p>
+\$$ \min_{\mathbf{x}} \| \hat{\mathbf{y}} - \Sigma V^T \mathbf{x} \|^2 $$
+
+<h3>4. Solving the Simplified Problem</h3>
+<p>We introduce a change of variables: $\hat{\mathbf{x}} = V^T \mathbf{x}$. The minimization problem becomes:</p>
+\$$ \min_{\hat{\mathbf{x}}} \| \hat{\mathbf{y}} - \Sigma \hat{\mathbf{x}} \|^2 $$
+<p>Since $A$ is not full rank, some of its singular values are zero. Let $r$ be the rank of $A$, meaning there are $r$ non-zero singular values ($\sigma_1, \dots, \sigma_r$) and $n-r$ zero singular values. The minimization problem can be written component-wise:</p>
+\$$ \| \hat{\mathbf{y}} - \Sigma \hat{\mathbf{x}} \|^2 = \sum_{i=1}^{n} (\hat{y}_i - \sigma_i \hat{x}_i)^2 $$
+<p>We can split this sum into two parts:</p>
+\$$ \sum_{i=1}^{r} (\hat{y}_i - \sigma_i \hat{x}_i)^2 + \sum_{i=r+1}^{n} (\hat{y}_i - 0 \cdot \hat{x}_i)^2 = \underbrace{\sum_{i=1}^{r} (\hat{y}_i - \sigma_i \hat{x}_i)^2}_{\text{Term 1}} + \underbrace{\sum_{i=r+1}^{n} (\hat{y}_i)^2}_{\text{Term 2}} $$
+<p>Term 2 is a constant and cannot be changed. Term 1 can be minimized by setting each of its components to zero. This gives us the optimal values for the first $r$ components of $\hat{\mathbf{x}}$:</p>
+\$$ \hat{y}_i - \sigma_i \hat{x}_i = 0 \implies \hat{x}_i = \frac{\hat{y}_i}{\sigma_i} \quad \text{for } i = 1, \dots, r $$
+<p>Notice that the components $\hat{x}_{r+1}, \dots, \hat{x}_n$ do not affect the least squares error at all. They can be set to any arbitrary value. This implies there are infinitely many solutions for $\mathbf{x}$ that produce the same minimum error.</p>
+
+<h3>5. The Minimum Norm Solution</h3>
+<p>Among the infinite possible solutions, a standard practice is to choose the one with the smallest Euclidean norm, $\| \mathbf{x} \|$. This is known as the minimum-norm least-squares solution.</p>
+<p>Since $ \hat{\mathbf{x}} = V^T \mathbf{x} $ and $V^T$ is a unitary matrix, the norms are preserved: $ \| \mathbf{x} \|^2 = \| \hat{\mathbf{x}} \|^2 $. Therefore, minimizing $\| \mathbf{x} \|$ is equivalent to minimizing $\| \hat{\mathbf{x}} \|$.</p>
+<p>The norm of $\hat{\mathbf{x}}$ is:</p>
+\$$ \| \hat{\mathbf{x}} \|^2 = \sum_{i=1}^{r} |\hat{x}_i|^2 + \sum_{i=r+1}^{n} |\hat{x}_i|^2 $$
+<p>The values $\hat{x}_1, \dots, \hat{x}_r$ are already fixed by the minimization of the error. To minimize the total norm, we must choose the arbitrary components $\hat{x}_{r+1}, \dots, \hat{x}_n$ to be zero:</p>
+\$$ \hat{x}_i = 0 \quad \text{for } i = r+1, \dots, n $$
+
+<h3>6. The Pseudoinverse and the General Solution</h3>
+<p>Combining these results, the minimum norm solution for $\hat{\mathbf{x}}$ is:</p>
+\$$ \hat{x}_i = \begin{cases} \hat{y}_i / \sigma_i & \text{if } i \le r \\ 0 & \text{if } i > r \end{cases} $$
+<p>This can be expressed in matrix form as:</p>
+\$$ \hat{\mathbf{x}} = \Sigma^\dagger \hat{\mathbf{y}} $$
+<p>Here, $\Sigma^\dagger$ is the <b>pseudoinverse</b> of the diagonal matrix $\Sigma$. It is formed by taking the reciprocal of the non-zero singular values and leaving the zeros as they are:</p>
+\$$ (\Sigma^\dagger)_{ii} = \begin{cases} 1/\sigma_i & \text{if } \sigma_i \ne 0 \\ 0 & \text{if } \sigma_i = 0 \end{cases} $$
+<p>Now, we substitute back the original variables:</p>
+<ul>
+    <li>$ \hat{\mathbf{x}} = V^T \mathbf{x} $</li>
+    <li>$ \hat{\mathbf{y}} = U^T \mathbf{y} $</li>
+</ul>
+<p>The equation becomes:</p>
+\$$ V^T \mathbf{x} = \Sigma^\dagger U^T \mathbf{y} $$
+<p>To solve for $\mathbf{x}$, we pre-multiply both sides by $V$:</p>
+\$$ V V^T \mathbf{x} = V \Sigma^\dagger U^T \mathbf{y} $$
+<p>Since $V$ is a square unitary matrix, $V V^T = I$, which gives the final solution:</p>
+\$$ \mathbf{x}_{LS} = V \Sigma^\dagger U^T \mathbf{y} $$
+<p>The term $V \Sigma^\dagger U^T$ is defined as the general pseudoinverse of $A$, denoted $A^\dagger$. This formula provides the minimum-norm least-squares solution and is valid for any matrix $A$, regardless of its rank.</p>
+
+<h3>7. Connection to the Full Rank Case</h3>
+<p>This general formula is consistent with the solution for the full column rank case. If $A$ has full column rank ($r=n$), then all its singular values are non-zero. In this scenario, $\Sigma^\dagger$ becomes $\Sigma^{-1}$ (an $n \times m$ matrix whose top-left block is the inverse of the diagonal $n \times n$ part of $\Sigma$).</p>
+<p>The solution is $\mathbf{x} = V \Sigma^{-1} U^T \mathbf{y}$. It can be shown that this is equivalent to the familiar normal equation solution $ (A^T A)^{-1} A^T \mathbf{y} $:</p>
+<ul>
+    <li>$A^T A = (U \Sigma V^T)^T (U \Sigma V^T) = V \Sigma^T U^T U \Sigma V^T = V (\Sigma^T \Sigma) V^T$.</li>
+    <li>$(A^T A)^{-1} = (V (\Sigma^T \Sigma) V^T)^{-1} = V (\Sigma^T \Sigma)^{-1} V^T$.</li>
+    <li>$(A^T A)^{-1} A^T = V (\Sigma^T \Sigma)^{-1} V^T (V \Sigma^T U^T) = V (\Sigma^T \Sigma)^{-1} \Sigma^T U^T$.</li>
+</ul>
+<p>The term $(\Sigma^T \Sigma)^{-1} \Sigma^T$ simplifies to $\Sigma^{-1}$, yielding $V \Sigma^{-1} U^T$. Thus, the pseudoinverse method correctly reduces to the conventional solution when $A$ has full column rank.</p>
+</div></div><h2>Weekly Summary</h2><div>
+<p>This week's lectures cover two major topics: an introduction to Discrete-Time Markov Chains (DTMCs) and a deeper analysis of the Least Squares problem, particularly for rank-deficient systems.</p>
+
+<p><b>1. Discrete-Time Markov Chains (DTMCs)</b></p>
+<p>This section introduces stochastic processes as a probabilistic framework for modeling systems that evolve randomly over time. The focus is on a specific, highly useful type of stochastic process known as a Discrete-Time Markov Chain.</p>
+<p><b>Main Topics Covered:</b></p>
+<ul>
+<li><b>Introduction to Stochastic Processes:</b> A stochastic process is a probabilistic model for a system's evolution over time. Examples include daily temperatures, stock prices, inventory levels, and machine reliability (operational vs. faulty).</li>
+<li><b>The Markov Property:</b> A simplifying assumption stating that the future state of the system depends only on the current state, not on the entire history of how it arrived there. Mathematically, this is expressed as:<br>$ P(X_{n+1}=s_j | X_n=s_i, X_{n-1}, ..., X_0) = P(X_{n+1}=s_j | X_n=s_i) $</li>
+<li><b>Transition Probability Matrix:</b> A DTMC's evolution is fully characterized by its one-step transition probabilities, $p_{ij}$, which are organized into a square matrix $P$. Each element $p_{ij}$ represents the probability of moving from state $i$ to state $j$ in one time step.</li>
+<li><b>Properties of the Transition Matrix (P):</b> All entries are non-negative ($p_{ij} \geq 0$), and the sum of the probabilities in each row must equal 1.</li>
+<li><b>Building DTMC Models:</b> Several examples are developed, including a machine reliability problem with two states (operational, faulty), which is then extended to a more complex three-state model for two independent machines. A stock price model with boundary conditions is also constructed.</li>
+<li><b>N-Step Transition Probabilities:</b> The probability of transitioning from one state to another in $m$ steps is found in the matrix $P^m$ (the transition matrix $P$ raised to the power of $m$).</li>
+<li><b>Limiting and Stationary Distributions:</b> The long-term behavior of a DTMC is explored. For many DTMCs, as $n \to \infty$, the matrix $P^n$ converges to a matrix where all rows are identical. This identical row vector, $\pi$, is the <b>limiting distribution</b>, representing the long-run probability of being in each state, regardless of the starting state. This is also related to the <b>stationary distribution</b>, a probability distribution $\pi$ that remains unchanged over time, satisfying the equation $\pi^T P = \pi^T$.</li>
+</ul>
+<p><b>Key Takeaways:</b></p>
+<ul>
+<li>A DTMC is a powerful tool for modeling systems that change states randomly over time, based on the principle that only the present state matters for predicting the future.</li>
+<li>The entire behavior of a time-homogeneous DTMC is captured by its transition probability matrix $P$.</li>
+<li>The m-step transition probabilities are conveniently calculated by finding the matrix power $P^m$.</li>
+<li>The long-term probabilities of a DTMC often converge to a unique stationary distribution $\pi$, which can be found by computing $\lim_{n \to \infty} P^n$ or by finding the left eigenvector of $P$ corresponding to an eigenvalue of 1.</li>
+</ul>
+<br>
+<p><b>2. Revisiting the Least Squares Problem</b></p>
+<p>This section provides a more detailed look at the least squares solution for overdetermined systems $y = Ax$, focusing on the conditions under which the standard solution is valid and how to proceed when it is not.</p>
+<p><b>Main Topics Covered:</b></p>
+<ul>
+<li><b>The Standard Least Squares Solution:</b> For an overdetermined system (more equations than unknowns), the least squares solution that minimizes $\\|y - Ax\\|^2$ is given by $\hat{x} = (A^T A)^{-1} A^T y$.</li>
+<li><b>Condition for the Standard Solution:</b> The formula above is only valid if the matrix $A^T A$ is invertible. It was proven that $A^T A$ is invertible if and only if the matrix $A$ has <b>full column rank</b> (i.e., its columns are linearly independent).</li>
+<li><b>The Rank-Deficient Case:</b> If $A$ does not have full column rank (its rank is less than the number of columns), $A^T A$ is not invertible, and the standard formula fails. In this scenario, there are infinitely many solutions for $x$ that produce the same minimum least squares error.</li>
+<li><b>Minimum Norm Least Squares Solution:</b> When infinite solutions exist, the standard practice is to choose the unique solution that has the minimum norm ($\\|x\\|$).</li>
+<li><b>Solution via Singular Value Decomposition (SVD):</b> The SVD ($A = U \Sigma V^T$) provides a robust method to solve the least squares problem in all cases, including the rank-deficient one. By transforming the problem using the SVD matrices, a solution is derived that minimizes the error and, in the rank-deficient case, also minimizes the solution norm $\\|x\\|$.</li>
+</ul>
+<p><b>Key Takeaways:</b></p>
+<ul>
+<li>The familiar least squares formula $\hat{x} = (A^T A)^{-1} A^T y$ is not universally applicable; it requires the matrix $A$ to have full column rank.</li>
+<li>When $A$ is rank-deficient, the SVD must be used to find the least squares solution. This approach naturally leads to the minimum norm solution among all possible solutions.</li>
+<li>The general formula for the pseudo-inverse $A^\dagger$ is $A^\dagger = V \Sigma^\dagger U^T$, where $\Sigma^\dagger$ is formed by taking the reciprocal of the non-zero singular values of $A$ and keeping the zeros.</li>
+<li>This SVD-based formula for the solution, $\hat{x} = V \Sigma^\dagger U^T y$, is the most general form of the least squares solution, as it is valid whether $A$ has full column rank or is rank-deficient.</li>
+</ul>
+</div><h2>Assignment Explanation</h2><div>
+<h3>Question 1: Sparse Signal Estimation</h3>
+<p><b>Question:</b> Consider the sparse signal estimation problem $ y = A h $ where:</p>
+\$$ y = \begin{bmatrix} 0 \\ -4 \\ 8 \\ 4 \end{bmatrix}, \quad A = \begin{bmatrix} 1 & 0 & 1 & 0 & 0 & 1 \\ 0 & 1 & 0 & 1 & 1 & 0 \\ 1 & 1 & 0 & 0 & 0 & 1 \\ 0 & 1 & 1 & 0 & 1 & 1 \end{bmatrix}, \quad h = \begin{bmatrix} h_1 \\ h_2 \\ h_3 \\ h_4 \\ h_5 \\ h_6 \end{bmatrix} $$
+<p>The question asks for the index of the column chosen in the first iteration of an algorithm like Orthogonal Matching Pursuit (OMP).</p>
+<p><b>Explanation:</b> The first step in OMP is to find the column of the matrix $A$ that is most correlated with the measurement vector $y$. This is done by finding the column $a_j$ that maximizes the absolute value of the inner product $|\langle y, a_j \rangle|$ or $|y^T a_j|$.</p>
+<p>Let's calculate the inner product of $y$ with each column of $A$:</p>
+<ul>
+    <li>$ y^T a_1 = [0, -4, 8, 4] \cdot [1, 0, 1, 0]^T = 0 \cdot 1 + (-4) \cdot 0 + 8 \cdot 1 + 4 \cdot 0 = 8 $</li>
+    <li>$ y^T a_2 = [0, -4, 8, 4] \cdot [0, 1, 1, 1]^T = 0 \cdot 0 + (-4) \cdot 1 + 8 \cdot 1 + 4 \cdot 1 = -4 + 8 + 4 = 8 $</li>
+    <li>$ y^T a_3 = [0, -4, 8, 4] \cdot [1, 0, 0, 1]^T = 0 \cdot 1 + (-4) \cdot 0 + 8 \cdot 0 + 4 \cdot 1 = 4 $</li>
+    <li>$ y^T a_4 = [0, -4, 8, 4] \cdot [0, 1, 0, 0]^T = 0 \cdot 0 + (-4) \cdot 1 + 8 \cdot 0 + 4 \cdot 0 = -4 $</li>
+    <li>$ y^T a_5 = [0, -4, 8, 4] \cdot [0, 1, 1, 1]^T = 0 \cdot 0 + (-4) \cdot 1 + 8 \cdot 1 + 4 \cdot 1 = -4 + 8 + 4 = 8 $</li>
+    <li>$ y^T a_6 = [0, -4, 8, 4] \cdot [1, 0, 1, 1]^T = 0 \cdot 1 + (-4) \cdot 0 + 8 \cdot 1 + 4 \cdot 1 = 8 + 4 = 12 $</li>
+</ul>
+<p>The absolute values of these inner products are 8, 8, 4, 4, 8, and 12. The maximum value is 12, which corresponds to the 6th column ($a_6$). Therefore, the index chosen in the first iteration should be 6.</p>
+<p><i>Note: The provided answer is "5", and the submission was marked incorrect. Based on the standard OMP algorithm and the data visible in the image, the calculated answer is 6. There may be an error in the question's provided matrix, the vector y, or the accepted answer.</i></p>
+
+<h3>Question 2: SVM Hyperplane Distance</h3>
+<p><b>Question:</b> In a Support Vector Machine (SVM), two hyperplanes are given by the equations:</p>
+\$$ \bar{x}_1 + 2\bar{x}_2 + 3\bar{x}_3 + \dots + N\bar{x}_N = \sqrt{2} $$
+\$$ \bar{x}_1 + 2\bar{x}_2 + 3\bar{x}_3 + \dots + N\bar{x}_N = -\sqrt{2} $$
+<p>What is the distance between these hyperplanes?</p>
+<p><b>Explanation:</b> The distance between two parallel hyperplanes given by $w^T x = c_1$ and $w^T x = c_2$ is calculated using the formula:
+\$$ \text{Distance} = \frac{|c_1 - c_2|}{\|w\|} $$
+In this problem:
+<ul>
+    <li>The weight vector is $w = [1, 2, 3, \dots, N]^T$.</li>
+    <li>The constants are $c_1 = \sqrt{2}$ and $c_2 = -\sqrt{2}$.</li>
+</ul>
+First, we calculate the L2-norm of the weight vector $w$:
+\$$ \|w\|^2 = 1^2 + 2^2 + 3^2 + \dots + N^2 $$
+This is the sum of the first $N$ squares, for which the formula is $\frac{N(N+1)(2N+1)}{6}$.
+So, $\|w\| = \sqrt{\frac{N(N+1)(2N+1)}{6}}$.
+Now, we can find the distance:
+\$$ \text{Distance} = \frac{|\sqrt{2} - (-\sqrt{2})|}{\sqrt{\frac{N(N+1)(2N+1)}{6}}} = \frac{2\sqrt{2}}{\sqrt{\frac{N(N+1)(2N+1)}{6}}} $$
+\$$ \text{Distance} = 2\sqrt{2} \cdot \sqrt{\frac{6}{N(N+1)(2N+1)}} = \sqrt{8} \cdot \sqrt{\frac{6}{N(N+1)(2N+1)}} $$
+\$$ \text{Distance} = \sqrt{\frac{48}{N(N+1)(2N+1)}} = \frac{\sqrt{16 \cdot 3}}{\sqrt{N(N+1)(2N+1)}} = \frac{4\sqrt{3}}{\sqrt{N(N+1)(2N+1)}} $$
+The correct answer is $\frac{4\sqrt{3}}{\sqrt{N(N+1)(2N+1)}}$.</p>
+
+<h3>Question 3: K-means Centroid Update</h3>
+<p><b>Question:</b> In the k-means clustering algorithm with points $\bar{x}^{(j)}, j=1, 2, \dots, m$, let $\alpha_i^{(l)}(j)$ be the cluster assignment indicator which is 1 if point $\bar{x}^{(j)}$ is assigned to cluster $i$ in iteration $l$, and 0 otherwise. How is the centroid $\bar{\mu}_i^{(l)}$ of cluster $i$ evaluated?</p>
+<p><b>Explanation:</b> The k-means algorithm alternates between two steps: assigning points to the nearest cluster and updating the cluster's centroid. The update step involves recalculating the centroid of each cluster to be the mean (average) of all data points assigned to it.
+To calculate the new centroid $\bar{\mu}_i^{(l)}$ for cluster $i$, we perform two operations:
+<ol>
+    <li>Sum all the data points $\bar{x}^{(j)}$ that are currently assigned to cluster $i$. Using the indicator function, this sum is $ \sum_{j=1}^{m} \alpha_i^{(l)}(j) \bar{x}^{(j)} $.</li>
+    <li>Count the number of points in cluster $i$, which is $ \sum_{j=1}^{m} \alpha_i^{(l)}(j) $.</li>
+</ol>
+The centroid is the sum of the points divided by the count:
+\$$ \bar{\mu}_i^{(l)} = \frac{\sum_{j=1}^{m} \alpha_i^{(l)}(j) \bar{x}^{(j)}}{\sum_{j=1}^{m} \alpha_i^{(l)}(j)} $$
+The accepted answer matches this formula.</p>
+
+<h3>Question 4: Linear Dynamical System</h3>
+<p><b>Question:</b> A linear dynamical system is modeled as:
+\$$ \frac{d}{dt}\bar{v}(t) = H_1\bar{v}(t), \quad 0 \le t < 2T $$
+\$$ \frac{d}{dt}\bar{v}(t) = H_2\bar{v}(t), \quad 2T \le t < 4T $$
+The output $\bar{v}(3T)$ at time $t=3T$ is given as what, in terms of the initial state $\bar{v}(0)$?</p>
+<p><b>Explanation:</b> This system's behavior is described by two different matrices, $H_1$ and $H_2$, over two consecutive time intervals. We must solve for the state evolution piece by piece.
+The solution to the differential equation $\frac{d}{dt}\bar{v}(t) = H\bar{v}(t)$ from an initial time $t_0$ is $\bar{v}(t) = e^{H(t-t_0)}\bar{v}(t_0)$.
+<ol>
+    <li><b>Interval 1 (0 to 2T):</b> The system evolves with $H_1$. The state at time $2T$ is found by evolving from $t=0$:
+    \$$ \bar{v}(2T) = e^{H_1(2T - 0)}\bar{v}(0) = e^{2TH_1}\bar{v}(0) $$
+    </li>
+    <li><b>Interval 2 (2T to 3T):</b> The system evolves with $H_2$. The state at time $3T$ is found by evolving from $t=2T$, using $\bar{v}(2T)$ as the new initial condition:
+    \$$ \bar{v}(3T) = e^{H_2(3T - 2T)}\bar{v}(2T) = e^{TH_2}\bar{v}(2T) $$
+    </li>
+</ol>
+By substituting the expression for $\bar{v}(2T)$ from step 1 into the equation from step 2, we get the final state at $3T$:
+\$$ \bar{v}(3T) = e^{TH_2} \left( e^{2TH_1}\bar{v}(0) \right) = e^{TH_2} e^{2TH_1} \bar{v}(0) $$
+Note that matrix exponentials do not generally commute, so the order $e^{TH_2} e^{2TH_1}$ is important.</p>
+
+<h3>Question 5: Matrix Exponential with Eigendecomposition</h3>
+<p><b>Question:</b> Given the eigenvalue decomposition of a matrix $H$ as $H = U\Lambda U^{-1}$, the matrix exponential $e^{tH}$ reduces to what expression?</p>
+<p><b>Explanation:</b> The matrix exponential $e^A$ is defined by its Taylor series expansion: $e^A = I + A + \frac{A^2}{2!} + \frac{A^3}{3!} + \dots $.
+First, let's find the expression for powers of $H$ using its eigendecomposition:
+\$$ H^2 = (U\Lambda U^{-1})(U\Lambda U^{-1}) = U\Lambda(U^{-1}U)\Lambda U^{-1} = U\Lambda^2 U^{-1} $$
+In general, $H^k = U\Lambda^k U^{-1}$.
+Now, we substitute this into the Taylor series for $e^{tH}$:
+\$$ e^{tH} = I + tH + \frac{(tH)^2}{2!} + \dots = I + t(U\Lambda U^{-1}) + \frac{t^2(U\Lambda^2 U^{-1})}{2!} + \dots $$
+Factoring out $U$ and $U^{-1}$ (and noting that $I = UIU^{-1}$):
+\$$ e^{tH} = U(I)U^{-1} + U(t\Lambda)U^{-1} + U\left(\frac{(t\Lambda)^2}{2!}\right)U^{-1} + \dots $$
+\$$ e^{tH} = U \left( I + t\Lambda + \frac{(t\Lambda)^2}{2!} + \dots \right) U^{-1} $$
+The expression in the parentheses is the Taylor series for $e^{t\Lambda}$. Therefore:
+\$$ e^{tH} = U e^{t\Lambda} U^{-1} $$
+This is the correct simplification.</p>
+
+<h3>Question 6: Sparse Regression Column Selection</h3>
+<p><b>Question:</b> In the sparse regression problem $\bar{y} = X\bar{\theta}$, where $X = [\bar{X}_1, \bar{X}_2, \dots, \bar{X}_n]$, how is the column most similar to $\bar{y}$ determined?</p>
+<p><b>Explanation:</b> This question describes the first step of a greedy algorithm like Orthogonal Matching Pursuit (OMP), which is used to solve sparse regression problems. The goal is to find which column of the matrix $X$ (which represents a feature or basis vector) is most "aligned" or "correlated" with the output vector $\bar{y}$.
+Similarity between vectors is measured by their inner product (dot product). A larger inner product indicates a stronger projection of one vector onto another. To find the most similar column $\bar{X}_j$, we should maximize the inner product $\bar{X}_j^T \bar{y}$.
+Therefore, the index of the most similar column is found by:
+\$$ \arg \max_j \bar{X}_j^T \bar{y} $$
+<i>Note: More generally, one maximizes the absolute value, $\arg \max_j |\bar{X}_j^T \bar{y}|$, but among the given choices, maximizing the inner product itself is the intended answer.</i></p>
+
+<h3>Question 7: Autonomous Linear Dynamical System Model</h3>
+<p><b>Question:</b> What is the general model for an autonomous Linear Dynamical System?</p>
+<p><b>Explanation:</b> Let's break down the term:
+<ul>
+    <li><b>Dynamical System:</b> A system whose state, $\bar{v}(t)$, evolves over time. Its evolution is described by a differential equation.</li>
+    <li><b>Linear:</b> The rate of change of the state, $\frac{d}{dt}\bar{v}(t)$, is a linear function of the state $\bar{v}(t)$. This means it can be represented by a matrix multiplication: $\frac{d}{dt}\bar{v}(t) = H \bar{v}(t)$.</li>
+    <li><b>Autonomous:</b> The rule governing the system's evolution does not explicitly depend on time. In the equation $\frac{d}{dt}\bar{v}(t) = H \bar{v}(t)$, this means the matrix $H$ is constant and does not change with time (i.e., $H$ is not a function $H(t)$).</li>
+</ul>
+Combining these properties, the general model for an autonomous linear dynamical system is:
+\$$ \frac{d}{dt}\bar{v}(t) = H\bar{v}(t) $$
+where $H$ is a constant matrix.</p>
+
+<h3>Question 8: Sparse Vector Recovery Technique</h3>
+<p><b>Question:</b> Consider the linear system $\bar{y} = X\bar{\theta}$, where $X$ is an $m \times n$ matrix with $m \ll n$ (a "fat" matrix). The vector $\bar{\theta}$ is known to be sparse (contains many zeros). Which technique can be used to determine $\bar{\theta}$?</p>
+<p><b>Explanation:</b> This is a classic underdetermined system of equations, meaning there are fewer equations (m) than unknowns (n), leading to infinite solutions. The additional information that $\bar{\theta}$ is sparse allows us to find a unique, meaningful solution.
+Let's evaluate the options:
+<ul>
+    <li><b>Least Squares:</b> This method minimizes $\|\bar{y} - X\bar{\theta}\|_2^2$. For an underdetermined system, it does not yield a unique solution and does not enforce sparsity.</li>
+    <li><b>Least Norm:</b> This finds the solution to $\bar{y} = X\bar{\theta}$ that has the minimum L2 norm ($\|\bar{\theta}\|_2$). The resulting vector is unique but generally not sparse.</li>
+    <li><b>Orthogonal Matching Pursuit (OMP):</b> This is a greedy iterative algorithm specifically designed to find sparse solutions to underdetermined linear systems. It is a standard method for sparse recovery and compressed sensing.</li>
+    <li><b>Principal Component Analysis (PCA):</b> This is a statistical method for dimensionality reduction. It is not used for solving systems of linear equations.</li>
+</ul>
+Therefore, Orthogonal Matching Pursuit is the correct technique for this problem.</p>
+
+<h3>Question 9: Sparsity in Sparse Regression</h3>
+<p><b>Question:</b> In the sparse regression problem $\bar{y} = X\bar{\theta}$, which of the following statements is true?</p>
+<p><b>Explanation:</b> The term "sparse regression" refers to a regression scenario where the goal is to model an output vector $\bar{y}$ as a linear combination of the columns of a matrix $X$, under the assumption that only a few of these columns are needed.
+The model is $\bar{y} = \theta_1 \bar{X}_1 + \theta_2 \bar{X}_2 + \dots + \theta_n \bar{X}_n$. The "sparsity" constraint or assumption applies to the vector of regression coefficients, $\bar{\theta} = [\theta_1, \theta_2, \dots, \theta_n]^T$. It means that most of the coefficients $\theta_j$ are expected to be zero.
+Therefore, the defining characteristic of sparse regression is that <b>the vector of regression coefficients $\bar{\theta}$ is sparse</b>.</p>
+
+<h3>Question 10: SVM Hyperplane Distance (Numerical)</h3>
+<p><b>Question:</b> In an SVM, the hyperplanes for classification are given by:</p>
+\$$ 3x_1 - 4x_2 + 2 \ge 1 $$
+\$$ 3x_1 - 4x_2 + 2 \le -1 $$
+<p>What is the distance between these hyperplanes?</p>
+<p><b>Explanation:</b> The hyperplanes are the boundaries where the equalities hold. Let's rewrite the equations for the two hyperplanes:
+<ol>
+    <li>$3x_1 - 4x_2 + 2 = 1 \implies 3x_1 - 4x_2 = -1$</li>
+    <li>$3x_1 - 4x_2 + 2 = -1 \implies 3x_1 - 4x_2 = -3$</li>
+</ol>
+These two planes are parallel. We can use the formula for the distance between two parallel planes, $w^T x = c_1$ and $w^T x = c_2$, which is:
+\$$ \text{Distance} = \frac{|c_1 - c_2|}{\|w\|} $$
+From the equations, we can identify:
+<ul>
+    <li>The weight vector $w = [3, -4]^T$.</li>
+    <li>The constants $c_1 = -1$ and $c_2 = -3$.</li>
+</ul>
+First, calculate the norm of $w$:
+\$$ \|w\| = \sqrt{3^2 + (-4)^2} = \sqrt{9 + 16} = \sqrt{25} = 5 $$
+Now, apply the distance formula:
+\$$ \text{Distance} = \frac{|-1 - (-3)|}{5} = \frac{|2|}{5} = \frac{2}{5} $$
+The distance between the hyperplanes is $ \frac{2}{5} $.</p>
+</div></div>
+</body>
+</html>

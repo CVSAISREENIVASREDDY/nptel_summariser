@@ -1,0 +1,753 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week3</title>
+
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+      };
+    </script>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 2em;
+        }
+        .mjx-display {
+            margin: 2.5em 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="week" id="week_3"><h1 class="week-title">Week 3</h1><h2>Transcript Explanations</h2><div class="chapter" id="Lecture 11 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 11 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the Gram-Schmidt procedure, a fundamental algorithm in linear algebra for creating an orthonormal set of vectors from an arbitrary set of basis vectors. The explanation follows the concepts, formulas, and examples presented in the transcript.</p>
+
+<h3>1. The Goal of the Gram-Schmidt Procedure</h3>
+<p>The Gram-Schmidt procedure is a method for <b>orthogonalization</b> or <b>orthonormalization</b>. Its primary purpose is to take any given basis for a vector subspace and convert it into a special type of basis called an <b>orthonormal basis</b>.</p>
+
+<p>Let's say we start with an arbitrary basis for a subspace, represented by the set of vectors:
+\$$ \{\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_n\} $$
+These vectors span the subspace, meaning any vector within that subspace can be written as a linear combination of them. However, these basis vectors are not necessarily perpendicular to each other, nor do they necessarily have a length of one.</p>
+
+<p>The Gram-Schmidt procedure produces a new basis for the <i>same</i> subspace, represented by the vectors:
+\$$ \{\mathbf{v}_1, \mathbf{v}_2, \dots, \mathbf{v}_n\} $$
+This new basis has two special properties that make it an <b>orthonormal basis</b>:</p>
+<ol>
+    <li><b>Unit Norm:</b> Each vector in the new basis has a length (or norm) of 1.
+    \$$ ||\mathbf{v}_i|| = 1 \quad \text{for all } i $$
+    </li>
+    <li><b>Orthogonality:</b> Each vector is orthogonal (perpendicular) to every other vector in the basis. The inner product (or dot product for real vectors) of any two distinct vectors is zero. For complex vectors, this is expressed using the Hermitian conjugate.
+    \$$ \mathbf{v}_i^H \mathbf{v}_j = 0 \quad \text{for all } i \neq j $$
+    </li>
+</ol>
+<p>An orthonormal basis is highly desirable in many applications because it simplifies calculations involving projections, coordinate transformations, and numerical algorithms.</p>
+
+<h3>2. The Step-by-Step Algorithm</h3>
+<p>The procedure builds the orthonormal basis $\{\mathbf{v}_1, \mathbf{v}_2, \dots, \mathbf{v}_n\}$ one vector at a time. At each step, a new vector is made orthogonal to all previously constructed vectors, and then it is normalized to have a unit length.</p>
+
+<h4>Step 1: Construct the first vector $\mathbf{v}_1$</h4>
+<p>The first vector is the easiest. We simply take the first vector from the original basis, $\mathbf{x}_1$, and normalize it by dividing it by its norm (length).</p>
+\$$ \mathbf{v}_1 = \frac{\mathbf{x}_1}{||\mathbf{x}_1||} $$
+
+<h4>Step 2: Construct the second vector $\mathbf{v}_2$</h4>
+<p>To find $\mathbf{v}_2$, we first need to create a vector that is orthogonal to $\mathbf{v}_1$. We do this by taking the second original vector, $\mathbf{x}_2$, and subtracting its <b>projection</b> onto $\mathbf{v}_1$. This process effectively removes the component of $\mathbf{x}_2$ that lies in the direction of $\mathbf{v}_1$, leaving only the part that is orthogonal to it.</p>
+
+<p>First, we create an intermediate vector, which we'll call $\mathbf{v}_2^{\sim}$:</p>
+\$$ \mathbf{v}_2^{\sim} = \mathbf{x}_2 - \langle \mathbf{x}_2, \mathbf{v}_1 \rangle \mathbf{v}_1 $$
+<p>Here, $\langle \mathbf{x}_2, \mathbf{v}_1 \rangle$ represents the inner product of $\mathbf{x}_2$ and $\mathbf{v}_1$. For complex vectors, this is written as $\mathbf{v}_1^H \mathbf{x}_2$ or $\mathbf{x}_2^H \mathbf{v}_1$ (depending on convention, the transcript uses the latter). The term $\langle \mathbf{x}_2, \mathbf{v}_1 \rangle \mathbf{v}_1$ is the projection of $\mathbf{x}_2$ onto $\mathbf{v}_1$.</p>
+<p>Now, $\mathbf{v}_2^{\sim}$ is guaranteed to be orthogonal to $\mathbf{v}_1$. To make it part of the orthonormal basis, we just need to normalize it:</p>
+\$$ \mathbf{v}_2 = \frac{\mathbf{v}_2^{\sim}}{||\mathbf{v}_2^{\sim}||} $$
+
+<h4>General Step: Construct the i-th vector $\mathbf{v}_i$</h4>
+<p>This process is generalized for any subsequent vector $\mathbf{v}_i$. We take the original vector $\mathbf{x}_i$ and subtract its projections onto <i>all</i> the previously constructed orthonormal vectors ($\mathbf{v}_1, \mathbf{v}_2, \dots, \mathbf{v}_{i-1}$).</p>
+
+<p>The intermediate orthogonal vector $\mathbf{v}_i^{\sim}$ is calculated as:</p>
+\$$ \mathbf{v}_i^{\sim} = \mathbf{x}_i - \sum_{j=1}^{i-1} \langle \mathbf{x}_i, \mathbf{v}_j \rangle \mathbf{v}_j $$
+<p>Using the Hermitian notation from the transcript for the inner product:</p>
+\$$ \mathbf{v}_i^{\sim} = \mathbf{x}_i - \sum_{j=1}^{i-1} (\mathbf{x}_i^H \mathbf{v}_j) \mathbf{v}_j $$
+<p>This formula ensures that $\mathbf{v}_i^{\sim}$ is orthogonal to all preceding vectors $\mathbf{v}_1, \dots, \mathbf{v}_{i-1}$. Finally, we normalize this intermediate vector to get the next member of our orthonormal basis:</p>
+\$$ \mathbf{v}_i = \frac{\mathbf{v}_i^{\sim}}{||\mathbf{v}_i^{\sim}||} $$
+<p>This process is repeated until all $n$ vectors have been constructed.</p>
+
+<h3>3. Worked Example</h3>
+<p>Let's apply the Gram-Schmidt procedure to the basis vectors provided in the transcript:</p>
+\$$ \mathbf{x}_1 = \begin{pmatrix} 1 \\ 1 \\ 1 \\ 1 \end{pmatrix}, \quad \mathbf{x}_2 = \begin{pmatrix} 1 \\ 2 \\ 3 \\ 4 \end{pmatrix}, \quad \mathbf{x}_3 = \begin{pmatrix} 1 \\ -2 \\ 3 \\ -1 \end{pmatrix} $$
+
+<h4>Step 1: Calculate $\mathbf{v}_1$</h4>
+<p>First, we find the norm of $\mathbf{x}_1$:</p>
+\$$ ||\mathbf{x}_1|| = \sqrt{1^2 + 1^2 + 1^2 + 1^2} = \sqrt{4} = 2 $$
+<p>Now, we normalize $\mathbf{x}_1$ to get $\mathbf{v}_1$:</p>
+\$$ \mathbf{v}_1 = \frac{\mathbf{x}_1}{||\mathbf{x}_1||} = \frac{1}{2} \begin{pmatrix} 1 \\ 1 \\ 1 \\ 1 \end{pmatrix} $$
+
+<h4>Step 2: Calculate $\mathbf{v}_2$</h4>
+<p>We start by computing the intermediate vector $\mathbf{v}_2^{\sim}$. Since the vectors are real, the Hermitian transpose $(\cdot)^H$ is just the regular transpose $(\cdot)^T$.</p>
+\$$ \mathbf{v}_2^{\sim} = \mathbf{x}_2 - (\mathbf{x}_2^T \mathbf{v}_1) \mathbf{v}_1 $$
+<p>First, calculate the inner product (projection coefficient):</p>
+\$$ \mathbf{x}_2^T \mathbf{v}_1 = \begin{pmatrix} 1 & 2 & 3 & 4 \end{pmatrix} \left( \frac{1}{2} \begin{pmatrix} 1 \\ 1 \\ 1 \\ 1 \end{pmatrix} \right) = \frac{1}{2} (1+2+3+4) = \frac{10}{2} = 5 $$
+<p>Now, subtract the projection from $\mathbf{x}_2$:</p>
+\$$ \mathbf{v}_2^{\sim} = \begin{pmatrix} 1 \\ 2 \\ 3 \\ 4 \end{pmatrix} - 5 \left( \frac{1}{2} \begin{pmatrix} 1 \\ 1 \\ 1 \\ 1 \end{pmatrix} \right) = \begin{pmatrix} 1 \\ 2 \\ 3 \\ 4 \end{pmatrix} - \begin{pmatrix} 2.5 \\ 2.5 \\ 2.5 \\ 2.5 \end{pmatrix} = \begin{pmatrix} -1.5 \\ -0.5 \\ 0.5 \\ 1.5 \end{pmatrix} = \frac{1}{2} \begin{pmatrix} -3 \\ -1 \\ 1 \\ 3 \end{pmatrix} $$
+<p>Next, we find the norm of $\mathbf{v}_2^{\sim}$:</p>
+\$$ ||\mathbf{v}_2^{\sim}|| = \left|\left| \frac{1}{2} \begin{pmatrix} -3 \\ -1 \\ 1 \\ 3 \end{pmatrix} \right|\right| = \frac{1}{2}\sqrt{(-3)^2 + (-1)^2 + 1^2 + 3^2} = \frac{1}{2}\sqrt{9+1+1+9} = \frac{\sqrt{20}}{2} = \frac{2\sqrt{5}}{2} = \sqrt{5} $$
+<p>Finally, we normalize to get $\mathbf{v}_2$:</p>
+\$$ \mathbf{v}_2 = \frac{\mathbf{v}_2^{\sim}}{||\mathbf{v}_2^{\sim}||} = \frac{\frac{1}{2} \begin{pmatrix} -3 \\ -1 \\ 1 \\ 3 \end{pmatrix}}{\sqrt{5}} = \frac{1}{2\sqrt{5}} \begin{pmatrix} -3 \\ -1 \\ 1 \\ 3 \end{pmatrix} $$
+
+<h4>Step 3: Calculate $\mathbf{v}_3$</h4>
+<p>We compute $\mathbf{v}_3^{\sim}$ by subtracting the projections of $\mathbf{x}_3$ onto both $\mathbf{v}_1$ and $\mathbf{v}_2$.</p>
+\$$ \mathbf{v}_3^{\sim} = \mathbf{x}_3 - (\mathbf{x}_3^T \mathbf{v}_1) \mathbf{v}_1 - (\mathbf{x}_3^T \mathbf{v}_2) \mathbf{v}_2 $$
+<p>Calculate the inner products:</p>
+\$$ \mathbf{x}_3^T \mathbf{v}_1 = \begin{pmatrix} 1 & -2 & 3 & -1 \end{pmatrix} \left( \frac{1}{2} \begin{pmatrix} 1 \\ 1 \\ 1 \\ 1 \end{pmatrix} \right) = \frac{1}{2}(1-2+3-1) = \frac{1}{2} $$
+\$$ \mathbf{x}_3^T \mathbf{v}_2 = \begin{pmatrix} 1 & -2 & 3 & -1 \end{pmatrix} \left( \frac{1}{2\sqrt{5}} \begin{pmatrix} -3 \\ -1 \\ 1 \\ 3 \end{pmatrix} \right) = \frac{1}{2\sqrt{5}}(-3+2+3-3) = \frac{-1}{2\sqrt{5}} $$
+<p>Now, assemble $\mathbf{v}_3^{\sim}$:</p>
+\$$ \mathbf{v}_3^{\sim} = \begin{pmatrix} 1 \\ -2 \\ 3 \\ -1 \end{pmatrix} - \left(\frac{1}{2}\right)\frac{1}{2}\begin{pmatrix} 1 \\ 1 \\ 1 \\ 1 \end{pmatrix} - \left(\frac{-1}{2\sqrt{5}}\right)\frac{1}{2\sqrt{5}}\begin{pmatrix} -3 \\ -1 \\ 1 \\ 3 \end{pmatrix} $$
+\$$ \mathbf{v}_3^{\sim} = \begin{pmatrix} 1 \\ -2 \\ 3 \\ -1 \end{pmatrix} - \frac{1}{4}\begin{pmatrix} 1 \\ 1 \\ 1 \\ 1 \end{pmatrix} + \frac{1}{20}\begin{pmatrix} -3 \\ -1 \\ 1 \\ 3 \end{pmatrix} $$
+<p>Finding a common denominator of 20:</p>
+\$$ \mathbf{v}_3^{\sim} = \frac{1}{20} \left( 20\begin{pmatrix} 1 \\ -2 \\ 3 \\ -1 \end{pmatrix} - 5\begin{pmatrix} 1 \\ 1 \\ 1 \\ 1 \end{pmatrix} + \begin{pmatrix} -3 \\ -1 \\ 1 \\ 3 \end{pmatrix} \right) = \frac{1}{20} \begin{pmatrix} 20-5-3 \\ -40-5-1 \\ 60-5+1 \\ -20-5+3 \end{pmatrix} = \frac{1}{20}\begin{pmatrix} 12 \\ -46 \\ 56 \\ -22 \end{pmatrix} $$
+<p>The norm of the vector part is $\sqrt{12^2 + (-46)^2 + 56^2 + (-22)^2} = \sqrt{144 + 2116 + 3136 + 484} = \sqrt{5880} = 14\sqrt{30}$. The norm of $\mathbf{v}_3^{\sim}$ is therefore $\frac{14\sqrt{30}}{20}$.</p>
+<p>Finally, we normalize to get $\mathbf{v}_3$:</p>
+\$$ \mathbf{v}_3 = \frac{\mathbf{v}_3^{\sim}}{||\mathbf{v}_3^{\sim}||} = \frac{\frac{1}{20}\begin{pmatrix} 12 \\ -46 \\ 56 \\ -22 \end{pmatrix}}{\frac{\sqrt{5880}}{20}} = \frac{1}{\sqrt{5880}}\begin{pmatrix} 12 \\ -46 \\ 56 \\ -22 \end{pmatrix} = \frac{1}{14\sqrt{30}}\begin{pmatrix} 12 \\ -46 \\ 56 \\ -22 \end{pmatrix} $$
+
+<h3>4. Final Result</h3>
+<p>The Gram-Schmidt procedure has transformed the original basis into the following orthonormal basis:</p>
+\$$ \left\{ \frac{1}{2} \begin{pmatrix} 1 \\ 1 \\ 1 \\ 1 \end{pmatrix}, \quad \frac{1}{2\sqrt{5}} \begin{pmatrix} -3 \\ -1 \\ 1 \\ 3 \end{pmatrix}, \quad \frac{1}{14\sqrt{30}}\begin{pmatrix} 12 \\ -46 \\ 56 \\ -22 \end{pmatrix} \right\} $$
+<p>Each vector in this set has a norm of 1, and each vector is orthogonal to the others. This new basis spans the exact same subspace as the original set of vectors $\{\mathbf{x}_1, \mathbf{x}_2, \mathbf{x}_3\}$.</p>
+</div></div><div class="chapter" id="Lecture 12 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 12 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts surrounding Gaussian random variables and vectors, as presented in the transcript. These concepts are fundamental in linear system analysis, signal processing, and machine learning.</p>
+
+<b>1. The Gaussian Random Variable</b>
+<p>A Gaussian random variable, also known as a Normal random variable, is one of the most important continuous random variables in probability and statistics. Its probability distribution is described by a symmetric, bell-shaped curve.</p>
+<p>The distribution is completely characterized by two parameters:</p>
+<ul>
+    <li><b>Mean ($\mu$):</b> This parameter represents the central tendency or the average value of the random variable. On the graph of the probability density function (PDF), the mean is the location of the peak of the bell curve. The expected value of the random variable $X$ is its mean:
+    \$$ E[X] = \mu $$
+    </li>
+    <li><b>Variance ($\sigma^2$):</b> This parameter measures the spread or dispersion of the distribution. A larger variance results in a wider, flatter bell curve, indicating that the values are more spread out from the mean. A smaller variance results in a taller, narrower curve. The variance is defined as the expected value of the squared deviation from the mean:
+    \$$ E[(X - \mu)^2] = \sigma^2 $$
+    The square root of the variance, $\sigma$, is called the standard deviation.
+    </li>
+</ul>
+<p>The <b>Probability Density Function (PDF)</b> of a Gaussian random variable $X$ is given by the formula:</p>
+\$$ f_X(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}} $$
+<p>where $x$ can be any real number ($-\infty < x < \infty$). This function describes the likelihood of the random variable taking on a particular value $x$.</p>
+
+<b>2. The Gaussian Random Vector (Multivariate Gaussian)</b>
+<p>In many applications, we deal with multiple random variables simultaneously. A <b>Gaussian random vector</b> is a collection of random variables, $\mathbf{x} = [x_1, x_2, \dots, x_n]^T$, where any linear combination of these variables is also a Gaussian random variable. This property is known as being "jointly Gaussian."</p>
+<p>Similar to the single-variable case, a multivariate Gaussian distribution is characterized by a mean vector and a covariance matrix.</p>
+<ul>
+    <li><b>Mean Vector ($\boldsymbol{\mu}$):</b> This is an n-dimensional vector where each element is the mean of the corresponding random variable.
+    \$$ \boldsymbol{\mu} = E[\mathbf{x}] = \begin{pmatrix} E[x_1] \\ E[x_2] \\ \vdots \\ E[x_n] \end{pmatrix} $$
+    </li>
+    <li><b>Covariance Matrix ($\mathbf{R}$):</b> This is an $n \times n$ matrix that describes the variance of each individual component and the covariance between pairs of components. It is defined as:
+    \$$ \mathbf{R} = E[(\mathbf{x}-\boldsymbol{\mu})(\mathbf{x}-\boldsymbol{\mu})^T] $$
+    The diagonal elements $r_{ii}$ of $\mathbf{R}$ are the variances of the individual random variables $x_i$, and the off-diagonal elements $r_{ij}$ are the covariances between $x_i$ and $x_j$. The covariance matrix is always symmetric ($r_{ij} = r_{ji}$).
+    </li>
+</ul>
+<p>The <b>PDF of a multivariate Gaussian</b> random vector $\mathbf{x}$ is given by:</p>
+\$$ f_{\mathbf{X}}(\mathbf{x}) = \frac{1}{\sqrt{(2\pi)^n \det(\mathbf{R})}} e^{-\frac{1}{2}(\mathbf{x}-\boldsymbol{\mu})^T \mathbf{R}^{-1}(\mathbf{x}-\boldsymbol{\mu})} $$
+<p>Here, $n$ is the dimension of the vector, $\det(\mathbf{R})$ is the determinant of the covariance matrix, and $\mathbf{R}^{-1}$ is its inverse. The term in the exponent, $(\mathbf{x}-\boldsymbol{\mu})^T \mathbf{R}^{-1}(\mathbf{x}-\boldsymbol{\mu})$, is a quadratic form that generalizes the squared distance from the mean found in the single-variable case.</p>
+
+<b>3. Analysis of the Covariance Matrix</b>
+<p>The structure of the covariance matrix $\mathbf{R}$ reveals the relationships between the components of the random vector. For simplicity, consider the case where the mean vector is zero ($\boldsymbol{\mu} = \mathbf{0}$). The covariance matrix then simplifies to:</p>
+\$$ \mathbf{R} = E[\mathbf{x}\mathbf{x}^T] $$
+<p>The elements of this matrix are:</p>
+<ul>
+    <li><b>Diagonal Entries ($r_{ii}$):</b> These are the variances of the individual random variables.
+    \$$ r_{ii} = E[x_i^2] = \text{Variance of } x_i $$
+    </li>
+    <li><b>Off-Diagonal Entries ($r_{ij}$ for $i \neq j$):</b> These are the correlations (covariances, in the zero-mean case) between pairs of random variables.
+    \$$ r_{ij} = r_{ji} = E[x_i x_j] $$
+    </li>
+</ul>
+
+<b>4. Special Cases and Key Properties</b>
+<p>The transcript highlights two important special cases related to the structure of the covariance matrix.</p>
+
+<b>Case 1: Uncorrelated Components (Diagonal Covariance Matrix)</b>
+<p>If the off-diagonal entries of the covariance matrix $\mathbf{R}$ are all zero, the matrix is diagonal.
+\$$ \mathbf{R} = \begin{pmatrix} \sigma_1^2 & 0 & \cdots & 0 \\ 0 & \sigma_2^2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & \sigma_n^2 \end{pmatrix} $$
+This means that for any pair of different random variables $x_i$ and $x_j$ (where $i \neq j$), their correlation is zero:
+\$$ E[x_i x_j] = 0 \quad (\text{for } i \neq j) $$
+<p>Random variables with zero correlation are said to be <b>uncorrelated</b>. A crucial property of jointly Gaussian random variables is that if they are uncorrelated, they are also <b>independent</b>. This is a powerful result that does not hold for random variables in general.</p>
+
+<b>Case 2: Independent and Identically Distributed (i.i.d.) Components</b>
+<p>This is a further simplification where the covariance matrix is diagonal and all the diagonal elements (variances) are equal.
+\$$ \mathbf{R} = \sigma^2 \mathbf{I} = \begin{pmatrix} \sigma^2 & 0 & \cdots & 0 \\ 0 & \sigma^2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & \sigma^2 \end{pmatrix} $$
+In this scenario, where $\mathbf{I}$ is the identity matrix:</p>
+<ul>
+    <li>The components $x_1, x_2, \dots, x_n$ are <b>independent</b> because the covariance matrix is diagonal.</li>
+    <li>They are <b>identically distributed</b> because they share the same mean (assumed to be 0 here) and the same variance ($\sigma^2$).</li>
+</ul>
+<p>Such a collection of random variables is referred to as <b>i.i.d. (independent and identically distributed)</b>. This is a common assumption for modeling noise in many signal processing and communication systems, as it simplifies analysis significantly.</p>
+</div></div><div class="chapter" id="Lecture 13 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 13 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<h3>Introduction: Linear Transformation of Gaussian Random Vectors</h3>
+<p>This module explores a fundamental and powerful property of Gaussian (or Normal) random vectors: their behavior under linear transformations. This concept is crucial in many fields, especially in the analysis of linear systems, signal processing, and statistical modeling. A random vector is a collection of random variables, and a Gaussian random vector is one where these variables are jointly Gaussian.</p>
+<p>The core idea presented is that if you take a Gaussian random vector and apply a linear transformation to it, the resulting vector is also a Gaussian random vector. This property, often summarized as <b>"Gaussian remains Gaussian,"</b> makes the analysis of such systems much more tractable.</p>
+
+<h3>The General Linear Transformation</h3>
+<p>Let's start with the general case. We have a Gaussian random vector, which the transcript denotes as $\bar{x}$ (we will use the more common notation $\mathbf{x}$). This vector is characterized by its mean vector and its covariance matrix.</p>
+<p><b>1. Initial Gaussian Random Vector</b></p>
+<p>Let $\mathbf{x}$ be an $n \times 1$ Gaussian random vector with mean vector $\boldsymbol{\mu_x}$ and covariance matrix $R$. This is denoted as:</p>
+\$$ \mathbf{x} \sim \mathcal{N}(\boldsymbol{\mu_x}, R) $$
+<p>This notation implies two things:</p>
+<ul>
+    <li>The expected value (mean) of the vector is: $ E[\mathbf{x}] = \boldsymbol{\mu_x} $</li>
+    <li>The covariance matrix, which describes the variance of each component and the covariance between components, is: $ R = E[(\mathbf{x} - \boldsymbol{\mu_x})(\mathbf{x} - \boldsymbol{\mu_x})^T] $</li>
+</ul>
+
+<p><b>2. The Linear Transformation</b></p>
+<p>We now define a new random vector, $\mathbf{y}$, by applying a linear transformation to $\mathbf{x}$. The transformation is defined as:</p>
+\$$ \mathbf{y} = A\mathbf{x} + \mathbf{b} $$
+<p>Where:</p>
+<ul>
+    <li>$\mathbf{x}$ is the original $n \times 1$ Gaussian random vector.</li>
+    <li>$A$ is a constant $m \times n$ matrix.</li>
+    <li>$\mathbf{b}$ is a constant $m \times 1$ vector.</li>
+    <li>$\mathbf{y}$ is the resulting $m \times 1$ random vector.</li>
+</ul>
+<p><i>Note: This is technically an affine transformation, but it is commonly referred to as a linear transformation in this context.</i></p>
+
+<p><b>3. The Resulting Distribution</b></p>
+<p>The key property is that $\mathbf{y}$ is also a Gaussian random vector. To fully describe its distribution, we need to find its mean $\boldsymbol{\mu_y}$ and its covariance matrix $R_y$.</p>
+
+<p><b>Mean of $\mathbf{y}$:</b></p>
+<p>The mean of $\mathbf{y}$ is found by taking the expectation of the transformation. Since the expectation operator $E[\cdot]$ is linear, we can distribute it through the expression:</p>
+\$$ \boldsymbol{\mu_y} = E[\mathbf{y}] = E[A\mathbf{x} + \mathbf{b}] $$
+\$$ \boldsymbol{\mu_y} = E[A\mathbf{x}] + E[\mathbf{b}] $$
+<p>Since $A$ and $\mathbf{b}$ are constants, this simplifies to:</p>
+\$$ \boldsymbol{\mu_y} = A E[\mathbf{x}] + \mathbf{b} $$
+<p>Substituting $E[\mathbf{x}] = \boldsymbol{\mu_x}$, we get the final result for the mean of $\mathbf{y}$:</p>
+\$$ \boldsymbol{\mu_y} = A\boldsymbol{\mu_x} + \mathbf{b} $$
+
+<p><b>Covariance of $\mathbf{y}$:</b></p>
+<p>The covariance matrix of $\mathbf{y}$ is defined as $R_y = E[(\mathbf{y} - \boldsymbol{\mu_y})(\mathbf{y} - \boldsymbol{\mu_y})^T]$. To derive this, we first express the term $\mathbf{y} - \boldsymbol{\mu_y}$:</p>
+\$$ \mathbf{y} - \boldsymbol{\mu_y} = (A\mathbf{x} + \mathbf{b}) - (A\boldsymbol{\mu_x} + \mathbf{b}) = A\mathbf{x} - A\boldsymbol{\mu_x} = A(\mathbf{x} - \boldsymbol{\mu_x}) $$
+<p>Now, we substitute this back into the covariance formula:</p>
+\$$ R_y = E\left[ \left( A(\mathbf{x} - \boldsymbol{\mu_x}) \right) \left( A(\mathbf{x} - \boldsymbol{\mu_x}) \right)^T \right] $$
+<p>Using the property of transpose $(BC)^T = C^T B^T$, the second term becomes $(\mathbf{x} - \boldsymbol{\mu_x})^T A^T$. The expression is now:</p>
+\$$ R_y = E\left[ A (\mathbf{x} - \boldsymbol{\mu_x}) (\mathbf{x} - \boldsymbol{\mu_x})^T A^T \right] $$
+<p>Since $A$ and $A^T$ are constant matrices, we can pull them outside the expectation operator:</p>
+\$$ R_y = A \cdot E\left[ (\mathbf{x} - \boldsymbol{\mu_x}) (\mathbf{x} - \boldsymbol{\mu_x})^T \right] \cdot A^T $$
+<p>The term inside the expectation is, by definition, the covariance matrix of $\mathbf{x}$, which is $R$. Therefore, the covariance matrix of $\mathbf{y}$ is:</p>
+\$$ R_y = A R A^T $$
+
+<p><b>Summary of the General Result</b></p>
+<p>If $\mathbf{x} \sim \mathcal{N}(\boldsymbol{\mu_x}, R)$ and $\mathbf{y} = A\mathbf{x} + \mathbf{b}$, then the transformed vector $\mathbf{y}$ is also Gaussian with the following distribution:</p>
+\$$ \mathbf{y} \sim \mathcal{N}(A\boldsymbol{\mu_x} + \mathbf{b}, A R A^T) $$
+
+<h3>Special Case: Weighted Sum of IID Gaussian Variables</h3>
+<p>The transcript examines a very common and important special case: forming a weighted sum of independent and identically distributed (IID) Gaussian random variables.</p>
+
+<p><b>1. The IID Gaussian Vector</b></p>
+<p>Consider a vector $\mathbf{x}$ composed of $n$ random variables $x_1, x_2, \dots, x_n$ that are:</p>
+<ul>
+    <li><b>Independent:</b> The value of one variable gives no information about the others.</li>
+    <li><b>Identically Distributed:</b> They all follow the same probability distribution.</li>
+    <li><b>Zero-Mean Gaussian:</b> Each $x_i$ has a mean of 0 and a variance of $\sigma^2$. That is, $E[x_i] = 0$ and $E[x_i^2] = \sigma^2$.</li>
+</ul>
+<p>For this vector $\mathbf{x}$:</p>
+<ul>
+    <li>The mean vector is the zero vector: $\boldsymbol{\mu_x} = \mathbf{0}$.</li>
+    <li>The covariance matrix is $R = \sigma^2 I$, where $I$ is the identity matrix. The off-diagonal elements are zero due to independence, and the diagonal elements are all $\sigma^2$ because the variables are identically distributed.</li>
+</ul>
+\$$ R = E[\mathbf{x}\mathbf{x}^T] = \begin{pmatrix} \sigma^2 & 0 & \cdots & 0 \\ 0 & \sigma^2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & \sigma^2 \end{pmatrix} = \sigma^2 I $$
+
+<p><b>2. The Weighted Sum Transformation</b></p>
+<p>We now create a new scalar random variable $y$ which is a weighted sum of the components of $\mathbf{x}$:</p>
+\$$ y = a_1 x_1 + a_2 x_2 + \dots + a_n x_n = \sum_{i=1}^{n} a_i x_i $$
+<p>This can be written in vector form as a dot product:</p>
+\$$ y = \begin{pmatrix} a_1 & a_2 & \cdots & a_n \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{pmatrix} = \mathbf{a}^T \mathbf{x} $$
+<p>This is a specific instance of the linear transformation $\mathbf{y} = A\mathbf{x} + \mathbf{b}$, where $A = \mathbf{a}^T$ (an $1 \times n$ matrix) and $\mathbf{b} = 0$.</p>
+
+<p><b>3. Mean and Variance of the Weighted Sum</b></p>
+<p>Since $y$ is a linear transformation of a Gaussian vector, $y$ itself is a Gaussian random variable (a scalar). We can find its mean and variance using the general formulas.</p>
+<p><b>Mean of $y$:</b></p>
+\$$ E[y] = E[\mathbf{a}^T \mathbf{x}] = \mathbf{a}^T E[\mathbf{x}] = \mathbf{a}^T \mathbf{0} = 0 $$
+<p>The resulting weighted sum is also a zero-mean random variable.</p>
+
+<p><b>Variance of $y$:</b></p>
+<p>The variance is $\text{Var}(y) = E[(y - E[y])^2] = E[y^2]$ since the mean is zero. Using the formula for the transformed covariance matrix $A R A^T$:</p>
+\$$ \text{Var}(y) = (\mathbf{a}^T) (\sigma^2 I) (\mathbf{a}^T)^T = \sigma^2 (\mathbf{a}^T I \mathbf{a}) = \sigma^2 \mathbf{a}^T \mathbf{a} $$
+<p>The term $\mathbf{a}^T \mathbf{a}$ is the dot product of the vector of weights with itself, which is the squared Euclidean norm of the vector, denoted $||\mathbf{a}||^2$.</p>
+\$$ \mathbf{a}^T \mathbf{a} = ||\mathbf{a}||^2 = \sum_{i=1}^{n} a_i^2 $$
+<p>So, the variance is:</p>
+\$$ \text{Var}(y) = \sigma^2 ||\mathbf{a}||^2 = \sigma^2 \sum_{i=1}^{n} a_i^2 $$
+
+<p>The final result is that the weighted sum $y$ is a Gaussian random variable with mean 0 and variance $\sigma^2 ||\mathbf{a}||^2$:</p>
+\$$ y \sim \mathcal{N}(0, \sigma^2 ||\mathbf{a}||^2) $$
+
+<h3>Application: Beamforming</h3>
+<p>The transcript mentions that this special case has a direct and important application in wireless communications, known as <b>beamforming</b>. In a system with an antenna array (multiple antennas), the receiver can combine the signals $(x_i)$ from each antenna element using a set of complex weights $(a_i)$. By carefully choosing these weights (the "beamforming vector" $\mathbf{a}$), the receiver can amplify signals coming from a desired direction and suppress interference from other directions, effectively "forming a beam" of sensitivity in space.</p>
+
+</div></div><div class="chapter" id="Lecture 14 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 14 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts presented in the transcript, focusing on a machine learning application of Gaussian random vectors: <b>classification with Gaussian classes</b>.</p>
+
+<h3>1. The Classification Problem</h3>
+<p>The core problem is to classify a new data observation into one of two predefined classes. It is assumed that the data points within each class are distributed according to a multivariate Gaussian distribution.</p>
+<p><b>Problem Setup:</b></p>
+<ul>
+    <li>There are two classes, which we'll call Class 1 ($C_1$) and Class 2 ($C_2$).</li>
+    <li>Data points in each class are represented by random vectors.</li>
+    <li><b>Class 1</b> is modeled by a Gaussian distribution with mean vector $\bar{\mu}_1$ and covariance matrix $\Sigma$.</li>
+    <li><b>Class 2</b> is modeled by a Gaussian distribution with mean vector $\bar{\mu}_2$ and covariance matrix $\Sigma$.</li>
+</ul>
+<p>A key simplifying assumption here is that both classes share the <b>same covariance matrix $\Sigma$</b>, but they have different means ($\bar{\mu}_1 \neq \bar{\mu}_2$). The central question is: given a new observation vector $\bar{x}$, does it belong to Class 1 or Class 2?</p>
+<p>A practical example is image segmentation, where pixels belonging to a foreground object (Class 1) might have a different average color (mean) than pixels in the background (Class 2), while their color variations (covariance) might be similar.</p>
+
+<h3>2. The Likelihood-Based Classifier</h3>
+<p>To decide which class $\bar{x}$ belongs to, we use a principle based on likelihood. The <b>likelihood</b> of a class for a given observation $\bar{x}$ is the value of that class's probability density function (PDF) evaluated at $\bar{x}$.</p>
+
+<p><b>Likelihood of Class 1:</b><br>
+This is the multivariate Gaussian PDF for Class 1, evaluated at $\bar{x}$.
+\$$ p(\bar{x} | \bar{\mu}_1, \Sigma) = \frac{1}{\sqrt{(2\pi)^n \det(\Sigma)}} \exp\left(-\frac{1}{2}(\bar{x} - \bar{\mu}_1)^T \Sigma^{-1} (\bar{x} - \bar{\mu}_1)\right) $$
+where $n$ is the dimension of the vector $\bar{x}$ and $\det(\Sigma)$ is the determinant of the covariance matrix.</p>
+
+<p><b>Likelihood of Class 2:</b><br>
+Similarly, this is the PDF for Class 2, evaluated at $\bar{x}$.
+\$$ p(\bar{x} | \bar{\mu}_2, \Sigma) = \frac{1}{\sqrt{(2\pi)^n \det(\Sigma)}} \exp\left(-\frac{1}{2}(\bar{x} - \bar{\mu}_2)^T \Sigma^{-1} (\bar{x} - \bar{\mu}_2)\right) $$
+</p>
+
+<p><b>The Classification Rule:</b><br>
+The decision rule is intuitive: assign $\bar{x}$ to the class with the higher likelihood.
+</p>
+<ul>
+    <li>Choose <b>Class 1</b> if: $ p(\bar{x} | \bar{\mu}_1, \Sigma) \ge p(\bar{x} | \bar{\mu}_2, \Sigma) $</li>
+    <li>Choose <b>Class 2</b> if: $ p(\bar{x} | \bar{\mu}_1, \Sigma) < p(\bar{x} | \bar{\mu}_2, \Sigma) $</li>
+</ul>
+<p>This can be written compactly as:
+\$$ p(\bar{x} | \bar{\mu}_1, \Sigma) \underset{C_2}{\overset{C_1}{\gtrless}} p(\bar{x} | \bar{\mu}_2, \Sigma) $$
+</p>
+
+<h3>3. Derivation and Simplification of the Rule</h3>
+<p>We can simplify the classification rule by substituting the PDF formulas into the inequality.</p>
+<p><b>Step 1: Cancel the constant term</b><br>
+The term $ \frac{1}{\sqrt{(2\pi)^n \det(\Sigma)}} $ is common to both sides and positive, so it can be cancelled. The comparison becomes:
+\$$ \exp\left(-\frac{1}{2}(\bar{x} - \bar{\mu}_1)^T \Sigma^{-1} (\bar{x} - \bar{\mu}_1)\right) \ge \exp\left(-\frac{1}{2}(\bar{x} - \bar{\mu}_2)^T \Sigma^{-1} (\bar{x} - \bar{\mu}_2)\right) $$
+</p>
+<p><b>Step 2: Remove the exponential</b><br>
+Since the exponential function $e^z$ is monotonically increasing, we can compare its arguments directly. However, because of the negative sign in the exponent, the direction of the inequality is reversed:
+\$$ -\frac{1}{2}(\bar{x} - \bar{\mu}_1)^T \Sigma^{-1} (\bar{x} - \bar{\mu}_1) \ge -\frac{1}{2}(\bar{x} - \bar{\mu}_2)^T \Sigma^{-1} (\bar{x} - \bar{\mu}_2) $$
+Multiplying by -2 (and flipping the inequality again) gives:
+\$$ (\bar{x} - \bar{\mu}_1)^T \Sigma^{-1} (\bar{x} - \bar{\mu}_1) \le (\bar{x} - \bar{\mu}_2)^T \Sigma^{-1} (\bar{x} - \bar{\mu}_2) $$
+The term $(\bar{x} - \bar{\mu})^T \Sigma^{-1} (\bar{x} - \bar{\mu})$ is the squared Mahalanobis distance from $\bar{x}$ to the mean $\bar{\mu}$. So, this rule classifies $\bar{x}$ to the class with the smaller Mahalanobis distance.</p>
+
+<p><b>Step 3: Expand and simplify the quadratic forms</b><br>
+Expanding both sides gives:
+\$$ \bar{x}^T\Sigma^{-1}\bar{x} - 2\bar{\mu}_1^T\Sigma^{-1}\bar{x} + \bar{\mu}_1^T\Sigma^{-1}\bar{\mu}_1 \le \bar{x}^T\Sigma^{-1}\bar{x} - 2\bar{\mu}_2^T\Sigma^{-1}\bar{x} + \bar{\mu}_2^T\Sigma^{-1}\bar{\mu}_2 $$
+The term $\bar{x}^T\Sigma^{-1}\bar{x}$ cancels from both sides. Rearranging the remaining terms to group $\bar{x}$ yields:
+\$$ 2(\bar{\mu}_2 - \bar{\mu}_1)^T\Sigma^{-1}\bar{x} \le \bar{\mu}_2^T\Sigma^{-1}\bar{\mu}_2 - \bar{\mu}_1^T\Sigma^{-1}\bar{\mu}_1 $$
+Multiplying by -1 and swapping terms gives:
+\$$ 2(\bar{\mu}_1 - \bar{\mu}_2)^T\Sigma^{-1}\bar{x} \ge \bar{\mu}_1^T\Sigma^{-1}\bar{\mu}_1 - \bar{\mu}_2^T\Sigma^{-1}\bar{\mu}_2 $$
+This leads to the final form shown in the transcript after some manipulation:
+\$$ (\bar{\mu}_1 - \bar{\mu}_2)^T \Sigma^{-1} \left(\bar{x} - \frac{\bar{\mu}_1 + \bar{\mu}_2}{2}\right) \ge 0 $$
+This elegant result defines a <b>linear classifier</b>. The expression $\bar{w}^T(\bar{x}-\bar{x}_0)=0$ defines a hyperplane, and the classification depends on which side of this plane the point $\bar{x}$ falls.
+</p>
+
+<h3>4. Special Case: Independent and Identically Distributed (IID) Components</h3>
+<p>A very intuitive result emerges when we consider a simpler covariance structure where the components of the Gaussian vectors are independent and have the same variance $\sigma^2$. In this case, the covariance matrix is a scaled identity matrix:</p>
+\$$ \Sigma = \sigma^2 I $$
+Its inverse is simply:
+\$$ \Sigma^{-1} = \frac{1}{\sigma^2} I $$
+Substituting this into our decision rule:
+\$$ (\bar{\mu}_1 - \bar{\mu}_2)^T \left(\frac{1}{\sigma^2} I\right) \left(\bar{x} - \frac{\bar{\mu}_1 + \bar{\mu}_2}{2}\right) \ge 0 $$
+Since $\frac{1}{\sigma^2}$ is a positive scalar, we can remove it without changing the inequality:
+\$$ (\bar{\mu}_1 - \bar{\mu}_2)^T \left(\bar{x} - \frac{\bar{\mu}_1 + \bar{\mu}_2}{2}\right) \ge 0 $$
+<p>We choose Class 1 if the inequality holds, and Class 2 otherwise.</p>
+
+<h3>5. Geometric Interpretation: The Minimum Distance Classifier</h3>
+<p>This simplified rule has a clear and powerful geometric meaning.</p>
+<ul>
+    <li>The vector $ \bar{\mu}_1 - \bar{\mu}_2 $ points from the mean of Class 2 to the mean of Class 1.</li>
+    <li>The point $ \bar{x}_0 = \frac{\bar{\mu}_1 + \bar{\mu}_2}{2} $ is the midpoint of the line segment connecting the two means.</li>
+    <li>The vector $ \bar{x} - \bar{x}_0 $ points from this midpoint to our new observation $\bar{x}$.</li>
+</ul>
+<p>The expression $(\bar{\mu}_1 - \bar{\mu}_2)^T (\bar{x} - \bar{x}_0)$ is the dot product of these two vectors. The dot product is positive if and only if the angle between the vectors is less than 90°. This means $\bar{x}$ lies on the same side of the perpendicular bisector of the means as $\bar{\mu}_1$.</p>
+<p>The equation for the decision boundary is:
+\$$ (\bar{\mu}_1 - \bar{\mu}_2)^T \left(\bar{x} - \frac{\bar{\mu}_1 + \bar{\mu}_2}{2}\right) = 0 $$
+This equation defines the hyperplane that is the <b>perpendicular bisector</b> of the line segment joining $\bar{\mu}_1$ and $\bar{\mu}_2$.</p>
+
+<p>Therefore, the classification rule simplifies to:</p>
+<ul>
+    <li>If $\bar{x}$ lies on the side of the perpendicular bisector closer to $\bar{\mu}_1$, classify it as <b>Class 1</b>.</li>
+    <li>If it lies on the side closer to $\bar{\mu}_2$, classify it as <b>Class 2</b>.</li>
+</ul>
+<p>This is equivalent to classifying $\bar{x}$ based on which mean it is closer to in Euclidean distance. This is why it is called a <b>Minimum Distance Classifier</b>. The condition is: choose Class 1 if
+\$$ ||\bar{x} - \bar{\mu}_1|| \le ||\bar{x} - \bar{\mu}_2|| $$
+This demonstrates that for the special case of Gaussian classes with identical and spherical covariances ($\Sigma = \sigma^2 I$), the sophisticated likelihood-based approach reduces to a simple and intuitive geometric rule.</p>
+</div></div><div class="chapter" id="Lecture 15 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 15 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts of eigenvalues and eigenvalue decomposition (EVD) as presented in the transcript. This is one of the most fundamental and impactful topics in linear algebra, with widespread applications in numerous fields.</p>
+
+<b>1. The Core Concept: Eigenvectors and Eigenvalues</b>
+<p>Eigenvalue analysis is defined for <b>square matrices</b>. Given an $ n \times n $ square matrix $ A $, we are interested in finding special vectors that, when transformed by $ A $, do not change their direction.</p>
+
+<p>A non-zero vector $ \bar{u} $ is called an <b>eigenvector</b> of matrix $ A $ if the matrix-vector product $ A\bar{u} $ is simply a scaled version of the original vector $ \bar{u} $. The scaling factor is a scalar value $ \lambda $, known as the corresponding <b>eigenvalue</b>.</p>
+
+<p>This relationship is captured by the fundamental equation:</p>
+\$$ A\bar{u} = \lambda \bar{u} $$
+<p>Here:</p>
+<ul>
+    <li>$ A $ is an $ n \times n $ square matrix.</li>
+    <li>$ \bar{u} $ is an $ n \times 1 $ non-zero vector (the eigenvector).</li>
+    <li>$ \lambda $ is a scalar (the eigenvalue).</li>
+</ul>
+<p>Conceptually, if you consider the vector $ \bar{u} $ as an input to a system represented by matrix $ A $, the output $ A\bar{u} $ is perfectly aligned with the input, just stretched or shrunk by the factor $ \lambda $.</p>
+
+<b>2. Finding Eigenvalues: The Characteristic Equation</b>
+<p>To find the eigenvalues of a matrix $ A $, we can rearrange the core equation. The process is as follows:</p>
+<ol>
+    <li>Start with the definition: $ A\bar{u} = \lambda \bar{u} $.</li>
+    <li>Bring all terms to one side: $ A\bar{u} - \lambda \bar{u} = \bar{0} $.</li>
+    <li>To factor out $ \bar{u} $, we introduce the identity matrix $ I $ of the same size as $ A $: $ A\bar{u} - \lambda I \bar{u} = \bar{0} $.</li>
+    <li>Factor out the vector $ \bar{u} $: $ (A - \lambda I)\bar{u} = \bar{0} $.</li>
+</ol>
+<p>This equation, $ (A - \lambda I)\bar{u} = \bar{0} $, signifies that the eigenvector $ \bar{u} $ lies in the <b>null space</b> of the matrix $ (A - \lambda I) $. Since eigenvectors are defined to be non-zero, this means the null space must be non-trivial. A matrix has a non-trivial null space if and only if it is <b>singular</b>, which in turn means its determinant is zero.</p>
+<p>This leads to the <b>characteristic equation</b>, which allows us to solve for the eigenvalues $ \lambda $:</p>
+\$$ \det(A - \lambda I) = 0 $$
+<p>Solving this equation, which will be a polynomial in $ \lambda $ of degree $ n $, yields the $ n $ eigenvalues of the matrix $ A $.</p>
+
+<b>3. Finding Eigenvectors</b>
+<p>Once an eigenvalue $ \lambda $ has been found by solving the characteristic equation, its corresponding eigenvector(s) $ \bar{u} $ can be found by substituting the value of $ \lambda $ back into the equation:</p>
+\$$ (A - \lambda I)\bar{u} = \bar{0} $$
+<p>This is equivalent to finding the basis vectors for the null space of the matrix $ A - \lambda I $.</p>
+<p>An important property mentioned in the transcript is that if $ \bar{u} $ is an eigenvector, then any scaled version $ \alpha\bar{u} $ (where $ \alpha $ is a non-zero scalar) is also an eigenvector for the same eigenvalue $ \lambda $. This is because:</p>
+\$$ A(\alpha\bar{u}) = \alpha(A\bar{u}) = \alpha(\lambda\bar{u}) = \lambda(\alpha\bar{u}) $$
+<p>This is why solving for an eigenvector will always involve a free variable, allowing for infinite solutions that all lie along the same line (or in the same subspace).</p>
+
+<b>4. Worked Example</b>
+<p>Let's use the example from the transcript to find the eigenvalues and eigenvectors.</p>
+<p>Consider the matrix:
+\$$ A = \begin{pmatrix} 2 & 2 \\ 3 & 1 \end{pmatrix} $$
+</p>
+<p><b>Step 1: Find the Eigenvalues</b></p>
+<p>First, we set up the characteristic equation $ \det(A - \lambda I) = 0 $.</p>
+\$$ A - \lambda I = \begin{pmatrix} 2 & 2 \\ 3 & 1 \end{pmatrix} - \lambda \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} = \begin{pmatrix} 2-\lambda & 2 \\ 3 & 1-\lambda \end{pmatrix} $$
+<p>Now, we compute the determinant and set it to zero:</p>
+\$$ \det(A - \lambda I) = (2-\lambda)(1-\lambda) - (3)(2) = 0 $$
+\$$ 2 - 2\lambda - \lambda + \lambda^2 - 6 = 0 $$
+\$$ \lambda^2 - 3\lambda - 4 = 0 $$
+<p>Factoring the quadratic equation:</p>
+\$$ (\lambda - 4)(\lambda + 1) = 0 $$
+<p>The eigenvalues are $ \lambda_1 = 4 $ and $ \lambda_2 = -1 $.</p>
+
+<p><b>Step 2: Find the Eigenvectors</b></p>
+<p><b>For $ \lambda_1 = 4 $</b>: We solve $ (A - 4I)\bar{u} = \bar{0} $.</p>
+\$$ \begin{pmatrix} 2-4 & 2 \\ 3 & 1-4 \end{pmatrix} \begin{pmatrix} u_1 \\ u_2 \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix} \implies \begin{pmatrix} -2 & 2 \\ 3 & -3 \end{pmatrix} \begin{pmatrix} u_1 \\ u_2 \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix} $$
+<p>This gives the system of equations: $ -2u_1 + 2u_2 = 0 $ and $ 3u_1 - 3u_2 = 0 $. Both equations simplify to $ u_1 = u_2 $. We can choose any value for the free variable. If we set $ u_2 = 1 $, then $ u_1 = 1 $. So, the eigenvector is:</p>
+\$$ \bar{u}_1 = \begin{pmatrix} 1 \\ 1 \end{pmatrix} $$
+
+<p><b>For $ \lambda_2 = -1 $</b>: We solve $ (A - (-1)I)\bar{u} = \bar{0} $.</p>
+\$$ \begin{pmatrix} 2-(-1) & 2 \\ 3 & 1-(-1) \end{pmatrix} \begin{pmatrix} u_1 \\ u_2 \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix} \implies \begin{pmatrix} 3 & 2 \\ 3 & 2 \end{pmatrix} \begin{pmatrix} u_1 \\ u_2 \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix} $$
+<p>This gives the equation $ 3u_1 + 2u_2 = 0 $. If we set $ u_1 = 2 $, then $ 3(2) + 2u_2 = 0 \implies 2u_2 = -6 \implies u_2 = -3 $. So, the eigenvector is:</p>
+\$$ \bar{u}_2 = \begin{pmatrix} 2 \\ -3 \end{pmatrix} $$
+
+<b>5. Eigenvalue Decomposition (EVD)</b>
+<p>Eigenvalue Decomposition is a way of factorizing a matrix into a product of its eigenvectors and eigenvalues. For an $ n \times n $ matrix $ A $ with $ n $ linearly independent eigenvectors, we can write the $ n $ eigenvector equations:</p>
+\$$ A\bar{u}_1 = \lambda_1\bar{u}_1 $$
+\$$ A\bar{u}_2 = \lambda_2\bar{u}_2 $$
+\$$ \vdots $$
+\$$ A\bar{u}_n = \lambda_n\bar{u}_n $$
+
+<p>We can combine these into a single matrix equation. Let $ U $ be the matrix whose columns are the eigenvectors $ \bar{u}_i $, and let $ \Lambda $ be a diagonal matrix with the corresponding eigenvalues $ \lambda_i $ on its diagonal.</p>
+\$$ A \begin{pmatrix} | & | & & | \\ \bar{u}_1 & \bar{u}_2 & \cdots & \bar{u}_n \\ | & | & & | \end{pmatrix} = \begin{pmatrix} | & | & & | \\ \lambda_1\bar{u}_1 & \lambda_2\bar{u}_2 & \cdots & \lambda_n\bar{u}_n \\ | & | & & | \end{pmatrix} $$
+<p>The right side can be rewritten as:</p>
+\$$ \begin{pmatrix} | & | & & | \\ \bar{u}_1 & \bar{u}_2 & \cdots & \bar{u}_n \\ | & | & & | \end{pmatrix} \begin{pmatrix} \lambda_1 & 0 & \cdots & 0 \\ 0 & \lambda_2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & \lambda_n \end{pmatrix} $$
+<p>This gives us the compact form $ AU = U\Lambda $. If the eigenvectors are linearly independent, the matrix $ U $ is invertible. We can right-multiply by $ U^{-1} $ to get the final EVD formula:</p>
+\$$ A = U \Lambda U^{-1} $$
+<p>This is the <b>Eigenvalue Decomposition</b> of $ A $. It expresses the matrix $ A $ in terms of its fundamental components: its eigenvectors (in $ U $) and its eigenvalues (in $ \Lambda $). It is a convention, and often useful in applications, to arrange the eigenvalues in $ \Lambda $ in decreasing order of magnitude, with the corresponding eigenvectors arranged in the same order in $ U $.</p>
+
+<b>6. EVD Example (Continued)</b>
+<p>Using our previous results for $ A = \begin{pmatrix} 2 & 2 \\ 3 & 1 \end{pmatrix} $:</p>
+<ul>
+    <li>Eigenvalues: $ \lambda_1 = 4, \lambda_2 = -1 $</li>
+    <li>Eigenvectors: $ \bar{u}_1 = \begin{pmatrix} 1 \\ 1 \end{pmatrix}, \bar{u}_2 = \begin{pmatrix} 2 \\ -3 \end{pmatrix} $ (using a different scaling for demonstration).</li>
+</ul>
+<p>The matrices for the decomposition are:</p>
+<p><b>Matrix of Eigenvectors, $ U $</b>:</p>
+\$$ U = \begin{pmatrix} 1 & 2 \\ 1 & -3 \end{pmatrix} $$
+<p><b>Diagonal Matrix of Eigenvalues, $ \Lambda $</b>:</p>
+\$$ \Lambda = \begin{pmatrix} 4 & 0 \\ 0 & -1 \end{pmatrix} $$
+<p><b>Inverse of Eigenvector Matrix, $ U^{-1} $</b>:</p>
+\$$ U^{-1} = \frac{1}{(1)(-3) - (2)(1)} \begin{pmatrix} -3 & -2 \\ -1 & 1 \end{pmatrix} = -\frac{1}{5} \begin{pmatrix} -3 & -2 \\ -1 & 1 \end{pmatrix} = \frac{1}{5} \begin{pmatrix} 3 & 2 \\ 1 & -1 \end{pmatrix} $$
+<p>Thus, the eigenvalue decomposition of $ A $ is:</p>
+\$$ A = U \Lambda U^{-1} = \begin{pmatrix} 1 & 2 \\ 1 & -3 \end{pmatrix} \begin{pmatrix} 4 & 0 \\ 0 & -1 \end{pmatrix} \left( \frac{1}{5} \begin{pmatrix} 3 & 2 \\ 1 & -1 \end{pmatrix} \right) $$
+<p>Multiplying these matrices will verify that the result is the original matrix $ A $.</p>
+</div></div><div class="chapter" id="Lecture 16| Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 16| Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts presented in the transcript, focusing on two special classes of matrices: <b>Rotation matrices</b> and <b>Unitary matrices</b>. These matrices have significant applications in various fields, including linear algebra, physics, and modern wireless communications.</p>
+
+<h3>1. Rotation Matrix</h3>
+<p>A rotation matrix is a real-valued matrix that performs a rotation in Euclidean space. The transcript introduces the standard 2x2 rotation matrix, which rotates a coordinate system in a two-dimensional plane.</p>
+
+<b>Definition and Formula:</b>
+<p>The 2x2 rotation matrix, denoted as $R(\theta)$, is parameterized by a single variable $\theta$, which represents the angle of rotation. Its standard form is given by:</p>
+\$$ R(\theta) = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix} $$
+<p>This matrix corresponds to a rotation of the coordinate system <b>anti-clockwise</b> by an angle $\theta$. If you have a point with coordinates $\bar{x}$ in the original system, its new coordinates $\bar{x}'$ after the rotation are given by $\bar{x}' = R(\theta) \bar{x}$.</p>
+
+<b>Key Property: Orthogonality</b>
+<p>Rotation matrices have a crucial property: their transpose is also their inverse. This is expressed by the formula:</p>
+\$$ R^T R = R R^T = I $$
+<p>where $R^T$ is the transpose of $R$ and $I$ is the identity matrix. This relationship implies that $R^T = R^{-1}$. Matrices with this property are known as <b>orthogonal matrices</b>. A rotation matrix is a specific type of orthogonal matrix.</p>
+
+<b>Verification of the Property:</b>
+<p>We can verify this property by direct matrix multiplication. Let's compute $R^T R$:</p>
+<p>First, the transpose of $R(\theta)$ is:</p>
+\$$ R^T = \begin{pmatrix} \cos\theta & \sin\theta \\ -\sin\theta & \cos\theta \end{pmatrix} $$
+<p>Now, multiplying $R^T$ by $R$:</p>
+\$$ R^T R = \begin{pmatrix} \cos\theta & \sin\theta \\ -\sin\theta & \cos\theta \end{pmatrix} \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix} $$
+\$$ = \begin{pmatrix} (\cos\theta)(\cos\theta) + (\sin\theta)(\sin\theta) & (\cos\theta)(-\sin\theta) + (\sin\theta)(\cos\theta) \\ (-\sin\theta)(\cos\theta) + (\cos\theta)(\sin\theta) & (-\sin\theta)(-\sin\theta) + (\cos\theta)(\cos\theta) \end{pmatrix} $$
+\$$ = \begin{pmatrix} \cos^2\theta + \sin^2\theta & -\cos\theta\sin\theta + \sin\theta\cos\theta \\ -\sin\theta\cos\theta + \cos\theta\sin\theta & \sin^2\theta + \cos^2\theta \end{pmatrix} $$
+<p>Using the fundamental trigonometric identity $\cos^2\theta + \sin^2\theta = 1$, the matrix simplifies to:</p>
+\$$ R^T R = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} = I $$
+<p>This confirms that $R^T$ is the inverse of $R$.</p>
+
+<h3>2. Unitary Matrix</h3>
+<p>A unitary matrix is the complex analog of a rotation (or more generally, an orthogonal) matrix. It can be loosely thought of as a "complex rotation" matrix.</p>
+
+<b>Definition and Key Property:</b>
+<p>A square complex matrix $U$ is unitary if its conjugate transpose is also its inverse. The conjugate transpose, or <b>Hermitian transpose</b>, is denoted by $U^H$. The defining property is:</p>
+\$$ UU^H = U^H U = I $$
+<p>This implies $U^H = U^{-1}$.</p>
+
+<b>Example of a 2x2 Unitary Matrix:</b>
+<p>The transcript provides an example of a 2x2 unitary matrix that depends on three parameters: $\phi_1, \phi_2, \theta$. As noted in the transcript, the example presented contains typos that make the verification difficult. The matrix intended was likely a corrected form. Below is the verification based on the corrected version for clarity.</p>
+<p>A correct form for a general 2x2 unitary matrix (belonging to the group SU(2), up to a determinant factor) is:</p>
+\$$ U = \begin{pmatrix} e^{j\phi_1}\cos\theta & e^{j\phi_2}\sin\theta \\ -e^{-j\phi_2}\sin\theta & e^{-j\phi_1}\cos\theta \end{pmatrix} $$
+<p>Its Hermitian transpose is:</p>
+\$$ U^H = \begin{pmatrix} e^{-j\phi_1}\cos\theta & -e^{j\phi_2}\sin\theta \\ e^{-j\phi_2}\sin\theta & e^{j\phi_1}\cos\theta \end{pmatrix} $$
+<p>Multiplying $U U^H$ gives:</p>
+<ul>
+    <li><b>(1,1) element:</b> $ (e^{j\phi_1}\cos\theta)(e^{-j\phi_1}\cos\theta) + (e^{j\phi_2}\sin\theta)(e^{-j\phi_2}\sin\theta) = \cos^2\theta + \sin^2\theta = 1 $</li>
+    <li><b>(1,2) element:</b> $ (e^{j\phi_1}\cos\theta)(-e^{j\phi_2}\sin\theta) + (e^{j\phi_2}\sin\theta)(e^{j\phi_1}\cos\theta) = -e^{j(\phi_1+\phi_2)}\cos\theta\sin\theta + e^{j(\phi_1+\phi_2)}\cos\theta\sin\theta = 0 $</li>
+    <li><b>(2,1) element:</b> $ (-e^{-j\phi_2}\sin\theta)(e^{-j\phi_1}\cos\theta) + (e^{-j\phi_1}\cos\theta)(e^{-j\phi_2}\sin\theta) = -e^{-j(\phi_1+\phi_2)}\sin\theta\cos\theta + e^{-j(\phi_1+\phi_2)}\sin\theta\cos\theta = 0 $</li>
+    <li><b>(2,2) element:</b> $ (-e^{-j\phi_2}\sin\theta)(-e^{j\phi_2}\sin\theta) + (e^{-j\phi_1}\cos\theta)(e^{j\phi_1}\cos\theta) = \sin^2\theta + \cos^2\theta = 1 $</li>
+</ul>
+<p>The result is indeed the identity matrix $I$.</p>
+
+<h3>3. Practical Application: The Alamouti Code</h3>
+<p>A practical example where unitary matrices arise is in wireless communications, specifically in the <b>Alamouti code</b>. This code is used in systems with multiple antennas to improve reliability.</p>
+<p>For a system with 2 transmit antennas and 1 receive antenna, the channel is described by coefficients $h_1$ and $h_2$. The effective channel matrix for the Alamouti code is:</p>
+\$$ H_{eff} = \begin{pmatrix} h_1 & h_2 \\ h_2^* & -h_1^* \end{pmatrix} $$
+<p>where $h^*$ denotes the complex conjugate.</p>
+<p>This matrix is not unitary by itself. However, it can be normalized to create a unitary matrix $\tilde{H}$:</p>
+\$$ \tilde{H} = \frac{1}{||\bar{h}||} H_{eff} = \frac{1}{\sqrt{|h_1|^2 + |h_2|^2}} \begin{pmatrix} h_1 & h_2 \\ h_2^* & -h_1^* \end{pmatrix} $$
+<p>Here, $||\bar{h}|| = \sqrt{|h_1|^2 + |h_2|^2}$ is the norm of the channel vector $\bar{h} = [h_1, h_2]^T$. This normalized matrix $\tilde{H}$ is unitary, satisfying $\tilde{H}^H \tilde{H} = I$.</p>
+
+<h3>4. Properties of Unitary Matrices</h3>
+<p>Unitary matrices have several important and useful properties.</p>
+
+<b>1. Determinant has Unit Magnitude:</b>
+<p>For any unitary matrix $U$, the magnitude of its determinant is 1.</p>
+\$$ |\det(U)| = 1 $$
+<i>Proof:</i>
+<p>Starting from $UU^H = I$, we take the determinant of both sides:
+$\det(UU^H) = \det(I) = 1$.<br>
+Using the property $\det(AB) = \det(A)\det(B)$, we get $\det(U)\det(U^H) = 1$.<br>
+Using the property $\det(U^H) = \overline{\det(U)}$ (the conjugate of the determinant), we have $\det(U)\overline{\det(U)} = 1$.<br>
+This is equivalent to $|\det(U)|^2 = 1$, which implies $|\det(U)| = 1$.</p>
+
+<b>2. Eigenvalues have Unit Magnitude:</b>
+<p>All eigenvalues $\lambda$ of a unitary matrix have a magnitude of 1.</p>
+\$$ |\lambda| = 1 $$
+<i>Proof:</i>
+<p>Let $\lambda$ be an eigenvalue of $U$ with corresponding eigenvector $\bar{z}$. The eigenvalue equation is $U\bar{z} = \lambda\bar{z}$.<br>
+Taking the Hermitian transpose of both sides gives $\bar{z}^H U^H = \bar{\lambda}\bar{z}^H$.<br>
+Multiplying the left-hand side of the second equation by the left-hand side of the first, and similarly for the right-hand sides, we get:
+$ (\bar{z}^H U^H)(U\bar{z}) = (\bar{\lambda}\bar{z}^H)(\lambda\bar{z}) $<br>
+$ \bar{z}^H (U^H U) \bar{z} = \bar{\lambda}\lambda(\bar{z}^H \bar{z}) $<br>
+Since $U^H U = I$ and $\bar{z}^H\bar{z} = ||\bar{z}||^2$, this simplifies to:
+$ \bar{z}^H I \bar{z} = |\lambda|^2 ||\bar{z}||^2 $<br>
+$ ||\bar{z}||^2 = |\lambda|^2 ||\bar{z}||^2 $<br>
+Since an eigenvector $\bar{z}$ must be non-zero ($||\bar{z}||^2 \neq 0$), we can divide by $||\bar{z}||^2$ to get $|\lambda|^2 = 1$, which means $|\lambda| = 1$.</p>
+
+<b>3. Orthonormal Columns and Rows:</b>
+<p>The columns (and rows) of a unitary matrix form an orthonormal set. This means each column has a unit norm, and any two distinct columns are orthogonal to each other.</p>
+<p>If $\bar{u}_i$ and $\bar{u}_j$ are columns of $U$, then:</p>
+<ul>
+    <li>$ \bar{u}_i^H \bar{u}_i = ||\bar{u}_i||^2 = 1 $ (Unit Norm)</li>
+    <li>$ \bar{u}_i^H \bar{u}_j = 0 $ for $ i \neq j $ (Orthogonality)</li>
+</ul>
+<p>This comes directly from the condition $U^H U = I$, where the $(i, j)$-th entry of the resulting identity matrix is the inner product $\bar{u}_i^H \bar{u}_j$.</p>
+
+<b>4. Norm Preservation (Isometry):</b>
+<p>Multiplying a vector by a unitary matrix preserves the vector's norm (length).</p>
+<p>If $\tilde{x} = U\bar{x}$, then $ ||\tilde{x}|| = ||\bar{x}|| $.</p>
+<i>Proof:</i>
+<p>$ ||\tilde{x}||^2 = \tilde{x}^H \tilde{x} = (U\bar{x})^H (U\bar{x}) = (\bar{x}^H U^H)(U\bar{x}) $<br>
+$ = \bar{x}^H (U^H U) \bar{x} = \bar{x}^H I \bar{x} = \bar{x}^H \bar{x} = ||\bar{x}||^2 $<br>
+Therefore, $||\tilde{x}|| = ||\bar{x}||$.</p>
+
+<b>5. Preservation of IID Gaussian Distribution:</b>
+<p>If a random vector $\bar{x}$ has components that are independent and identically distributed (i.i.d.) Gaussian random variables with mean 0 and variance $\sigma^2$, its covariance matrix is $\sigma^2 I$. When this vector is transformed by a unitary matrix $U$ to get a new vector $\tilde{x} = U\bar{x}$, the new vector $\tilde{x}$ also has i.i.d. Gaussian components with the same mean and variance.</p>
+<p><i>Proof Sketch:</i></p>
+<ul>
+    <li><b>Mean:</b> $ E[\tilde{x}] = E[U\bar{x}] = U E[\bar{x}] = U \cdot 0 = 0 $.</li>
+    <li><b>Covariance:</b> $ E[\tilde{x}\tilde{x}^H] = E[(U\bar{x})(U\bar{x})^H] = E[U\bar{x}\bar{x}^H U^H] $
+    $ = U E[\bar{x}\bar{x}^H] U^H = U(\sigma^2 I)U^H = \sigma^2(UU^H) = \sigma^2 I $.</li>
+</ul>
+<p>Since the resulting covariance matrix is still a scaled identity matrix, the components of $\tilde{x}$ are also uncorrelated (and thus independent, since they are Gaussian) and have the same variance $\sigma^2$.</p>
+</div></div><h2>Weekly Summary</h2><p>This week's lectures cover the Gram-Schmidt procedure for creating orthonormal bases, the properties and transformations of Gaussian random vectors, an application of these concepts in machine learning classification, the fundamental theory of eigenvalue decomposition, and special classes of matrices like rotation and unitary matrices.</p>
+
+<p><b>Gram-Schmidt Orthonormalization</b></p>
+<p>
+The Gram-Schmidt procedure is a systematic method to convert any given basis $\\{ \mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_n \\}$ for a subspace into an <i>orthonormal basis</i> $\\{ \mathbf{v}_1, \mathbf{v}_2, \dots, \mathbf{v}_n \\}$ for the same subspace. An orthonormal basis consists of vectors that are mutually orthogonal ($\mathbf{v}_i^H \mathbf{v}_j = 0$ for $i \neq j$) and have a unit norm ($\\| \mathbf{v}_i \\| = 1$). The process is iterative:
+</p>
+<p>
+1. The first orthonormal vector is found by normalizing the first original vector: $\mathbf{v}_1 = \frac{\mathbf{x}_1}{\\| \mathbf{x}_1 \\|}$.<br>
+2. For each subsequent vector $\mathbf{x}_i$, its projections onto the previously found orthonormal vectors ($\mathbf{v}_1, \dots, \mathbf{v}_{i-1}$) are subtracted. This creates an intermediate vector $\tilde{\mathbf{v}}_i = \mathbf{x}_i - \sum_{j=1}^{i-1} (\mathbf{x}_i^H \mathbf{v}_j) \mathbf{v}_j$ which is orthogonal to all preceding basis vectors.<br>
+3. This intermediate vector is then normalized to have unit length: $\mathbf{v}_i = \frac{\tilde{\mathbf{v}}_i}{\\| \tilde{\mathbf{v}}_i \\|}$.
+</p>
+
+<p><b>Gaussian Random Vectors</b></p>
+<p>
+A <i>multivariate Gaussian random vector</i> is a collection of jointly Gaussian random variables, fundamental for modeling phenomena like noise in signal processing and data in machine learning.
+</p>
+<p>
+A Gaussian random vector $\mathbf{x}$ is completely characterized by its mean vector $\boldsymbol{\mu} = E[\mathbf{x}]$ and its covariance matrix $\mathbf{R} = E[(\mathbf{x}-\boldsymbol{\mu})(\mathbf{x}-\boldsymbol{\mu})^H]$. A key takeaway is the interpretation of the covariance matrix structure:
+</p>
+<p>
+    • If $\mathbf{R}$ is a diagonal matrix, the components of $\mathbf{x}$ are uncorrelated. For Gaussian vectors, this also implies they are <i>independent</i>.<br>
+    • If $\mathbf{R}$ is proportional to the identity matrix ($\mathbf{R} = \sigma^2 \mathbf{I}$), the components are independent and identically distributed (i.i.d.), each with the same variance $\sigma^2$.
+</p>
+
+<p><b>Linear Transformation of Gaussian Vectors</b></p>
+<p>
+A crucial property of Gaussian random vectors is that they remain Gaussian after a linear transformation. If $\mathbf{x}$ is a Gaussian random vector with mean $\boldsymbol{\mu}_x$ and covariance $\mathbf{R}_x$, and it undergoes the transformation $\mathbf{y} = \mathbf{A}\mathbf{x} + \mathbf{b}$, then $\mathbf{y}$ is also a Gaussian random vector with:
+</p>
+<p>
+    • New mean: $\boldsymbol{\mu}_y = \mathbf{A}\boldsymbol{\mu}_x + \mathbf{b}$<br>
+    • New covariance: $\mathbf{R}_y = \mathbf{A} \mathbf{R}_x \mathbf{A}^T$
+</p>
+<p>This property makes the analysis of linear systems with Gaussian inputs mathematically tractable.</p>
+
+<p><b>Application: Classification with Gaussian Classes</b></p>
+<p>
+This topic demonstrates a practical machine learning application. In a binary classification problem where data from two classes are modeled by Gaussian distributions with different means ($\boldsymbol{\mu}_1, \boldsymbol{\mu}_2$) but an identical covariance matrix ($\boldsymbol{\Sigma}$), the optimal decision rule is a <i>Maximum Likelihood classifier</i>. This involves assigning a new data point $\mathbf{x}$ to the class whose probability density function yields a higher value at $\mathbf{x}$.
+</p>
+<p>
+<b>Key Takeaways:</b><br>
+    • The decision boundary for this classifier simplifies to a linear hyperplane.<br>
+    • In the special case where the covariance matrix is proportional to identity ($\boldsymbol{\Sigma} = \sigma^2 \mathbf{I}$), the rule further simplifies to a <i>minimum distance classifier</i>. The data point is assigned to the class corresponding to the closer mean. The decision boundary becomes the perpendicular bisector of the line segment connecting the two means.
+</p>
+
+<p><b>Eigenvalues and Eigenvalue Decomposition (EVD)</b></p>
+<p>
+Eigenvalues and eigenvectors are fundamental properties of a square matrix $\mathbf{A}$. An eigenvector $\mathbf{u}$ is a non-zero vector whose direction is unchanged when multiplied by $\mathbf{A}$; it is only scaled by a factor $\lambda$, the corresponding eigenvalue. This relationship is defined by the equation:</p>
+\$$ \mathbf{A}\mathbf{u} = \lambda\mathbf{u} $$
+<p>Eigenvalues are found by solving the <i>characteristic equation</i>, $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$. For each eigenvalue, the corresponding eigenvectors are found by determining the null space of $(\mathbf{A} - \lambda\mathbf{I})$.</p>
+<p>The <i>Eigenvalue Decomposition (EVD)</i> expresses a matrix $\mathbf{A}$ (if it has a full set of linearly independent eigenvectors) as:</p>
+\$$ \mathbf{A} = \mathbf{U} \boldsymbol{\Lambda} \mathbf{U}^{-1} $$
+<p>Here, $\mathbf{U}$ is the matrix whose columns are the eigenvectors of $\mathbf{A}$, and $\boldsymbol{\Lambda}$ is a diagonal matrix containing the corresponding eigenvalues. EVD is a powerful tool that reveals the intrinsic structure of a linear transformation.</p>
+
+<p><b>Rotation and Unitary Matrices</b></p>
+<p>
+These are special classes of square matrices representing transformations that preserve length and angles.
+</p>
+<p>
+    • A real <i>rotation matrix</i> $\mathbf{R}$ is an orthogonal matrix, satisfying $\mathbf{R}^T \mathbf{R} = \mathbf{I}$, which implies $\mathbf{R}^{-1} = \mathbf{R}^T$.<br>
+    • A complex <i>unitary matrix</i> $\mathbf{U}$ is the complex analog, satisfying $\mathbf{U}^H \mathbf{U} = \mathbf{I}$, which implies $\mathbf{U}^{-1} = \mathbf{U}^H$.
+</p>
+<p>
+<b>Key Properties of Unitary Matrices:</b><br>
+    • Their columns (and rows) form an orthonormal set.<br>
+    • They preserve the norm of any vector: $\\| \mathbf{U}\mathbf{x} \\| = \\| \mathbf{x} \\|$.<br>
+    • The magnitude of their determinant is 1 ($|\det(\mathbf{U})|=1$).<br>
+    • All their eigenvalues have a magnitude of 1 ($|\lambda|=1$).<br>
+    • They arise frequently in signal processing (e.g., Alamouti codes) and advanced matrix decompositions.
+</p><h2>Assignment Explanation</h2><div>
+<p>Here is an explanation of the questions and answers from the assignment.</p>
+
+<p><b>Question 1: Vectors $\bar{a}_1, \bar{a}_2, \dots, \bar{a}_n$ are linearly independent when...</b></p>
+<p><b>Explanation:</b> This question asks for the formal definition of linear independence. A set of vectors is called linearly independent if the only way to make their linear combination equal to the zero vector is by choosing all scalar coefficients to be zero. The linear combination is given by $\alpha_1\bar{a}_1 + \alpha_2\bar{a}_2 + \dots + \alpha_n\bar{a}_n$. The condition for this sum to be zero $\textit{if and only if}$ all coefficients ($\alpha_1, \alpha_2, \dots, \alpha_n$) are zero is the definition of linear independence. The symbol $\Leftrightarrow$ means "if and only if".</p>
+<p>The correct answer is: $\alpha_1\bar{a}_1 + \alpha_2\bar{a}_2 + \dots + \alpha_n\bar{a}_n = 0 \Leftrightarrow \alpha_1 = \alpha_2 = \dots = 0$.</p>
+
+<p><b>Question 2: Consider the matrix $A$ given below. The cofactor $C_{2,1}$ is given as...</b></p>
+<p><b>Explanation:</b> This question asks to calculate a specific cofactor of the given matrix. The cofactor $C_{i,j}$ is defined as $C_{i,j} = (-1)^{i+j} M_{i,j}$, where $M_{i,j}$ is the minor. The minor is the determinant of the submatrix formed by removing the $i$-th row and $j$-th column.</p>
+<p>Given the matrix:
+\$$ A = \begin{bmatrix} 3 & 6 & -2 \\ -2 & -1 & 4 \\ 1 & -5 & -3 \end{bmatrix} $$
+To find $C_{2,1}$, we have $i=2$ and $j=1$.
+<ol>
+    <li>First, find the minor $M_{2,1}$ by removing the 2nd row and 1st column:
+    \$$ M_{2,1} = \det \begin{pmatrix} 6 & -2 \\ -5 & -3 \end{pmatrix} = (6)(-3) - (-2)(-5) = -18 - 10 = -28 $$
+    </li>
+    <li>Next, calculate the sign: $(-1)^{2+1} = (-1)^3 = -1$.</li>
+    <li>Finally, the cofactor is $C_{2,1} = (-1) \times M_{2,1} = (-1) \times (-28) = 28$.</li>
+</ol>
+<b>Note:</b> There appears to be an error in the question's options and accepted answer. The correct calculated value for the cofactor is 28, but this is not listed as an option. The system has an incorrect answer marked as correct.</p>
+
+<p><b>Question 3: Consider the directed graph below. The adjacency matrix for this graph is given as...</b></p>
+<p><b>Explanation:</b> This question asks for the adjacency matrix of a given directed graph. For a graph with $n$ nodes, the adjacency matrix $A$ is an $n \times n$ matrix where the element $A_{ij}$ is 1 if there is a directed edge from node $i$ to node $j$, and 0 otherwise. Based on the graph (and confirmed by the correct answer), the connections are:
+<ul>
+    <li>From Node 1: No outgoing edges. (Row 1 is all zeros)</li>
+    <li>From Node 2: Edges to Node 3 and Node 5. (Row 2 has 1s in columns 3 and 5)</li>
+    <li>From Node 3: Edge to Node 1. (Row 3 has a 1 in column 1)</li>
+    <li>From Node 4: Edges to Node 2 and Node 3. (Row 4 has 1s in columns 2 and 3)</li>
+    <li>From Node 5: Edges to Node 1 and Node 4. (Row 5 has 1s in columns 1 and 4)</li>
+</ul>
+Translating this into a matrix gives the accepted answer:
+\$$ \begin{bmatrix} 0 & 0 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 & 1 \\ 1 & 0 & 0 & 0 & 0 \\ 0 & 1 & 1 & 0 & 0 \\ 1 & 0 & 0 & 1 & 0 \end{bmatrix} $$</p>
+
+<p><b>Question 4: Consider the matrix $A$ given below. The minor $M_{1,3}$ is given as...</b></p>
+<p><b>Explanation:</b> This question asks to calculate a specific minor of the matrix. The minor $M_{i,j}$ is the determinant of the submatrix formed by deleting the $i$-th row and $j$-th column.</p>
+<p>Given the matrix:
+\$$ A = \begin{bmatrix} 1 & -4 & -5 \\ -2 & 2 & 3 \\ 5 & -3 & -2 \end{bmatrix} $$
+To find $M_{1,3}$, we remove the 1st row and 3rd column:
+\$$ M_{1,3} = \det \begin{pmatrix} -2 & 2 \\ 5 & -3 \end{pmatrix} = (-2)(-3) - (2)(5) = 6 - 10 = -4 $$
+<b>Note:</b> Similar to Question 2, there seems to be an error in the provided options and accepted answer. The correct calculation for the minor $M_{1,3}$ is -4. The system incorrectly marks -2 as the correct answer.</p>
+
+<p><b>Question 5: Vectors $\bar{a}_1, \bar{a}_2, \dots, \bar{a}_n$ are linearly dependent when...</b></p>
+<p><b>Explanation:</b> This question asks for the definition of linear dependence. A set of vectors is linearly dependent if their linear combination can be made equal to the zero vector using scalar coefficients that are <b>not all zero</b>. This means there is a non-trivial way to combine the vectors to get zero, implying that at least one vector can be expressed as a linear combination of the others.</p>
+<p>The correct answer is: There exist $\alpha_1, \alpha_2, \dots, \alpha_n$, not all zero, such that $\alpha_1\bar{a}_1 + \alpha_2\bar{a}_2 + \dots + \alpha_n\bar{a}_n = 0$.</p>
+
+<p><b>Question 6: Consider the traffic flow problem given below. The values of the traffic flows $x_1$ and $x_2$ are...</b></p>
+<p><b>Explanation:</b> This question requires setting up and solving a system of linear equations based on the principle of conservation of flow, which states that the total flow into an intersection must equal the total flow out of it.
+<ul>
+    <li><b>Top Intersection:</b> Flow in = $50 + x_2$. Flow out = $20 + x_1$.
+    <br>Equation: $50 + x_2 = 20 + x_1 \Rightarrow x_1 - x_2 = 30$.</li>
+    <li><b>Bottom Intersection:</b> Flow in = $x_1 + 40$. Flow out = $x_2 + 80$.
+    <br>Equation: $x_1 + 40 = x_2 + 80 \Rightarrow x_1 - x_2 = 40$.</li>
+</ul>
+We have a system of two equations:
+\$$ x_1 - x_2 = 30 $$
+\$$ x_1 - x_2 = 40 $$
+This system is inconsistent because $x_1 - x_2$ cannot be equal to both 30 and 40 simultaneously.
+<br><b>Note:</b> The problem as stated in the diagram has no solution. There is an error in the problem's values, making it impossible to solve.</p>
+
+<p><b>Question 7: Consider the $r \times t$ MIMO channel matrix $H$. The $(i, j)$ element of $H$, represented by $h_{i,j}$, denotes the channel between...</b></p>
+<p><b>Explanation:</b> MIMO stands for Multiple-Input Multiple-Output, a technology used in wireless communication. The channel matrix $H$ models the physical paths between the transmitter and receiver antennas. By convention, a matrix of size $r \times t$ models a system with $t$ transmit antennas and $r$ receive antennas. The element $h_{i,j}$ (in the $i$-th row and $j$-th column) represents the gain and phase shift of the channel from the $j$-th transmit antenna to the $i$-th receive antenna.</p>
+<p>The correct answer is: Receive antenna $i$ and transmit antenna $j$.</p>
+
+<p><b>Question 8: Consider the circuit shown below. The equation for loop 1 is given as...</b></p>
+<p><b>Explanation:</b> This question asks to apply Kirchhoff's Voltage Law (KVL) to the first loop of the circuit. KVL states that the sum of voltage rises (from sources) in a closed loop equals the sum of voltage drops (across resistors).
+<ul>
+    <li>Loop 1 contains the 8V source, a 5Ω resistor, and a 4Ω resistor.</li>
+    <li>The voltage source provides a rise of 8V.</li>
+    <li>The voltage drop across the 5Ω resistor is $5 \times i_1$.</li>
+    <li>The 4Ω resistor is shared between loop 1 and loop 2. The net current flowing down through it (in the direction of $i_1$) is $i_1 - i_2$. The voltage drop is $4 \times (i_1 - i_2)$.</li>
+</ul>
+Applying KVL:
+\$$ \text{Voltage Rises} = \text{Voltage Drops} $$
+\$$ 8 = 5i_1 + 4(i_1 - i_2) $$
+\$$ 8 = 5i_1 + 4i_1 - 4i_2 $$
+\$$ 8 = 9i_1 - 4i_2 $$
+<b>Note:</b> The equation derived using KVL is $9i_1 - 4i_2 = 8$. None of the options match this correct equation. The provided accepted answer of $5i_1 - 4i_2 = -8$ is incorrect, suggesting an error in the question itself.</p>
+
+<p><b>Question 9: Matrix that is NOT invertible is termed a...</b></p>
+<p><b>Explanation:</b> This is a vocabulary question from linear algebra. A square matrix that does not have a multiplicative inverse is called a <b>singular matrix</b>. A non-singular matrix is another term for an invertible matrix. A key property of a singular matrix is that its determinant is zero.</p>
+<p>The correct answer is: Singular matrix.</p>
+
+<p><b>Question 10: MIMO technology in 4G/ 5G systems relies on which of the principles below for high data rate transmission?</b></p>
+<p><b>Explanation:</b> The primary principle that allows MIMO systems to achieve very high data rates is <b>spatial multiplexing</b>. This technique uses multiple antennas at both the transmitter and receiver to send multiple, independent data streams simultaneously over the same frequency band. By exploiting the different spatial paths between the antennas, the receiver can separate these streams, effectively multiplying the data rate without requiring more bandwidth or transmission power.</p>
+<p>The correct answer is: Spatial multiplexing.</p>
+</div></div>
+</body>
+</html>

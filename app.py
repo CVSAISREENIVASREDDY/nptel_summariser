@@ -6,7 +6,7 @@ import os
 # 🧭 Streamlit Page Configuration
 # ------------------------------------------------------------------
 st.set_page_config(
-    page_title="AI Course Notes",
+    page_title="Applied Linear Algebra",
     layout="wide",
     page_icon="📘",
 )
@@ -53,7 +53,7 @@ code {
 # ------------------------------------------------------------------
 # 🧭 Sidebar Navigation
 # ------------------------------------------------------------------
-st.sidebar.title("📄 Lecture Navigation")
+st.sidebar.title("📄 Week Navigation")
 
 # Path where your HTML files are stored
 PAGES_DIR = "weekly_outputs"

@@ -1,0 +1,961 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week12</title>
+
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+      };
+    </script>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 2em;
+        }
+        .mjx-display {
+            margin: 2.5em 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="week" id="week_12"><h1 class="week-title">Week 12</h1><h2>Transcript Explanations</h2><div class="chapter" id="noc21_ee33-Lec 63"><h3 class="heading">noc21_ee33-Lec 63</h3><div>
+<p>This document provides a detailed explanation of the concepts and formulas related to <b>Weighted Least Squares (WLS)</b>, as presented in the transcript. WLS is introduced as a powerful and useful generalization of the standard Least Squares (LS) principle.</p>
+
+<h3>1. Review of Standard Least Squares (LS)</h3>
+<p>The conventional Least Squares (LS) problem aims to find the best approximation for a system of linear equations that may not have an exact solution, typically when there are more equations than unknowns. This is often the case when dealing with experimental data.</p>
+<p><b>The Objective:</b></p>
+<p>The goal is to find a vector $\bar{x}$ that minimizes the squared Euclidean norm (or length) of the error vector. The error is the difference between the observed data vector $\bar{y}$ and the model's prediction, $A\bar{x}$.</p>
+<p>The cost function to be minimized is:</p>
+\$$ \min_{\bar{x}} ||\bar{y} - A\bar{x}||^2 $$
+<p>Where:</p>
+<ul>
+    <li>$\bar{y}$ is the $m \times 1$ observation vector.</li>
+    <li>$A$ is an $m \times n$ matrix, often a "tall matrix" where the number of rows $m$ (equations) is greater than or equal to the number of columns $n$ (unknowns), i.e., $m \ge n$.</li>
+    <li>$\bar{x}$ is the $n \times 1$ vector of unknown parameters we want to find.</li>
+    <li>The term $\bar{e} = \bar{y} - A\bar{x}$ represents the error vector. Minimizing $||\bar{e}||^2$ means minimizing the sum of the squares of the individual errors.</li>
+</ul>
+
+<p><b>The Solution:</b></p>
+<p>The unique solution $\hat{x}$ that minimizes this cost function is given by the normal equations, leading to the formula:</p>
+\$$ \hat{x} = (A^T A)^{-1} A^T \bar{y} $$
+<p>The matrix $(A^T A)^{-1} A^T$ is known as the <b>pseudo-inverse</b> of $A$.</p>
+
+<h3>2. Introduction to Weighted Least Squares (WLS)</h3>
+<p>Weighted Least Squares (WLS) extends the standard LS problem by allowing some errors to be treated as more significant than others. Instead of minimizing the simple sum of squared errors, WLS introduces a <b>weighting matrix</b> $W$ to assign a specific weight to each error component.</p>
+
+<p><b>The WLS Cost Function:</b></p>
+<p>The standard LS cost function can be written using vector transpose notation as:</p>
+\$$ (\bar{y} - A\bar{x})^T (\bar{y} - A\bar{x}) $$
+<p>In the WLS formulation, the weighting matrix $W$ is inserted into this expression, creating a new cost function:</p>
+\$$ f(\bar{x}) = (\bar{y} - A\bar{x})^T W (\bar{y} - A\bar{x}) $$
+<p>This is the central cost function for the WLS problem. If we define the error vector as $\bar{e} = \bar{y} - A\bar{x}$, the cost function is simply $\bar{e}^T W \bar{e}$. This quadratic form can be expanded as:</p>
+\$$ \bar{e}^T W \bar{e} = \sum_{i=1}^{m} \sum_{j=1}^{m} e_i w_{ij} e_j $$
+<p>Here, $e_i$ and $e_j$ are components of the error vector, and $w_{ij}$ are the "weighting coefficients" from the matrix $W$. This shows that the cost is no longer a simple sum of squared errors but a weighted combination of products of errors.</p>
+
+<p><b>Relation to Standard LS:</b></p>
+<p>WLS reduces to the standard LS problem if the weighting matrix $W$ is the identity matrix ($I$). In this case, $w_{ij} = 1$ if $i=j$ and $0$ otherwise. The cost function simplifies to:</p>
+\$$ \sum_{i=1}^{m} e_i (1) e_i = \sum_{i=1}^{m} e_i^2 = ||\bar{e}||^2 $$
+<p>This is exactly the standard LS cost function.</p>
+
+<h3>3. Properties of the Weighting Matrix $W$</h3>
+<p>The weighting matrix $W$ cannot be an arbitrary matrix. To ensure that the cost function $\bar{e}^T W \bar{e}$ behaves like a squared error (i.e., it is always non-negative), $W$ must be a <b>positive semi-definite (PSD)</b> matrix.</p>
+<p>A matrix $W$ is positive semi-definite if for any non-zero vector $\bar{z}$:</p>
+\$$ \bar{z}^T W \bar{z} \ge 0 $$
+<p>This property guarantees that the WLS cost function is always greater than or equal to zero. PSD matrices have several key properties, including:</p>
+<ul>
+    <li>They are symmetric ($W = W^T$).</li>
+    <li>Their diagonal elements are non-negative ($w_{ii} \ge 0$).</li>
+    <li>All their eigenvalues are non-negative.</li>
+</ul>
+
+<h3>4. Decomposing the WLS Cost Function</h3>
+<p>A key property of any positive semi-definite matrix $W$ is that it can be decomposed into the product of a matrix and its transpose. This is known as the <b>Cholesky decomposition</b> or matrix square root.</p>
+\$$ W = (W^{1/2})^T W^{1/2} $$
+<p>Here, $W^{1/2}$ is the "square root" of the matrix $W$. This decomposition allows us to rewrite the WLS cost function in a form that resembles the standard LS problem.</p>
+
+<p>Starting with the WLS cost function:</p>
+\$$ (\bar{y} - A\bar{x})^T W (\bar{y} - A\bar{x}) $$
+<p>Substitute the decomposition of $W$:</p>
+\$$ (\bar{y} - A\bar{x})^T (W^{1/2})^T W^{1/2} (\bar{y} - A\bar{x}) $$
+<p>Using the property $(BC)^T = C^T B^T$, we can group the terms:</p>
+\$$ (W^{1/2}(\bar{y} - A\bar{x}))^T (W^{1/2}(\bar{y} - A\bar{x})) $$
+<p>This is the squared norm of the vector $W^{1/2}(\bar{y} - A\bar{x})$:</p>
+\$$ || W^{1/2}(\bar{y} - A\bar{x}) ||^2 $$
+<p>This is a compact and insightful representation of the WLS cost function. It shows that WLS is equivalent to performing a standard least squares minimization on a "weighted" or "transformed" version of the error vector.</p>
+
+<h3>5. Derivation of the WLS Solution</h3>
+<p>To find the vector $\hat{x}$ that minimizes the WLS cost function, we must take the gradient of the cost function with respect to $\bar{x}$ and set it to zero.</p>
+
+<p><b>Step 1: Expand the cost function $f(\bar{x})$</b></p>
+\$$ f(\bar{x}) = (\bar{y} - A\bar{x})^T W (\bar{y} - A\bar{x}) $$
+\$$ f(\bar{x}) = (\bar{y}^T - \bar{x}^T A^T) W (\bar{y} - A\bar{x}) $$
+\$$ f(\bar{x}) = \bar{y}^T W \bar{y} - \bar{y}^T W A \bar{x} - \bar{x}^T A^T W \bar{y} + \bar{x}^T A^T W A \bar{x} $$
+<p>Since the middle two terms are scalars and transposes of each other, they are equal. Thus, we can combine them:</p>
+\$$ f(\bar{x}) = \bar{y}^T W \bar{y} - 2\bar{x}^T A^T W \bar{y} + \bar{x}^T (A^T W A) \bar{x} $$
+
+<p><b>Step 2: Compute the gradient $\nabla_{\bar{x}} f(\bar{x})$</b></p>
+<p>We use the following standard matrix calculus identities:</p>
+<ul>
+    <li>The gradient of a constant is zero: $\nabla_{\bar{x}} (\text{constant}) = \bar{0}$.</li>
+    <li>$\nabla_{\bar{x}} (\bar{x}^T \bar{c}) = \bar{c}$.</li>
+    <li>$\nabla_{\bar{x}} (\bar{x}^T P \bar{x}) = 2P\bar{x}$, provided $P$ is a symmetric matrix.</li>
+</ul>
+<p>Applying these to our expanded cost function:</p>
+<ul>
+    <li>The term $\bar{y}^T W \bar{y}$ is constant with respect to $\bar{x}$, so its gradient is $\bar{0}$.</li>
+    <li>The term $-2\bar{x}^T (A^T W \bar{y})$ is of the form $-2\bar{x}^T \bar{c}$. Its gradient is $-2A^T W \bar{y}$.</li>
+    <li>The term $\bar{x}^T (A^T W A) \bar{x}$ is of the form $\bar{x}^T P \bar{x}$, where $P = A^T W A$. Since $W$ is symmetric, $P$ is also symmetric. Its gradient is $2(A^T W A)\bar{x}$.</li>
+</ul>
+<p>Combining these results, the gradient is:</p>
+\$$ \nabla_{\bar{x}} f(\bar{x}) = \bar{0} - 2A^T W \bar{y} + 2A^T W A \bar{x} $$
+
+<p><b>Step 3: Set the gradient to zero and solve for $\hat{x}$</b></p>
+\$$ -2A^T W \bar{y} + 2A^T W A \hat{x} = \bar{0} $$
+\$$ 2A^T W A \hat{x} = 2A^T W \bar{y} $$
+\$$ A^T W A \hat{x} = A^T W \bar{y} $$
+<p>Finally, we solve for $\hat{x}$ by multiplying by the inverse of $A^T W A$:</p>
+\$$ \hat{x} = (A^T W A)^{-1} A^T W \bar{y} $$
+<p>This is the <b>Weighted Least Squares (WLS) solution</b>. It provides the optimal vector $\hat{x}$ that minimizes the weighted squared error. As noted before, if $W = I$, this formula simplifies directly to the standard LS solution.</p>
+
+</div></div><div class="chapter" id="noc21_ee33-Lec 64"><h3 class="heading">noc21_ee33-Lec 64</h3><div>
+<p>This document provides a detailed explanation of the concepts and formulas discussed in the transcript, focusing on the theory of Weighted Least Squares (WLS) and its application to a specific estimation problem.</p>
+
+<h3>1. The Weighted Least Squares (WLS) Cost Function</h3>
+<p>The discussion begins by contrasting the Conventional Least Squares (CLS) method with the Weighted Least Squares (WLS) method. The goal of both is to find an estimate $\bar{x}$ that minimizes the difference between the observed data $\bar{y}$ and the model prediction $A\bar{x}$.</p>
+<p><b>Conventional Least Squares (CLS):</b></p>
+<p>The CLS cost function is the squared Euclidean norm of the residual vector $(\bar{y} - A\bar{x})$.</p>
+\$$ J_{CLS}(\bar{x}) = ||\bar{y} - A\bar{x}||^2 = (\bar{y} - A\bar{x})^T (\bar{y} - A\bar{x}) $$
+
+<p><b>Weighted Least Squares (WLS):</b></p>
+<p>The WLS method introduces a <b>weighting matrix</b> $W$ to the cost function. This matrix allows us to assign different levels of importance or confidence to different measurements in $\bar{y}$.</p>
+\$$ J_{WLS}(\bar{x}) = (\bar{y} - A\bar{x})^T W (\bar{y} - A\bar{x}) $$
+<p>The components are:</p>
+<ul>
+    <li>$\bar{y}$: An $m \times 1$ vector of observations.</li>
+    <li>$A$: An $m \times n$ matrix representing the model.</li>
+    <li>$\bar{x}$: An $n \times 1$ vector of parameters to be estimated.</li>
+    <li>$W$: An $m \times m$ weighting matrix.</li>
+</ul>
+
+<h4>Properties of the Weighting Matrix $W$</h4>
+<p>The weighting matrix $W$ is not just any matrix; it must be <b>positive semi-definite</b>. This property ensures that the cost function represents a squared quantity and is always non-negative. Key properties of a positive semi-definite matrix include:</p>
+<ul>
+    <li>Its eigenvalues are non-negative ($\lambda_i \ge 0$).</li>
+    <li>It can be decomposed into the form $W = C^T C$ for some matrix $C$. A common decomposition is using the matrix square root, $W = (W^{1/2})^T W^{1/2}$.</li>
+</ul>
+<p>Using this decomposition, the WLS cost function can be rewritten as a standard squared norm, which clarifies its structure:</p>
+\$$ J_{WLS}(\bar{x}) = (\bar{y} - A\bar{x})^T (W^{1/2})^T W^{1/2} (\bar{y} - A\bar{x}) = ||W^{1/2}(\bar{y} - A\bar{x})||^2 $$
+<p>This shows that WLS is equivalent to transforming the original problem with $W^{1/2}$ and then applying conventional least squares.</p>
+
+<h3>2. The WLS Estimate Formula</h3>
+<p>By taking the derivative of the WLS cost function with respect to $\bar{x}$ and setting it to zero, one can derive the closed-form solution for the WLS estimate, denoted as $\hat{x}$.</p>
+\$$ \hat{x}_{WLS} = (A^T W A)^{-1} A^T W \bar{y} $$
+<p>This formula gives the optimal parameter vector $\bar{x}$ that minimizes the weighted sum of squared errors.</p>
+
+<h3>3. Example: Estimating a Scalar from Noisy Observations</h3>
+<p>To make the concept concrete, the transcript presents a simple example of estimating a single scalar parameter.</p>
+<p><b>Problem Setup:</b></p>
+<ul>
+    <li><b>Scalar Parameter:</b> The number of parameters is $n=1$, so the vector $\bar{x}$ becomes a scalar $x$.</li>
+    <li><b>Model Matrix:</b> The matrix $A$ is an $m \times 1$ vector, which is set to be the vector of all ones, denoted $\bar{1}$.
+        \$$ A = \bar{a} = \bar{1} = \begin{bmatrix} 1 \\ 1 \\ \vdots \\ 1 \end{bmatrix} $$
+    </li>
+</ul>
+<p><b>The Observation Model:</b></p>
+<p>The model describes making $m$ noisy measurements ($y_1, y_2, \dots, y_m$) of the same scalar quantity $x$.</p>
+\$$ \bar{y} = A x + \bar{v} \implies \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_m \end{bmatrix} = \begin{bmatrix} 1 \\ 1 \\ \vdots \\ 1 \end{bmatrix} x + \begin{bmatrix} v_1 \\ v_2 \\ \vdots \\ v_m \end{bmatrix} $$
+<p>Here, $\bar{v}$ is a vector of random noise affecting each measurement.</p>
+
+<h4>Properties of the Noise</h4>
+<p>The statistical properties of the noise are crucial for determining the optimal weighting matrix. The noise is assumed to be:</p>
+<ul>
+    <li><b>Zero-Mean Gaussian Noise:</b> $E[v_i] = 0$.</li>
+    <li><b>Uncorrelated:</b> The noise on one measurement is statistically independent of the noise on another. $E[v_i v_j] = 0$ for $i \neq j$.</li>
+    <li><b>Non-Identically Distributed:</b> Each measurement can have a different noise level, meaning the variances are not all the same. The variance of the $i$-th noise sample is $E[v_i^2] = \sigma_i^2$.</li>
+</ul>
+<p>This type of noise is called <b>Independent Non-Identically Distributed (i.n.i.d.)</b> noise.</p>
+<p>The <b>noise covariance matrix</b>, $R$, captures these properties. For uncorrelated noise, $R$ is a diagonal matrix where the diagonal entries are the variances of the respective noise components.</p>
+\$$ R = \begin{bmatrix} \sigma_1^2 & 0 & \cdots & 0 \\ 0 & \sigma_2^2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & \sigma_m^2 \end{bmatrix} $$
+
+<h3>4. The Optimal Weighting Matrix</h3>
+<p>A key insight presented is that for optimal estimation, the weighting matrix $W$ should be the <b>inverse of the noise covariance matrix</b>.</p>
+\$$ W_{optimal} = R^{-1} $$
+<p>For a diagonal covariance matrix, its inverse is simply a diagonal matrix with the reciprocals of the original diagonal elements.</p>
+\$$ W = R^{-1} = \begin{bmatrix} 1/\sigma_1^2 & 0 & \cdots & 0 \\ 0 & 1/\sigma_2^2 & \cdots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \cdots & 1/\sigma_m^2 \end{bmatrix} $$
+
+<h4>Special Case: i.i.d. Noise</h4>
+<p>If the noise were <b>Independent and Identically Distributed (i.i.d.)</b>, all variances would be equal, $\sigma_i^2 = \sigma^2$. In this case:</p>
+<ul>
+    <li>The covariance matrix becomes $R = \sigma^2 I$, where $I$ is the identity matrix.</li>
+    <li>The weighting matrix becomes $W = R^{-1} = \frac{1}{\sigma^2} I$.</li>
+</ul>
+<p>The WLS cost function simplifies to:</p>
+\$$ J_{WLS}(\bar{x}) = (\bar{y} - A\bar{x})^T \left(\frac{1}{\sigma^2}I\right) (\bar{y} - A\bar{x}) = \frac{1}{\sigma^2} ||\bar{y} - A\bar{x}||^2 $$
+<p>Since $1/\sigma^2$ is a positive constant, minimizing this is equivalent to minimizing the CLS cost function $||\bar{y} - A\bar{x}||^2$. This shows that <b>WLS reduces to CLS when the noise is i.i.d.</b></p>
+
+<h3>5. Deriving the WLS Estimate for the Example</h3>
+<p>We now apply the general WLS formula to our specific example, using $A = \bar{1}$ and $W = R^{-1}$.</p>
+\$$ \hat{x} = (\bar{1}^T R^{-1} \bar{1})^{-1} \bar{1}^T R^{-1} \bar{y} $$
+<p>Let's evaluate the two main components:</p>
+<p>1. <b>The term $\bar{1}^T R^{-1} \bar{1}$:</b></p>
+\$$ \bar{1}^T R^{-1} \bar{1} = \begin{bmatrix} 1 & \dots & 1 \end{bmatrix} \begin{bmatrix} 1/\sigma_1^2 & & 0 \\ & \ddots & \\ 0 & & 1/\sigma_m^2 \end{bmatrix} \begin{bmatrix} 1 \\ \vdots \\ 1 \end{bmatrix} = \sum_{i=1}^{m} \frac{1}{\sigma_i^2} $$
+<p>This is a scalar, so its inverse is its reciprocal.</p>
+<p>2. <b>The term $\bar{1}^T R^{-1} \bar{y}$:</b></p>
+\$$ \bar{1}^T R^{-1} \bar{y} = \begin{bmatrix} 1 & \dots & 1 \end{bmatrix} \begin{bmatrix} 1/\sigma_1^2 & & 0 \\ & \ddots & \\ 0 & & 1/\sigma_m^2 \end{bmatrix} \begin{bmatrix} y_1 \\ \vdots \\ y_m \end{bmatrix} = \sum_{i=1}^{m} \frac{y_i}{\sigma_i^2} $$
+
+<p>Combining these, the final WLS estimate for $x$ is:</p>
+\$$ \hat{x} = \frac{\sum_{i=1}^{m} \frac{1}{\sigma_i^2} y_i}{\sum_{i=1}^{m} \frac{1}{\sigma_i^2}} $$
+
+<h3>6. The Intuition Behind the Result</h3>
+<p>This final formula provides a powerful and intuitive result. It is a <b>weighted average</b> of the measurements $y_i$. The weight for each measurement $y_i$ is $w_i = 1/\sigma_i^2$.</p>
+<p>This weighting scheme is logical:</p>
+<ul>
+    <li>If a measurement $y_i$ has a <b>large noise variance</b> ($\sigma_i^2$ is large), it is considered unreliable. The corresponding weight $1/\sigma_i^2$ will be small, so this measurement has less influence on the final estimate.</li>
+    <li>If a measurement $y_i$ has a <b>small noise variance</b> ($\sigma_i^2$ is small), it is considered reliable. The corresponding weight $1/\sigma_i^2$ will be large, giving this measurement more influence on the final estimate.</li>
+</ul>
+<p>This demonstrates why setting $W = R^{-1}$ is the optimal choice. It automatically de-emphasizes noisy data and gives more credence to clean data, leading to a more accurate and robust estimate. If we had incorrectly chosen $W=R$, noisier measurements would have received higher weights, leading to a poor estimation principle.</p>
+</div></div><div class="chapter" id="noc21_ee33-Lec 65"><h3 class="heading">noc21_ee33-Lec 65</h3><div>
+<p>This document provides a detailed explanation of the concepts presented in the transcript, focusing on the <b>Woodbury Matrix Identity</b>, also known as the <b>Matrix Inversion Lemma</b>. This identity is a powerful tool in linear algebra that simplifies the computation of a matrix inverse under certain conditions.</p>
+
+<h3>1. The Woodbury Matrix Identity</h3>
+
+<p>The Woodbury Matrix Identity provides an analytical expression for the inverse of a sum of two matrices. Specifically, it addresses the case where one matrix, <b>A</b>, is added to a low-rank matrix, which is represented as the product <b>UCV</b>. The identity is stated as follows:</p>
+\$$ (A + UCV)^{-1} = A^{-1} - A^{-1}U(C^{-1} + VA^{-1}U)^{-1}VA^{-1} $$
+<p>At first glance, the right-hand side of the equation appears more complicated than the left-hand side. However, the identity's utility becomes clear when considering the dimensions and properties of the matrices involved.</p>
+
+<h3>2. Motivation and Application</h3>
+
+<p>The primary motivation for using the Woodbury Matrix Identity is to reduce the computational complexity of matrix inversion in specific, yet common, scenarios. The simplification occurs when:</p>
+<ol>
+    <li>The inverse of matrix <b>A</b>, denoted $A^{-1}$, is either already known or easy to compute. For example, <b>A</b> could be an identity matrix, a diagonal matrix, or a unitary matrix.</li>
+    <li>The matrix <b>UCV</b> represents a "low-rank update" to matrix <b>A</b>. This means the rank of <b>UCV</b> is much smaller than its dimensions.</li>
+</ol>
+
+<p><b>Low-Rank Structure</b></p>
+<p>A low-rank structure often arises when the inner dimension of the matrix product is small. Consider the example from the transcript with the following matrix dimensions:</p>
+<ul>
+    <li><b>A</b> is a large $500 \times 500$ matrix.</li>
+    <li><b>U</b> is a "tall" $500 \times 20$ matrix.</li>
+    <li><b>C</b> is a small $20 \times 20$ matrix.</li>
+    <li><b>V</b> is a "flat" $20 \times 500$ matrix.</li>
+</ul>
+<p>The product $UCV$ is a $500 \times 500$ matrix, the same size as <b>A</b>. However, its rank is at most 20 (the smallest dimension in the product chain). The term $A + UCV$ is therefore a full-size $500 \times 500$ matrix.</p>
+
+<p><b>Computational Advantage</b></p>
+<p>Without the Woodbury identity, calculating $(A + UCV)^{-1}$ would require inverting a dense $500 \times 500$ matrix, which is computationally expensive.</p>
+<p>Using the identity, the most complex operation becomes the inversion of the term $C^{-1} + VA^{-1}U$. Let's check the dimensions of this term:</p>
+<ul>
+    <li><b>V</b> is $20 \times 500$</li>
+    <li><b>A<sup>-1</sup></b> is $500 \times 500$</li>
+    <li><b>U</b> is $500 \times 20$</li>
+</ul>
+<p>The product $VA^{-1}U$ results in a $20 \times 20$ matrix. Since $C^{-1}$ is also $20 \times 20$, the entire term $C^{-1} + VA^{-1}U$ is a $20 \times 20$ matrix. Inverting a $20 \times 20$ matrix is significantly faster and less complex than inverting a $500 \times 500$ matrix. The identity thus transforms a large inversion problem into a much smaller one, with the rest of the operations being matrix multiplications.</p>
+
+<p>An extreme example is a <b>rank-one update</b>, where <b>U</b> is a column vector, <b>V</b> is a row vector, and <b>C</b> is a scalar. In this case, the inversion is reduced to a simple scalar division.</p>
+
+<h3>3. Proof of the Woodbury Matrix Identity</h3>
+
+<p>The proof relies on two preliminary properties that are first established.</p>
+
+<h4>Property 1</h4>
+<p>This property provides an alternative expression for $(I+P)^{-1}$, where <b>I</b> is the identity matrix.</p>
+\$$ (I+P)^{-1} = I - (I+P)^{-1}P $$
+<p><b>Derivation:</b></p>
+<ol>
+    <li>Start with $(I+P)^{-1}$ and multiply it by the identity matrix, <b>I</b>:
+    \$$ (I+P)^{-1} = (I+P)^{-1}I $$
+    </li>
+    <li>Rewrite <b>I</b> by adding and subtracting <b>P</b>: $I = (I+P) - P$.
+    \$$ (I+P)^{-1} = (I+P)^{-1}((I+P) - P) $$
+    </li>
+    <li>Distribute the term:
+    \$$ (I+P)^{-1} = (I+P)^{-1}(I+P) - (I+P)^{-1}P $$
+    </li>
+    <li>Simplify, since $(I+P)^{-1}(I+P) = I$:
+    \$$ (I+P)^{-1} = I - (I+P)^{-1}P $$
+    </li>
+</ol>
+
+<h4>Property 2</h4>
+<p>This property establishes a relationship between two expressions involving matrices <b>P</b> and <b>Q</b>. It is sometimes called the "push-through" identity.</p>
+\$$ (I+PQ)^{-1}P = P(I+QP)^{-1} $$
+<p><b>Derivation:</b></p>
+<ol>
+    <li>Start with the expression $P(I+QP)$. Distributing <b>P</b> gives $P + PQP$.</li>
+    <li>Now consider the expression $(I+PQ)P$. Distributing <b>P</b> gives $P + PQP$.</li>
+    <li>Since both expressions are equal, we have:
+    \$$ (I+PQ)P = P(I+QP) $$
+    </li>
+    <li>To isolate the desired terms, pre-multiply both sides by $(I+PQ)^{-1}$ and post-multiply both sides by $(I+QP)^{-1}$:
+    \$$ (I+PQ)^{-1}(I+PQ)P(I+QP)^{-1} = (I+PQ)^{-1}P(I+QP)(I+QP)^{-1} $$
+    </li>
+    <li>This simplifies to the final property:
+    \$$ P(I+QP)^{-1} = (I+PQ)^{-1}P $$
+    </li>
+</ol>
+
+<h4>Main Proof</h4>
+<p>The main proof applies these two properties to derive the Woodbury identity.</p>
+<ol>
+    <li>Start with the expression to be inverted, $(A + UCV)^{-1}$, and factor out <b>A</b> from the left:
+    \$$ (A + UCV)^{-1} = [A(I + A^{-1}UCV)]^{-1} $$
+    </li>
+    <li>Apply the inverse property $(XY)^{-1} = Y^{-1}X^{-1}$:
+    \$$ (A + UCV)^{-1} = (I + A^{-1}UCV)^{-1} A^{-1} $$
+    </li>
+    <li>Now, apply <b>Property 1</b> to the term $(I + A^{-1}UCV)^{-1}$ by setting $P = A^{-1}UCV$:
+    \$$ (I + A^{-1}UCV)^{-1} = I - (I + A^{-1}UCV)^{-1}(A^{-1}UCV) $$
+    </li>
+    <li>Substitute this back into the main expression:
+    \$$ (A + UCV)^{-1} = [I - (I + A^{-1}UCV)^{-1}(A^{-1}UCV)]A^{-1} $$
+    \$$ = A^{-1} - (I + A^{-1}UCV)^{-1}A^{-1}UCVA^{-1} $$
+    </li>
+    <li>Focus on the sub-expression $(I + A^{-1}UCV)^{-1}A^{-1}U$. We can apply <b>Property 2</b> here by setting $P = A^{-1}U$ and $Q = CV$. This gives:
+    \$$ (I + A^{-1}UCV)^{-1}A^{-1}U = A^{-1}U(I + CVA^{-1}U)^{-1} $$
+    </li>
+    <li>Substitute this result back into the main equation from step 4:
+    \$$ (A + UCV)^{-1} = A^{-1} - [A^{-1}U(I + CVA^{-1}U)^{-1}]CVA^{-1} $$
+    </li>
+    <li>Now, let's simplify the term $(I + CVA^{-1}U)^{-1}$. We can factor out <b>C</b> from the expression inside the inverse (assuming <b>C</b> is invertible):
+    \$$ I + CVA^{-1}U = C C^{-1} + CVA^{-1}U = C(C^{-1} + VA^{-1}U) $$
+    Taking the inverse gives:
+    \$$ (I + CVA^{-1}U)^{-1} = [C(C^{-1} + VA^{-1}U)]^{-1} = (C^{-1} + VA^{-1}U)^{-1}C^{-1} $$
+    </li>
+    <li>Substitute this final piece back into the expression from step 6:
+    \$$ (A + UCV)^{-1} = A^{-1} - A^{-1}U[(C^{-1} + VA^{-1}U)^{-1}C^{-1}]CVA^{-1} $$
+    </li>
+    <li>The $C^{-1}C$ terms cancel to become the identity matrix, leaving the final form of the Woodbury Matrix Identity:
+    \$$ (A + UCV)^{-1} = A^{-1} - A^{-1}U(C^{-1} + VA^{-1}U)^{-1}VA^{-1} $$
+    </li>
+</ol>
+<p>This completes the proof, demonstrating how a computationally intensive large matrix inversion can be transformed into a smaller one, which is particularly useful in fields like signal processing, machine learning, and communications.</p>
+</div></div><div class="chapter" id="noc21_ee33-Lec 66"><h3 class="heading">noc21_ee33-Lec 66</h3><div>
+<p>This document provides a detailed explanation of the concepts and formulas discussed in the transcript, focusing on the Woodbury Matrix Identity and its application to a rank-one matrix update.</p>
+
+<b>1. The Woodbury Matrix Identity</b>
+<p>The core concept discussed is the <b>Woodbury Matrix Identity</b>, also known as the <b>Matrix Inversion Lemma</b>. This identity provides an analytical expression for the inverse of a matrix that has been modified by a low-rank update. It is particularly useful when the inverse of the original matrix is already known or easy to compute.</p>
+<p>The general form of the identity is given for a matrix $A + UCV$, where $A, U, C, V$ are matrices of compatible dimensions. Its inverse is expressed as:</p>
+\$$ (A + UCV)^{-1} = A^{-1} - A^{-1}U(C^{-1} + VA^{-1}U)^{-1}VA^{-1} $$
+<p><b>Key conditions for its utility:</b></p>
+<ul>
+    <li>The matrix $A$ must be invertible, and its inverse $A^{-1}$ should be known or easy to find.</li>
+    <li>The matrix $C$ must also be invertible.</li>
+    <li>The identity is most powerful when the matrix $UCV$ is a <b>low-rank matrix</b>. This often occurs when $U$ is a "tall" matrix (more rows than columns) and $V$ is a "flat" or "wide" matrix (more columns than rows). In such cases, the matrix $C^{-1} + VA^{-1}U$ is much smaller in dimension than the original matrix $A + UCV$, making its inversion computationally cheaper.</li>
+</ul>
+
+<b>2. Application: Inverse of an Identity Matrix plus a Rank-One Matrix</b>
+<p>The transcript demonstrates a classic and very useful application of this identity: finding the inverse of a matrix formed by adding a rank-one matrix to the identity matrix. A rank-one matrix can be expressed as the outer product of two vectors, in this case, a vector $\mathbf{x}$ with its own transpose, $\mathbf{x}\mathbf{x}^T$.</p>
+<p>The problem is to compute the inverse of:</p>
+\$$ I + \mathbf{x}\mathbf{x}^T $$
+<p>To apply the Woodbury formula, we map the terms as follows:</p>
+\$$ A + UCV \rightarrow I + \mathbf{x}(1)\mathbf{x}^T $$
+<ul>
+    <li>$A = I$ (the $n \times n$ identity matrix). Its inverse is trivial: $A^{-1} = I$.</li>
+    <li>$U = \mathbf{x}$ (an $n \times 1$ column vector, a "tall" matrix).</li>
+    <li>$C = 1$ (a $1 \times 1$ scalar). Its inverse is also trivial: $C^{-1} = 1$.</li>
+    <li>$V = \mathbf{x}^T$ (a $1 \times n$ row vector, a "flat" matrix).</li>
+</ul>
+<p>Substituting these into the Woodbury identity gives:</p>
+\$$ (I + \mathbf{x}\mathbf{x}^T)^{-1} = I^{-1} - I^{-1}\mathbf{x}(1^{-1} + \mathbf{x}^T I^{-1} \mathbf{x})^{-1}\mathbf{x}^T I^{-1} $$
+<p>This expression simplifies significantly:</p>
+<p><b>Step 1: Simplify the inverses.</b><br>
+Since $I^{-1} = I$ and $1^{-1} = 1$, the formula becomes:</p>
+\$$ (I + \mathbf{x}\mathbf{x}^T)^{-1} = I - I\mathbf{x}(1 + \mathbf{x}^T I \mathbf{x})^{-1}\mathbf{x}^T I $$
+<p><b>Step 2: Simplify the matrix products.</b><br>
+Multiplying by the identity matrix $I$ doesn't change the other terms ($I\mathbf{x} = \mathbf{x}$ and $\mathbf{x}^T I = \mathbf{x}^T$):</p>
+\$$ (I + \mathbf{x}\mathbf{x}^T)^{-1} = I - \mathbf{x}(1 + \mathbf{x}^T \mathbf{x})^{-1}\mathbf{x}^T $$
+<p><b>Step 3: Interpret the central term.</b><br>
+The term $\mathbf{x}^T \mathbf{x}$ is the dot product of the vector $\mathbf{x}$ with itself, which is the squared Euclidean norm (or magnitude) of the vector, denoted $\|\mathbf{x}\|^2$. This is a scalar quantity. Therefore, the term $(1 + \mathbf{x}^T\mathbf{x})^{-1}$ is the reciprocal of the scalar $1 + \|\mathbf{x}\|^2$.</p>
+<p>This leads to the final, elegant formula:</p>
+\$$ (I + \mathbf{x}\mathbf{x}^T)^{-1} = I - \frac{\mathbf{x}\mathbf{x}^T}{1 + \|\mathbf{x}\|^2} $$
+<p>This result is powerful because it allows us to compute the inverse without performing any complex matrix inversion algorithm. The right-hand side only requires computing a vector norm, an outer product, a scalar division, and a matrix subtraction, which are all computationally efficient operations.</p>
+
+<b>3. Numerical Example</b>
+<p>The transcript illustrates this with a concrete example. The goal is to find the inverse of the matrix:</p>
+\$$ M = \begin{pmatrix} 2 & -2 & -1 \\ -2 & 5 & 2 \\ -1 & 2 & 2 \end{pmatrix} $$
+<p><b>Step 1: Decompose the matrix.</b><br>
+First, we recognize that this matrix can be written in the form $I + \mathbf{x}\mathbf{x}^T$. We identify the identity matrix $I$ (in this case, $3 \times 3$) and the vector $\mathbf{x}$:</p>
+\$$ \mathbf{x} = \begin{pmatrix} 1 \\ -2 \\ -1 \end{pmatrix} $$
+The outer product $\mathbf{x}\mathbf{x}^T$ is:
+\$$ \mathbf{x}\mathbf{x}^T = \begin{pmatrix} 1 \\ -2 \\ -1 \end{pmatrix} \begin{pmatrix} 1 & -2 & -1 \end{pmatrix} = \begin{pmatrix} 1 & -2 & -1 \\ -2 & 4 & 2 \\ -1 & 2 & 1 \end{pmatrix} $$
+Adding the identity matrix $I = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix}$ gives the original matrix $M$.</p>
+
+<p><b>Step 2: Apply the derived formula.</b><br>
+We use the formula $(I + \mathbf{x}\mathbf{x}^T)^{-1} = I - \frac{\mathbf{x}\mathbf{x}^T}{1 + \|\mathbf{x}\|^2}$.</p>
+<p>First, calculate the squared norm of $\mathbf{x}$:</p>
+\$$ \|\mathbf{x}\|^2 = (1)^2 + (-2)^2 + (-1)^2 = 1 + 4 + 1 = 6 $$
+<p>Next, calculate the denominator:</p>
+\$$ 1 + \|\mathbf{x}\|^2 = 1 + 6 = 7 $$
+<p>Now, substitute back into the formula:</p>
+\$$ M^{-1} = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix} - \frac{1}{7} \begin{pmatrix} 1 & -2 & -1 \\ -2 & 4 & 2 \\ -1 & 2 & 1 \end{pmatrix} $$
+<p><b>Step 3: Perform the final calculation.</b><br>
+Subtracting the scaled matrix from the identity matrix element-wise:</p>
+\$$ M^{-1} = \begin{pmatrix} 1 - \frac{1}{7} & 0 - \frac{-2}{7} & 0 - \frac{-1}{7} \\ 0 - \frac{-2}{7} & 1 - \frac{4}{7} & 0 - \frac{2}{7} \\ 0 - \frac{-1}{7} & 0 - \frac{2}{7} & 1 - \frac{1}{7} \end{pmatrix} = \begin{pmatrix} \frac{6}{7} & \frac{2}{7} & \frac{1}{7} \\ \frac{2}{7} & \frac{3}{7} & -\frac{2}{7} \\ \frac{1}{7} & -\frac{2}{7} & \frac{6}{7} \end{pmatrix} $$
+<p>Factoring out $\frac{1}{7}$ gives the final result presented in the transcript:</p>
+\$$ M^{-1} = \frac{1}{7} \begin{pmatrix} 6 & 2 & 1 \\ 2 & 3 & -2 \\ 1 & -2 & 6 \end{pmatrix} $$
+</div></div><div class="chapter" id="noc21_ee33-Lec 67"><h3 class="heading">noc21_ee33-Lec 67</h3><div>
+<p>This transcript provides a detailed derivation of the mean of a <b>conditional Gaussian distribution</b>. This is a fundamental concept in statistics, signal processing, and machine learning, used whenever one wants to estimate or infer an unknown random quantity based on related observations. The explanation breaks down the problem, introduces a clever mathematical tool to solve it, and derives a key result.</p>
+
+<h3>1. Problem Definition: The Conditional Gaussian</h3>
+<p>The core problem is to understand the statistical properties of a Gaussian random vector, let's call it $\mathbf{h}$, after we have observed another related Gaussian random vector, $\mathbf{y}$. In machine learning terminology:</p>
+<ul>
+    <li>$\mathbf{h}$ is the unknown <b>parameter vector</b> we want to learn or estimate (e.g., future stock prices, channel coefficients in communications).</li>
+    <li>$\mathbf{y}$ is the <b>observation vector</b>, which contains the data we have collected (e.g., past stock data, received signals).</li>
+</ul>
+<p>The goal is to find the conditional probability density function (PDF) of $\mathbf{h}$ given $\mathbf{y}$, which is denoted as $f(\mathbf{h}|\mathbf{y})$. Since $\mathbf{h}$ and $\mathbf{y}$ are jointly Gaussian, this conditional distribution will also be Gaussian. To fully characterize a Gaussian distribution, we need to find its mean and its covariance matrix.</p>
+
+<h3>2. Statistical Setup and Assumptions</h3>
+<p>The derivation is based on the following setup:</p>
+<ul>
+    <li><b>Random Vectors:</b>
+        <ul>
+            <li>$\mathbf{h}$ is an $M \times 1$ Gaussian random vector.</li>
+            <li>$\mathbf{y}$ is an $N \times 1$ Gaussian random vector.</li>
+        </ul>
+    </li>
+    <li><b>Zero Mean Assumption:</b> For simplicity, both vectors are initially assumed to have a mean of zero.
+        \$$ E[\mathbf{h}] = \mathbf{0} $$
+        \$$ E[\mathbf{y}] = \mathbf{0} $$
+        The case for non-zero means is an extension of this result.
+    </li>
+    <li><b>Jointly Gaussian:</b> This is a critical assumption. It means that any linear combination of the elements of $\mathbf{h}$ and $\mathbf{y}$ will result in a Gaussian random variable. This property is what ensures the conditional distribution is also Gaussian.
+    </li>
+    <li><b>Covariance Matrices:</b> These matrices describe the variance within each vector and the correlation between them.
+        <ul>
+            <li><b>Prior Covariance of h:</b> This matrix, $\mathbf{R}_h$, describes the uncertainty in $\mathbf{h}$ <i>before</i> any observations are made. It's often called the "a priori" information.
+                \$$ \mathbf{R}_h = E[\mathbf{h}\mathbf{h}^T] $$
+            </li>
+            <li><b>Covariance of y:</b>
+                \$$ \mathbf{R}_y = E[\mathbf{y}\mathbf{y}^T] $$
+            </li>
+            <li><b>Cross-Covariance Matrices:</b> These matrices capture the statistical relationship between $\mathbf{h}$ and $\mathbf{y}$.
+                \$$ \mathbf{R}_{hy} = E[\mathbf{h}\mathbf{y}^T] $$
+                \$$ \mathbf{R}_{yh} = E[\mathbf{y}\mathbf{h}^T] = \mathbf{R}_{hy}^T $$
+            </li>
+        </ul>
+    </li>
+</ul>
+
+<h3>3. The Derivation Strategy: Introducing an Auxiliary Variable</h3>
+<p>The direct derivation of the conditional PDF can be complex. The transcript uses a common and elegant technique: defining a new auxiliary random vector, $\mathbf{z}$, that is constructed to be statistically independent of the observation vector $\mathbf{y}$. This simplifies the problem significantly.</p>
+<p>The auxiliary vector $\mathbf{z}$ is defined as:</p>
+\$$ \mathbf{z} = \mathbf{h} - \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y} $$
+<p>This specific construction is chosen because it effectively subtracts the part of $\mathbf{h}$ that is correlated with $\mathbf{y}$.</p>
+
+<h3>4. Key Properties of the Auxiliary Vector $\mathbf{z}$</h3>
+<p>The derivation proceeds by establishing three key properties of $\mathbf{z}$.</p>
+
+<p><b>A. Gaussianity of $\mathbf{z}$</b><br>
+Since $\mathbf{z}$ is a linear combination of two jointly Gaussian vectors ($\mathbf{h}$ and $\mathbf{y}$), $\mathbf{z}$ is itself a Gaussian random vector.</p>
+
+<p><b>B. Mean of $\mathbf{z}$</b><br>
+The mean of $\mathbf{z}$ is calculated using the linearity of the expectation operator:</p>
+\$$ E[\mathbf{z}] = E[\mathbf{h} - \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y}] $$
+\$$ E[\mathbf{z}] = E[\mathbf{h}] - \mathbf{R}_{hy} \mathbf{R}_y^{-1} E[\mathbf{y}] $$
+<p>Since both $E[\mathbf{h}]$ and $E[\mathbf{y}]$ are zero, the result is:</p>
+\$$ E[\mathbf{z}] = \mathbf{0} - \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{0} = \mathbf{0} $$
+<p>So, $\mathbf{z}$ is also a zero-mean Gaussian random vector.</p>
+
+<p><b>C. Uncorrelation and Independence from $\mathbf{y}$</b><br>
+This is the most crucial step. We check if $\mathbf{z}$ and $\mathbf{y}$ are correlated by calculating their cross-covariance matrix, $E[\mathbf{z}\mathbf{y}^T]$.</p>
+\$$ E[\mathbf{z}\mathbf{y}^T] = E\left[ \left( \mathbf{h} - \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y} \right) \mathbf{y}^T \right] $$
+<p>Using the linearity of expectation again:</p>
+\$$ E[\mathbf{z}\mathbf{y}^T] = E[\mathbf{h}\mathbf{y}^T] - E\left[ \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y} \mathbf{y}^T \right] $$
+\$$ E[\mathbf{z}\mathbf{y}^T] = E[\mathbf{h}\mathbf{y}^T] - \mathbf{R}_{hy} \mathbf{R}_y^{-1} E[\mathbf{y}\mathbf{y}^T] $$
+<p>Substituting the definitions of $\mathbf{R}_{hy}$ and $\mathbf{R}_y$:</p>
+\$$ E[\mathbf{z}\mathbf{y}^T] = \mathbf{R}_{hy} - \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{R}_y $$
+<p>Since $\mathbf{R}_y^{-1} \mathbf{R}_y$ is the identity matrix $\mathbf{I}$:</p>
+\$$ E[\mathbf{z}\mathbf{y}^T] = \mathbf{R}_{hy} - \mathbf{R}_{hy}\mathbf{I} = \mathbf{0} $$
+<p>This result shows that $\mathbf{z}$ and $\mathbf{y}$ are <b>uncorrelated</b>. For jointly Gaussian random vectors, being uncorrelated is equivalent to being <b>statistically independent</b>. This means that observing $\mathbf{y}$ provides no information about $\mathbf{z}$, so $f(\mathbf{z}|\mathbf{y}) = f(\mathbf{z})$.</p>
+
+<h3>5. Deriving the Conditional Mean $E[\mathbf{h}|\mathbf{y}]$</h3>
+<p>With the independence of $\mathbf{z}$ and $\mathbf{y}$ established, we can now find the conditional mean of $\mathbf{h}$.</p>
+<p><b>Step 1:</b> Start with the conditional expectation of $\mathbf{z}$ given $\mathbf{y}$. Because they are independent, this is simply the unconditional mean of $\mathbf{z}$:</p>
+\$$ E[\mathbf{z}|\mathbf{y}] = E[\mathbf{z}] = \mathbf{0} $$
+
+<p><b>Step 2:</b> Express this same conditional expectation using the definition of $\mathbf{z}$:</p>
+\$$ E[\mathbf{z}|\mathbf{y}] = E[\mathbf{h} - \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y} | \mathbf{y}] $$
+\$$ E[\mathbf{z}|\mathbf{y}] = E[\mathbf{h}|\mathbf{y}] - E[\mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y} | \mathbf{y}] $$
+
+<p><b>Step 3:</b> Simplify the second term. When we are "given $\mathbf{y}$", the vector $\mathbf{y}$ is treated as a known, constant value. Therefore, the term $\mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y}$ is no longer random; it is a fixed quantity. The expectation of a constant is just the constant itself.</p>
+\$$ E[\mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y} | \mathbf{y}] = \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y} $$
+<p>So the equation becomes:</p>
+\$$ E[\mathbf{z}|\mathbf{y}] = E[\mathbf{h}|\mathbf{y}] - \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y} $$
+
+<p><b>Step 4:</b> Equate the results from Step 1 and Step 3.</p>
+\$$ \mathbf{0} = E[\mathbf{h}|\mathbf{y}] - \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y} $$
+
+<p><b>Step 5:</b> Rearrange to find the final result for the conditional mean.</p>
+\$$ \mathbf{E[h|y]} = \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y} $$
+
+<h3>Conclusion</h3>
+<p>This final formula gives the <b>conditional expectation</b> (or mean) of the parameter vector $\mathbf{h}$ given the observation vector $\mathbf{y}$. It is the first key parameter of the conditional Gaussian PDF $f(\mathbf{h}|\mathbf{y})$. This result is extremely powerful because it provides the best linear estimate of $\mathbf{h}$ based on the observation $\mathbf{y}$. The derivation of the second parameter, the conditional covariance matrix, is mentioned as the topic for a future module.</p>
+</div></div><div class="chapter" id="noc21_ee33-Lec 68"><h3 class="heading">noc21_ee33-Lec 68</h3><div>
+<p>This document provides a detailed explanation of the concepts and formulas discussed in the transcript, focusing on the <b>Conditional Gaussian Probability Density Function (PDF)</b>. This is a fundamental concept in statistics and linear algebra, particularly relevant in estimation theory.</p>
+
+<h3>1. Introduction to the Conditional Gaussian PDF</h3>
+<p>The core topic is understanding the probability distribution of a random vector $\mathbf{h}$ when we have observed another related random vector $\mathbf{y}$. The key assumption is that $\mathbf{h}$ and $\mathbf{y}$ are <b>jointly Gaussian</b> random vectors.</p>
+<p>In a typical estimation problem:</p>
+<ul>
+    <li>$\mathbf{y}$ represents a set of observations or measurements.</li>
+    <li>$\mathbf{h}$ represents an unknown quantity or set of parameters that we want to estimate based on the observations $\mathbf{y}$.</li>
+</ul>
+<p>The conditional PDF, denoted as $p(\mathbf{h}|\mathbf{y})$, describes the probability of $\mathbf{h}$ taking on a certain value given that we know the value of $\mathbf{y}$. A key result is that if $\mathbf{h}$ and $\mathbf{y}$ are jointly Gaussian, then the conditional distribution of $\mathbf{h}$ given $\mathbf{y}$ is also Gaussian.</p>
+<p>A Gaussian distribution is completely defined by its mean and its covariance matrix. The transcript details the derivation of these two parameters for the conditional case.</p>
+
+<h3>2. The Conditional Mean (Recap)</h3>
+<p>The transcript first reminds us of the formula for the conditional mean, which is the expected value of $\mathbf{h}$ given $\mathbf{y}$. This value is often used as the best estimate for $\mathbf{h}$.</p>
+<p>The conditional mean is given by:</p>
+\$$ E[\mathbf{h} | \mathbf{y}] = \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y} $$
+<p>Where:</p>
+<ul>
+    <li>$\mathbf{R}_{hy}$ is the cross-covariance matrix between $\mathbf{h}$ and $\mathbf{y}$, defined as $E[\mathbf{h}\mathbf{y}^T]$.</li>
+    <li>$\mathbf{R}_y$ is the auto-covariance matrix of $\mathbf{y}$, defined as $E[\mathbf{y}\mathbf{y}^T]$. We assume it is invertible.</li>
+</ul>
+
+<h3>3. Derivation of the Conditional Covariance Matrix</h3>
+<p>The main focus of the transcript is to derive the second parameter needed to define the conditional Gaussian PDF: the <b>conditional covariance matrix</b>, denoted $\text{cov}(\mathbf{h}|\mathbf{y})$.</p>
+
+<h4>Step 1: Define an Auxiliary Vector $\mathbf{z}$</h4>
+<p>To simplify the derivation, an auxiliary random vector $\mathbf{z}$ is constructed. This vector represents the part of $\mathbf{h}$ that is "unrelated" or orthogonal to $\mathbf{y}$.</p>
+\$$ \mathbf{z} = \mathbf{h} - \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y} $$
+
+<h4>Step 2: Establish Independence of $\mathbf{z}$ and $\mathbf{y}$</h4>
+<p>A crucial property, established previously, is that $\mathbf{z}$ and $\mathbf{y}$ are uncorrelated. This is shown by computing their cross-correlation:</p>
+\$$ E[\mathbf{z} \mathbf{y}^T] = \mathbf{0} $$
+<p>Since $\mathbf{h}$ and $\mathbf{y}$ are jointly Gaussian, and $\mathbf{z}$ is a linear combination of them, $\mathbf{z}$ and $\mathbf{y}$ are also jointly Gaussian. For Gaussian random vectors, being uncorrelated implies that they are also <b>independent</b>.</p>
+
+<h4>Step 3: Simplify the Covariance Calculation</h4>
+<p>The independence of $\mathbf{z}$ and $\mathbf{y}$ is a powerful result. It means that knowing the value of $\mathbf{y}$ gives no new information about $\mathbf{z}$. Therefore, the conditional covariance of $\mathbf{z}$ given $\mathbf{y}$ is the same as its unconditional covariance:</p>
+\$$ \text{cov}(\mathbf{z} | \mathbf{y}) = \text{cov}(\mathbf{z}) $$
+<p>Since $\mathbf{z}$ is a zero-mean random vector, its covariance is simply $E[\mathbf{z}\mathbf{z}^T]$.</p>
+
+<h4>Step 4: Expand and Calculate $\text{cov}(\mathbf{z})$</h4>
+<p>The covariance of $\mathbf{z}$ is calculated by expanding the expression $E[\mathbf{z}\mathbf{z}^T]$:</p>
+\$$ \text{cov}(\mathbf{z}) = E[\mathbf{z}\mathbf{z}^T] = E\left[ (\mathbf{h} - \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y})(\mathbf{h} - \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y})^T \right] $$
+<p>Using the transpose property $(AB)^T = B^T A^T$, the second term becomes:</p>
+\$$ (\mathbf{h} - \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y})^T = \mathbf{h}^T - (\mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y})^T = \mathbf{h}^T - \mathbf{y}^T (\mathbf{R}_y^{-1})^T (\mathbf{R}_{hy})^T $$
+<p>We use the facts that $\mathbf{R}_y$ is symmetric (so $\mathbf{R}_y^{-1}$ is also symmetric) and that $(\mathbf{R}_{hy})^T = \mathbf{R}_{yh}$. The expression becomes:</p>
+\$$ \mathbf{h}^T - \mathbf{y}^T \mathbf{R}_y^{-1} \mathbf{R}_{yh} $$
+<p>Expanding the full product gives four terms. After taking the expectation of each term:</p>
+\$$ E[\mathbf{z}\mathbf{z}^T] = E[\mathbf{h}\mathbf{h}^T] - E[\mathbf{R}_{hy}\mathbf{R}_y^{-1}\mathbf{y}\mathbf{h}^T] - E[\mathbf{h}\mathbf{y}^T\mathbf{R}_y^{-1}\mathbf{R}_{yh}] + E[\mathbf{R}_{hy}\mathbf{R}_y^{-1}\mathbf{y}\mathbf{y}^T\mathbf{R}_y^{-1}\mathbf{R}_{yh}] $$
+<p>Substituting the definitions of the covariance matrices (e.g., $E[\mathbf{h}\mathbf{h}^T] = \mathbf{R}_h$, $E[\mathbf{y}\mathbf{h}^T] = \mathbf{R}_{yh}$, etc.):</p>
+\$$ = \mathbf{R}_h - \mathbf{R}_{hy}\mathbf{R}_y^{-1}\mathbf{R}_{yh} - \mathbf{R}_{hy}\mathbf{R}_y^{-1}\mathbf{R}_{yh} + \mathbf{R}_{hy}\mathbf{R}_y^{-1}\mathbf{R}_y\mathbf{R}_y^{-1}\mathbf{R}_{yh} $$
+<p>Since $\mathbf{R}_y\mathbf{R}_y^{-1} = \mathbf{I}$ (the identity matrix), the expression simplifies to:</p>
+\$$ \text{cov}(\mathbf{z}) = \mathbf{R}_h - \mathbf{R}_{hy}\mathbf{R}_y^{-1}\mathbf{R}_{yh} - \mathbf{R}_{hy}\mathbf{R}_y^{-1}\mathbf{R}_{yh} + \mathbf{R}_{hy}\mathbf{R}_y^{-1}\mathbf{R}_{yh} $$
+\$$ \text{cov}(\mathbf{z}) = \mathbf{R}_h - \mathbf{R}_{hy}\mathbf{R}_y^{-1}\mathbf{R}_{yh} $$
+
+<h4>Step 5: Relate Back to $\text{cov}(\mathbf{h} | \mathbf{y})$</h4>
+<p>The final step is to show that the conditional covariance of $\mathbf{h}$ is the same as that of $\mathbf{z}$. From the definition of $\mathbf{z}$, we can write $\mathbf{h} = \mathbf{z} + \mathbf{R}_{hy}\mathbf{R}_y^{-1}\mathbf{y}$.</p>
+\$$ \text{cov}(\mathbf{h} | \mathbf{y}) = \text{cov}(\mathbf{z} + \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y} | \mathbf{y}) $$
+<p>When we condition on $\mathbf{y}$, the term $\mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y}$ is no longer random; it is a known, constant vector. Adding a constant to a random vector does not change its covariance. Therefore:</p>
+\$$ \text{cov}(\mathbf{h} | \mathbf{y}) = \text{cov}(\mathbf{z} | \mathbf{y}) $$
+<p>Combining this with the result from Step 3 and Step 4, we get the final formula:</p>
+\$$ \text{cov}(\mathbf{h} | \mathbf{y}) = \mathbf{R}_h - \mathbf{R}_{hy}\mathbf{R}_y^{-1}\mathbf{R}_{yh} $$
+
+<h3>4. The Complete Conditional Gaussian PDF</h3>
+<p>With both the conditional mean and conditional covariance derived, we can fully specify the conditional PDF of $\mathbf{h}$ given $\mathbf{y}$. It is a Gaussian distribution with:</p>
+<ul>
+    <li><b>Conditional Mean:</b> \$$ \boldsymbol{\mu}_{\mathbf{h}|\mathbf{y}} = \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y} $$</li>
+    <li><b>Conditional Covariance:</b> \$$ \boldsymbol{\Sigma}_{\mathbf{h}|\mathbf{y}} = \mathbf{R}_h - \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{R}_{yh} $$</li>
+</ul>
+
+<h3>5. Connection to MMSE and LMMSE Estimation</h3>
+<p>The transcript highlights a deep connection between these results and estimation theory.</p>
+<ul>
+    <li><b>MMSE (Minimum Mean Squared Error) Estimate:</b> The estimate $\hat{\mathbf{h}}$ that minimizes the mean squared error $E[\|\mathbf{h} - \hat{\mathbf{h}}\|^2]$ is the conditional mean, $\hat{\mathbf{h}}_{MMSE} = E[\mathbf{h}|\mathbf{y}]$. This is generally the best possible estimate but can be hard to compute for non-Gaussian distributions.</li>
+    <li><b>LMMSE (Linear Minimum Mean Squared Error) Estimate:</b> This is the best estimate that is restricted to be a linear function of the observations $\mathbf{y}$. Its formula is $\hat{\mathbf{h}}_{LMMSE} = \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{y}$.</li>
+</ul>
+<p>For jointly Gaussian random vectors, a remarkable property emerges: the conditional mean is a linear function of $\mathbf{y}$. This means:</p>
+<p><b>For Gaussian distributions: MMSE Estimate = LMMSE Estimate</b></p>
+<p>This is a unique and powerful property of the Gaussian distribution. It implies that the best linear estimator is, in fact, the best possible estimator overall (in the mean squared error sense). For most other distributions, the MMSE estimate is non-linear, and the LMMSE estimate is suboptimal.</p>
+
+<h3>6. The Case of Non-Zero Means</h3>
+<p>The derivation above assumes $\mathbf{h}$ and $\mathbf{y}$ are zero-mean. The results can be easily extended to the case where they have non-zero means, $\boldsymbol{\mu}_h = E[\mathbf{h}]$ and $\boldsymbol{\mu}_y = E[\mathbf{y}]$.</p>
+<p>This is done by working with the centralized (zero-mean) vectors:</p>
+<ul>
+    <li>$ \tilde{\mathbf{h}} = \mathbf{h} - \boldsymbol{\mu}_h $</li>
+    <li>$ \tilde{\mathbf{y}} = \mathbf{y} - \boldsymbol{\mu}_y $</li>
+</ul>
+<p>The covariance matrices $\mathbf{R}_h, \mathbf{R}_y, \mathbf{R}_{hy}$ are defined based on these centralized vectors. Applying the zero-mean formulas to $\tilde{\mathbf{h}}$ and $\tilde{\mathbf{y}}$ and then transforming back gives the general result:</p>
+<ul>
+    <li><b>Conditional Mean (Non-Zero Mean Case):</b>
+        \$$ E[\mathbf{h} | \mathbf{y}] = \boldsymbol{\mu}_h + \mathbf{R}_{hy} \mathbf{R}_y^{-1} (\mathbf{y} - \boldsymbol{\mu}_y) $$
+        This formula has an intuitive interpretation: start with the prior mean of $\mathbf{h}$ ($\boldsymbol{\mu}_h$) and add a correction term that is linear in the new information from the observation, $\mathbf{y} - \boldsymbol{\mu}_y$.
+    </li>
+    <li><b>Conditional Covariance (Non-Zero Mean Case):</b>
+        \$$ \text{cov}(\mathbf{h} | \mathbf{y}) = \mathbf{R}_h - \mathbf{R}_{hy} \mathbf{R}_y^{-1} \mathbf{R}_{yh} $$
+        The conditional covariance is unaffected by the means and remains the same. This reflects that observing $\mathbf{y}$ reduces the uncertainty about $\mathbf{h}$, and this reduction in uncertainty (variance) does not depend on the mean values.
+    </li>
+</ul>
+<p>These formulas are central to many algorithms in signal processing, machine learning, and communications, such as the Kalman filter.</p>
+</div></div><div class="chapter" id="noc21_ee33-Lec 69"><h3 class="heading">noc21_ee33-Lec 69</h3><div>
+<p>This document provides a detailed explanation of the concepts presented in the transcript, focusing on the application of conditional Gaussian inference for learning a parameter in a linear model.</p>
+
+<h3>1. The Problem: Learning a Parameter from a Linear Model</h3>
+<p>The core task is to estimate or "learn" an unknown parameter, denoted by $h$, from a set of observations. The relationship between the parameter, the inputs, and the observations is described by a linear model. This is a fundamental problem in many fields, including machine learning, signal processing, and statistics.</p>
+
+<p>The model is formulated as:</p>
+\$$ \mathbf{y} = \mathbf{x}h + \mathbf{v} $$
+
+<p>Let's break down the components of this model:</p>
+<ul>
+    <li><b>Observations ($\mathbf{y}$):</b> This is a vector of $n$ observed outputs, often called the training data.
+    \$$ \mathbf{y} = \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{bmatrix} $$
+    This is an $n \times 1$ column vector.</li>
+
+    <li><b>Inputs ($\mathbf{x}$):</b> This is a vector of $n$ known inputs, also part of the training data.
+    \$$ \mathbf{x} = \begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix} $$
+    This is also an $n \times 1$ column vector.</li>
+
+    <li><b>Parameter ($h$):</b> This is the unknown scalar (a $1 \times 1$ quantity) that we want to learn or estimate. The model assumes a linear relationship between the inputs and outputs, scaled by this parameter.</li>
+
+    <li><b>Noise ($\mathbf{v}$):</b> This is a vector of $n$ unobserved random noise values that corrupt the linear relationship.
+    \$$ \mathbf{v} = \begin{bmatrix} v_1 \\ v_2 \\ \vdots \\ v_n \end{bmatrix} $$
+    This is an $n \times 1$ column vector.</li>
+</ul>
+
+<h3>2. Statistical Assumptions (The Gaussian Framework)</h3>
+<p>To infer $h$ from $\mathbf{y}$, we make specific statistical assumptions about the random components of the model. The entire framework is built on the properties of Gaussian (or normal) distributions.</p>
+
+<ul>
+    <li><b>The Parameter $h$ is Gaussian:</b> Our prior belief about the parameter $h$ is that it is a Gaussian random variable with a known mean and variance.
+        <ul>
+            <li>Mean: $ E[h] = \mu_h $</li>
+            <li>Variance: $ \text{Var}(h) = E[(h-\mu_h)^2] = \sigma_h^2 $</li>
+        </ul>
+    </li>
+    <li><b>The Noise $\mathbf{v}$ is Gaussian:</b> The noise vector $\mathbf{v}$ is assumed to consist of <b>independent and identically distributed (i.i.d.)</b> Gaussian random variables.
+        <ul>
+            <li><b>Zero Mean:</b> Each noise sample $v_i$ has a mean of zero, so $E[\mathbf{v}] = \mathbf{0}$.</li>
+            <li><b>i.i.d.:</b> The noise samples are statistically independent of each other and share the same variance, $\sigma^2$.</li>
+        </ul>
+        This i.i.d. assumption leads to a simple structure for the <b>noise covariance matrix</b>:
+        \$$ E[\mathbf{v}\mathbf{v}^T] = \sigma^2 \mathbf{I} $$
+        where $\mathbf{I}$ is the $n \times n$ identity matrix. The off-diagonal elements are zero because different noise samples are uncorrelated (due to independence), and the diagonal elements are all $\sigma^2$, the variance of each noise sample.
+    </li>
+    <li><b>Uncorrelated Parameter and Noise:</b> The parameter $h$ and the noise vector $\mathbf{v}$ are assumed to be uncorrelated. This is a standard assumption, meaning the noise process does not depend on the parameter we are trying to estimate. Mathematically, $E[(h-\mu_h)\mathbf{v}^T] = \mathbf{0}$.</li>
+</ul>
+
+<h3>3. The Estimation Strategy: Minimum Mean Squared Error (MMSE)</h3>
+<p>The goal is to find the "best" estimate of $h$ given the observations $\mathbf{y}$. In this context, "best" is defined in the sense of <b>Minimum Mean Squared Error (MMSE)</b>. The MMSE estimate, denoted $\hat{h}$, is the one that minimizes the expected squared difference between the true parameter and its estimate: $E[(h-\hat{h})^2]$.</p>
+
+<p>A key result from statistical theory is that for Gaussian random variables, the MMSE estimate is the <b>conditional mean</b>.</p>
+\$$ \hat{h}_{MMSE} = E[h | \mathbf{y}] $$
+
+<p>Because our model $\mathbf{y} = \mathbf{x}h + \mathbf{v}$ is a linear combination of Gaussian variables ($h$ and $\mathbf{v}$), the observation vector $\mathbf{y}$ is also Gaussian. Therefore, we can use the formula for the conditional mean of jointly Gaussian variables to find the estimate. For non-zero mean variables, this formula is:</p>
+\$$ \hat{h} = E[h|\mathbf{y}] = \mathbf{R}_{hy} \mathbf{R}_{y}^{-1} (\mathbf{y} - \boldsymbol{\mu}_y) + \mu_h $$
+
+<p>To use this formula, we must first derive the following three quantities:</p>
+<ol>
+    <li>$\boldsymbol{\mu}_y$: The mean vector of the observations $\mathbf{y}$.</li>
+    <li>$\mathbf{R}_y$: The covariance matrix of $\mathbf{y}$.</li>
+    <li>$\mathbf{R}_{hy}$: The cross-covariance between $h$ and $\mathbf{y}$.</li>
+</ol>
+
+<h3>4. Deriving the Necessary Quantities</h3>
+
+<h4>A. Mean of the Observation Vector ($\boldsymbol{\mu}_y$)</h4>
+<p>We find the mean by taking the expectation of the linear model.</p>
+\$$ \boldsymbol{\mu}_y = E[\mathbf{y}] = E[\mathbf{x}h + \mathbf{v}] $$
+<p>Using the linearity of expectation:</p>
+\$$ \boldsymbol{\mu}_y = \mathbf{x}E[h] + E[\mathbf{v}] $$
+<p>Substituting the known means ($E[h] = \mu_h$ and $E[\mathbf{v}] = \mathbf{0}$):</p>
+\$$ \boldsymbol{\mu}_y = \mathbf{x}\mu_h $$
+
+<h4>B. Covariance Matrix of the Observation Vector ($\mathbf{R}_y$)</h4>
+<p>The covariance matrix is defined as $\mathbf{R}_y = E[(\mathbf{y} - \boldsymbol{\mu}_y)(\mathbf{y} - \boldsymbol{\mu}_y)^T]$. We first find the term $\mathbf{y} - \boldsymbol{\mu}_y$:</p>
+\$$ \mathbf{y} - \boldsymbol{\mu}_y = (\mathbf{x}h + \mathbf{v}) - \mathbf{x}\mu_h = \mathbf{x}(h - \mu_h) + \mathbf{v} $$
+<p>Now, we substitute this into the covariance definition and expand:</p>
+\$$ \mathbf{R}_y = E[ (\mathbf{x}(h - \mu_h) + \mathbf{v}) (\mathbf{x}(h - \mu_h) + \mathbf{v})^T ] $$
+\$$ \mathbf{R}_y = E[ \mathbf{x}(h - \mu_h)(h - \mu_h)\mathbf{x}^T + \mathbf{x}(h - \mu_h)\mathbf{v}^T + \mathbf{v}(h - \mu_h)\mathbf{x}^T + \mathbf{v}\mathbf{v}^T ] $$
+<p>Applying expectation to each term and using the fact that $h$ and $\mathbf{v}$ are uncorrelated (making the two middle cross-terms zero), we get:</p>
+\$$ \mathbf{R}_y = \mathbf{x} E[(h-\mu_h)^2] \mathbf{x}^T + E[\mathbf{v}\mathbf{v}^T] $$
+<p>Substituting the known variance of $h$ ($\sigma_h^2$) and the covariance of $\mathbf{v}$ ($\sigma^2 \mathbf{I}$), we arrive at the result:</p>
+\$$ \mathbf{R}_y = \sigma_h^2 \mathbf{x}\mathbf{x}^T + \sigma^2 \mathbf{I} $$
+
+<h4>C. Cross-Covariance of $h$ and $\mathbf{y}$ ($\mathbf{R}_{hy}$)</h4>
+<p>The cross-covariance is defined as $\mathbf{R}_{hy} = E[(h - \mu_h)(\mathbf{y} - \boldsymbol{\mu}_y)^T]$.</p>
+\$$ \mathbf{R}_{hy} = E[(h - \mu_h) (\mathbf{x}(h - \mu_h) + \mathbf{v})^T] $$
+\$$ \mathbf{R}_{hy} = E[(h - \mu_h) ((h - \mu_h)\mathbf{x}^T + \mathbf{v}^T)] $$
+\$$ \mathbf{R}_{hy} = E[(h - \mu_h)^2 \mathbf{x}^T + (h - \mu_h)\mathbf{v}^T] $$
+<p>Applying expectation and using the uncorrelation of $h$ and $\mathbf{v}$:</p>
+\$$ \mathbf{R}_{hy} = E[(h - \mu_h)^2] \mathbf{x}^T + E[(h - \mu_h)\mathbf{v}^T] $$
+<p>The second term is zero, and the first term is the variance of $h$. So, we get:</p>
+\$$ \mathbf{R}_{hy} = \sigma_h^2 \mathbf{x}^T $$
+
+<h3>5. The Final MMSE Estimate Formula</h3>
+<p>Now we have all the components to assemble the final formula for the MMSE estimate $\hat{h}$. We substitute the expressions for $\mathbf{R}_{hy}$, $\mathbf{R}_y$, and $\boldsymbol{\mu}_y$ into the general conditional mean equation.</p>
+<p>The estimate $\hat{h}$ is given by:</p>
+\$$ \hat{h} = \underbrace{(\sigma_h^2 \mathbf{x}^T)}_{\mathbf{R}_{hy}} \underbrace{(\sigma_h^2 \mathbf{x}\mathbf{x}^T + \sigma^2 \mathbf{I})^{-1}}_{\mathbf{R}_y^{-1}} \underbrace{(\mathbf{y} - \mathbf{x}\mu_h)}_{(\mathbf{y} - \boldsymbol{\mu}_y)} + \mu_h $$
+
+<p>This is the central result. It provides a concrete algorithm to compute the best estimate of the parameter $h$ from the observed data $\mathbf{y}$. It optimally combines the prior information about $h$ (captured by $\mu_h$ and $\sigma_h^2$) with the information contained in the new observations (captured by $\mathbf{y}$ and $\mathbf{x}$).</p>
+
+<p>The transcript notes that while this formula involves inverting an $n \times n$ matrix, the specific structure of this matrix (a rank-one matrix $\mathbf{x}\mathbf{x}^T$ plus a scaled identity matrix) allows for a much more efficient computation using tools like the matrix inversion lemma, a topic for further discussion.</p>
+</div></div><h2>Weekly Summary</h2><div><h3>1. Weighted Least Squares (WLS)</h3>
+<p>This section introduces Weighted Least Squares (WLS) as a generalization of the standard Least Squares (LS) problem. Instead of minimizing the simple sum of squared errors, WLS introduces a weighting matrix to give different levels of importance to different errors.</p>
+<b>Key Takeaways:</b>
+<ul>
+<li>The standard LS cost function is $||\mathbf{y} - A\mathbf{x}||^2$. The WLS cost function modifies this to $(\mathbf{y} - A\mathbf{x})^T W (\mathbf{y} - A\mathbf{x})$, where $W$ is a <b>weighting matrix</b>.</li>
+<li>To ensure the cost is always non-negative, the weighting matrix $W$ must be <b>positive semi-definite (PSD)</b>.</li>
+<li>Any PSD matrix $W$ can be decomposed using Cholesky decomposition as $W = W^{1/2 T} W^{1/2}$, allowing the cost function to be viewed as a standard LS problem on weighted data: $||W^{1/2}(\mathbf{y} - A\mathbf{x})||^2$.</li>
+<li>The solution to the WLS problem is given by:
+\$$ \hat{\mathbf{x}}_{WLS} = (A^T W A)^{-1} A^T W \mathbf{y} $$
+</li>
+<li>Standard LS is a special case of WLS where the weighting matrix $W$ is the identity matrix, meaning all errors are weighted equally.</li>
+</ul>
+
+<h3>2. Optimal Weighting in WLS</h3>
+<p>This section provides a practical example of WLS, demonstrating its application in scenarios with non-uniform noise. It shows that the optimal choice for the weighting matrix is related to the noise characteristics.</p>
+<b>Key Takeaways:</b>
+<ul>
+<li>WLS is particularly useful when observations are corrupted by noise that is independent but <b>not identically distributed</b> (i.e., different noise samples have different variances).</li>
+<li>The optimal weighting matrix $W$ is the inverse of the noise covariance matrix, $W = R^{-1}$. For uncorrelated noise with variances $\sigma_i^2$, $R$ is a diagonal matrix with entries $\sigma_i^2$, so $W$ is a diagonal matrix with entries $1/\sigma_i^2$.</li>
+<li>This choice is intuitive: observations with <b>higher noise variance</b> (less reliable) are given a <b>lower weight</b>, while observations with <b>lower noise variance</b> (more reliable) are given a <b>higher weight</b>.</li>
+<li>If the noise is independent and identically distributed (i.i.d.), the noise covariance matrix is $R = \sigma^2 I$, making $W \propto I$. In this case, WLS reduces to the standard LS problem.</li>
+</ul>
+
+<h3>3. The Woodbury Matrix Identity</h3>
+<p>This section introduces a powerful matrix algebra tool known as the Woodbury Matrix Identity or the Matrix Inversion Lemma. It provides an alternative way to compute the inverse of a matrix that is expressed as a sum.</p>
+<b>Key Takeaways:</b>
+<ul>
+<li>The Woodbury Matrix Identity is stated as:
+\$$ (A + UCV)^{-1} = A^{-1} - A^{-1}U(C^{-1} + VA^{-1}U)^{-1}VA^{-1} $$
+</li>
+<li>While it looks more complex, this identity is extremely useful when $A$ is large and easily invertible (e.g., diagonal or identity) and the matrix $UCV$ has a <b>low rank</b>.</li>
+<li>The key advantage is that it replaces the inversion of a large matrix ($A+UCV$) with the inversion of a much smaller matrix ($C^{-1} + VA^{-1}U$), significantly reducing computational complexity.</li>
+<li>A common application is when $U$ is a tall matrix and $V$ is a flat matrix, making their product $UCV$ a low-rank update to $A$.</li>
+</ul>
+
+<h3>4. Application of the Woodbury Identity</h3>
+<p>This section illustrates the utility of the Woodbury Identity with a specific, common example: inverting a rank-one update to the identity matrix.</p>
+<b>Key Takeaways:</b>
+<ul>
+<li>The problem is to compute the inverse of $(I + \mathbf{x}\mathbf{x}^T)^{-1}$, where $I$ is the identity matrix and $\mathbf{x}\mathbf{x}^T$ is a rank-one matrix.</li>
+<li>By applying the Woodbury Identity with $A=I$, $U=\mathbf{x}$, $C=1$, and $V=\mathbf{x}^T$, the inverse can be efficiently calculated without performing a full matrix inversion.</li>
+<li>The simplified result is:
+\$$ (I + \mathbf{x}\mathbf{x}^T)^{-1} = I - \frac{\mathbf{x}\mathbf{x}^T}{1 + ||\mathbf{x}||^2} $$
+</li>
+<li>This formula replaces a computationally expensive matrix inversion with simple vector and scalar operations.</li>
+</ul>
+
+<h3>5. The Conditional Gaussian Distribution</h3>
+<p>This section introduces the concept of the conditional Gaussian probability density function (PDF). It addresses the question of how the distribution of one Gaussian random vector changes when we observe another, correlated Gaussian random vector.</p>
+<b>Key Takeaways:</b>
+<ul>
+<li>If two random vectors, $\mathbf{h}$ and $\mathbf{y}$, are <b>jointly Gaussian</b>, then the conditional distribution of $\mathbf{h}$ given an observation of $\mathbf{y}$ is also Gaussian.</li>
+<li>The main goal is to find the parameters (mean and covariance) of this new conditional Gaussian distribution, $p(\mathbf{h}|\mathbf{y})$.</li>
+<li>This concept is fundamental in estimation and machine learning, where $\mathbf{h}$ might be an unknown parameter (like stock prices or a channel state) and $\mathbf{y}$ is a set of related observations or data.</li>
+<li>For zero-mean, jointly Gaussian vectors, the <b>conditional mean</b> (or conditional expectation) is derived as:
+\$$ E[\mathbf{h}|\mathbf{y}] = R_{hy}R_y^{-1}\mathbf{y} $$
+where $R_{hy}$ is the cross-covariance matrix and $R_y$ is the covariance matrix of $\mathbf{y}$.</li>
+<li>The <b>conditional covariance</b> is derived as:
+\$$ Cov(\mathbf{h}|\mathbf{y}) = R_h - R_{hy}R_y^{-1}R_{yh} $$
+</li>
+</ul>
+
+<h3>6. Estimation and the Linear Model</h3>
+<p>This section connects the conditional Gaussian results to the concept of estimation and applies them to a standard linear model. It establishes the relationship between the conditional mean and the Minimum Mean Squared Error (MMSE) estimate.</p>
+<b>Key Takeaways:</b>
+<ul>
+<li>The conditional mean, $E[\mathbf{h}|\mathbf{y}]$, is the <b>Minimum Mean Squared Error (MMSE)</b> estimate of $\mathbf{h}$ given $\mathbf{y}$. It is the best possible estimate in terms of minimizing the average squared error.</li>
+<li>A special property of Gaussian distributions is that the MMSE estimate is a linear function of the observations $\mathbf{y}$. This means that for Gaussians, the best overall estimate (MMSE) is the same as the best linear estimate (LMMSE). This is not true in general for other distributions.</li>
+<li>The framework is applied to the linear model $\mathbf{y} = \mathbf{x}h + \mathbf{v}$, where `h` is an unknown Gaussian parameter and $\mathbf{v}$ is Gaussian noise. The goal is to estimate `h` from the observation $\mathbf{y}$.</li>
+<li>By calculating the required covariance matrices ($R_y$ and $R_{hy}$) for this specific model, the MMSE estimate of `h` can be found using the conditional mean formula. This provides a principled way to learn or infer a parameter from noisy, linear observations.</li>
+</ul>
+</div><h2>Assignment Explanation</h2><div>
+<h3>Assignment Questions and Answers Explained</h3>
+
+<p>Here is a detailed explanation of each question in the assignment.</p>
+
+<hr>
+
+<h4>Question 1</h4>
+<p><b>Question:</b> Consider a discrete time stochastic process with $X_n$ denoting the state at time $n$. The Markov property states that</p>
+<p><b>Options:</b></p>
+<ul>
+  <li>$Pr(X_n | X_{n-1}, X_{n-2}, \dots, X_1) = Pr(X_n | X_1)$</li>
+  <li>$Pr(X_n | X_{n-1}, X_{n-2}, \dots, X_1) = Pr(X_{n-1}, X_{n-2}, \dots, X_1 | X_n)$</li>
+  <li>$Pr(X_n | X_{n-1}, X_{n-2}, \dots, X_1) = Pr(X_n)$</li>
+  <li>$Pr(X_n | X_{n-1}, X_{n-2}, \dots, X_1) = Pr(X_n | X_{n-1})$</li>
+</ul>
+<p><b>Explanation:</b></p>
+<p>The Markov property, also known as the "memoryless" property, is the fundamental characteristic of a Markov chain. It states that the future state of the process depends only on the present state, and not on the sequence of states that preceded it. Mathematically, the probability of being in state $X_n$ at time $n$, given the entire history of the process up to time $n-1$, is the same as the probability given only the state at time $n-1$.</p>
+<p>Therefore, the correct mathematical expression is:<br><b>$Pr(X_n | X_{n-1}, X_{n-2}, \dots, X_1) = Pr(X_n | X_{n-1})$</b></p>
+<p>This matches the last option.</p>
+
+<hr>
+
+<h4>Question 2</h4>
+<p><b>Question:</b> Consider a Discrete Time Markov Chain (DTMC) used to model a machine, where the state $W_n$ on day $n$ can belong to one of two possible states $S = \{s_1, s_2\}$, with $s_1$ denoting functional and $s_2$ denoting non-functional. Given the machine is functional on a particular day, the next day it can be non-functional with a probability 0.20, while when it is non-functional on a particular day, it can also be non-functional on the next day with probability 0.35. The one step transition probablity matrix for the DTMC is given as</p>
+<p><b>Explanation:</b></p>
+<p>Let's construct the transition probability matrix $P$. The entry $P_{ij}$ represents the probability of transitioning from state $j$ to state $i$. This is a column-stochastic convention where each column sums to 1.</p>
+<ul>
+    <li><b>States:</b> $s_1$ = functional, $s_2$ = non-functional.</li>
+    <li><b>From state $s_1$ (functional):</b>
+        <ul>
+            <li>The probability of transitioning to $s_2$ (non-functional) is given as 0.20. In the matrix, this is the probability of going from column 1 to row 2, so $P_{21} = 0.20$.</li>
+            <li>Since the column must sum to 1, the probability of remaining in state $s_1$ (functional) is $P_{11} = 1 - P_{21} = 1 - 0.20 = 0.80$.</li>
+        </ul>
+    </li>
+    <li><b>From state $s_2$ (non-functional):</b>
+        <ul>
+            <li>The probability of transitioning to $s_2$ (staying non-functional) is given as 0.35. This is the probability of going from column 2 to row 2, so $P_{22} = 0.35$.</li>
+            <li>Since the column must sum to 1, the probability of transitioning to state $s_1$ (functional) is $P_{12} = 1 - P_{22} = 1 - 0.35 = 0.65$.</li>
+        </ul>
+    </li>
+</ul>
+<p>The resulting transition matrix is:</p>
+\$$ P = \begin{bmatrix} P_{11} & P_{12} \\ P_{21} & P_{22} \end{bmatrix} = \begin{bmatrix} 0.80 & 0.65 \\ 0.20 & 0.35 \end{bmatrix} $$
+<p>The correct option is the one that matches this matrix.</p>
+
+<hr>
+
+<h4>Question 3</h4>
+<p><b>Question:</b> Consider the one step transition probability matrix $P$ for a DTMC. The stationary probability distribution of the DTMC is given as</p>
+<p><b>Explanation:</b></p>
+<p>The stationary distribution $\pi$ of a Markov chain is a probability distribution that does not change as the process evolves. If we start with the stationary distribution, the distribution at any subsequent time will remain the same.</p>
+<p>For a regular (ergodic) Markov chain, as the number of steps $n$ approaches infinity, the n-step transition matrix $P^n$ converges to a matrix where every row is identical. Each of these identical rows is the unique stationary probability distribution $\pi$. </p>
+<p>Therefore, the stationary distribution is given by <b>Each row of the matrix $\lim_{n\to\infty} P^n$</b>.</p>
+
+<hr>
+
+<h4>Question 4</h4>
+<p><b>Question:</b> Consider a DTMC with the one-step transition probability matrix
+\$$ P = \begin{bmatrix} \frac{1}{3} & \frac{2}{3} \\ \frac{2}{3} & \frac{1}{3} \end{bmatrix} $$
+The two-step transition probability matrix is given as</p>
+<p><b>Explanation:</b></p>
+<p>The n-step transition matrix is found by raising the one-step transition matrix $P$ to the power of $n$. For the two-step transition matrix, we need to calculate $P^2$.</p>
+\$$ P^2 = P \times P = \begin{bmatrix} \frac{1}{3} & \frac{2}{3} \\ \frac{2}{3} & \frac{1}{3} \end{bmatrix} \begin{bmatrix} \frac{1}{3} & \frac{2}{3} \\ \frac{2}{3} & \frac{1}{3} \end{bmatrix} $$
+<p>Performing the matrix multiplication:</p>
+\$$ P^2 = \begin{bmatrix} (\frac{1}{3})(\frac{1}{3}) + (\frac{2}{3})(\frac{2}{3}) & (\frac{1}{3})(\frac{2}{3}) + (\frac{2}{3})(\frac{1}{3}) \\ (\frac{2}{3})(\frac{1}{3}) + (\frac{1}{3})(\frac{2}{3}) & (\frac{2}{3})(\frac{2}{3}) + (\frac{1}{3})(\frac{1}{3}) \end{bmatrix} $$
+\$$ P^2 = \begin{bmatrix} \frac{1}{9} + \frac{4}{9} & \frac{2}{9} + \frac{2}{9} \\ \frac{2}{9} + \frac{2}{9} & \frac{4}{9} + \frac{1}{9} \end{bmatrix} $$
+\$$ P^2 = \begin{bmatrix} \frac{5}{9} & \frac{4}{9} \\ \frac{4}{9} & \frac{5}{9} \end{bmatrix} $$
+<p>The correct option is the one that matches this resulting matrix.</p>
+
+<hr>
+
+<h4>Question 5</h4>
+<p><b>Question:</b> Consider a Discrete Time Markov Chain (DTMC) used to model the weather, where the state $W_n$ on day $n$ can belong to one of two possible states $S = \{s_1, s_2\}$, with $s_1$ denoting sunny and $s_2$ denoting rainy. Given a particular day is sunny, the next day can be rainy with a probability 0.25, while when a particular day is rainy, the next day can also be rainy with a probability 0.15. The one step transition probablity matrix for the DTMC is given as</p>
+<p><b>Explanation:</b></p>
+<p><i>Note: There appears to be a typo in the question's text. Based on the options, the second condition should likely be "when a particular day is rainy, the next day can be <b>sunny</b> with a probability 0.15". The explanation below assumes this correction.</i></p>
+<p>Using the same column-stochastic convention as in Question 2 (where columns sum to 1):</p>
+<ul>
+    <li><b>States:</b> $s_1$ = sunny, $s_2$ = rainy.</li>
+    <li><b>From state $s_1$ (sunny):</b>
+        <ul>
+            <li>The probability of transitioning to $s_2$ (rainy) is 0.25. This corresponds to the matrix element $P_{21} = 0.25$.</li>
+            <li>The probability of remaining $s_1$ (sunny) is $P_{11} = 1 - P_{21} = 1 - 0.25 = 0.75$.</li>
+        </ul>
+    </li>
+    <li><b>From state $s_2$ (rainy):</b>
+        <ul>
+            <li>Assuming the correction: the probability of transitioning to $s_1$ (sunny) is 0.15. This corresponds to $P_{12} = 0.15$.</li>
+            <li>The probability of remaining $s_2$ (rainy) is $P_{22} = 1 - P_{12} = 1 - 0.15 = 0.85$.</li>
+        </ul>
+    </li>
+</ul>
+<p>The resulting transition matrix is:</p>
+\$$ P = \begin{bmatrix} P_{11} & P_{12} \\ P_{21} & P_{22} \end{bmatrix} = \begin{bmatrix} 0.75 & 0.15 \\ 0.25 & 0.85 \end{bmatrix} $$
+<p>This matrix corresponds to one of the provided options.</p>
+
+<hr>
+
+<h4>Question 6</h4>
+<p><b>Question:</b> Consider the sparse signal estimation problem below. The values of the non-zero signal coefficients in the sparse solution are...
+\$$ \begin{bmatrix} 1 & 0 & 1 & 0 & 0 & 1 \\ 0 & 1 & 0 & 1 & 1 & 0 \\ 1 & 1 & 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 1 & 1 & 0 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5 \\ x_6 \end{bmatrix} = \begin{bmatrix} 0 \\ 2 \\ 8 \\ 10 \end{bmatrix} $$
+</p>
+<p><b>Explanation:</b></p>
+<p>This question asks for the sparse solution to an underdetermined system of linear equations, $Ax=b$. Let's write out the equations:</p>
+<ol>
+    <li>$x_1 + x_3 + x_6 = 0$</li>
+    <li>$x_2 + x_4 + x_5 = 2$</li>
+    <li>$x_1 + x_2 + x_6 = 8$</li>
+    <li>$x_3 + x_4 + x_5 = 10$</li>
+</ol>
+<p>We can analyze these equations to check for consistency.
+Subtracting Equation (1) from Equation (3):
+\$$ (x_1 + x_2 + x_6) - (x_1 + x_3 + x_6) = 8 - 0 $$
+\$$ x_2 - x_3 = 8 $$
+Now, subtracting Equation (2) from Equation (4):
+\$$ (x_3 + x_4 + x_5) - (x_2 + x_4 + x_5) = 10 - 2 $$
+\$$ x_3 - x_2 = 8 $$
+We have derived two conditions: $x_2 - x_3 = 8$ and $x_3 - x_2 = 8$. The second condition is equivalent to $-(x_2 - x_3) = 8$, or $x_2 - x_3 = -8$.
+This leads to the contradiction $8 = -8$.
+Because the system of equations is inconsistent, there is <b>no solution</b> for $x$. Therefore, the question is flawed as stated, likely due to a typo in the matrix $A$ or the vector $b$.</p>
+
+<hr>
+
+<h4>Question 7</h4>
+<p><b>Question:</b> Consider the one-step transition probability matrix $P$ for a Discrete Time Markov Chain (DTMC) given as
+\$$ P = \begin{bmatrix} \frac{2}{3} & \frac{1}{3} \\ \frac{4}{5} & \frac{1}{5} \end{bmatrix} $$
+The two step transition probability for starting from state 2 and ending in state 1 is given as</p>
+<p><b>Explanation:</b></p>
+<p>This question asks for the probability of transitioning from state 2 to state 1 in two steps. This corresponds to the entry at row 1, column 2 of the two-step transition matrix $P^2$ if using a column-stochastic convention, or the entry at row 2, column 1 if using a row-stochastic convention. Since the rows of $P$ sum to 1, we use the row-stochastic convention where $P_{ij}$ is the probability of moving from state $i$ to state $j$. We need to find the $(P^2)_{21}$ element.</p>
+<p>First, we calculate $P^2$:</p>
+\$$ P^2 = P \times P = \begin{bmatrix} \frac{2}{3} & \frac{1}{3} \\ \frac{4}{5} & \frac{1}{5} \end{bmatrix} \begin{bmatrix} \frac{2}{3} & \frac{1}{3} \\ \frac{4}{5} & \frac{1}{5} \end{bmatrix} $$
+<p>We only need to compute the element in the second row, first column:</p>
+\$$ (P^2)_{21} = (\text{row 2 of P}) \cdot (\text{column 1 of P}) $$
+\$$ (P^2)_{21} = \left(\frac{4}{5}\right)\left(\frac{2}{3}\right) + \left(\frac{1}{5}\right)\left(\frac{4}{5}\right) $$
+\$$ (P^2)_{21} = \frac{8}{15} + \frac{4}{25} $$
+<p>To add these fractions, we find a common denominator, which is 75:</p>
+\$$ (P^2)_{21} = \frac{8 \times 5}{15 \times 5} + \frac{4 \times 3}{25 \times 3} = \frac{40}{75} + \frac{12}{75} = \frac{52}{75} $$
+<p>The correct probability is <b>52/75</b>.</p>
+
+<hr>
+
+<h4>Question 8</h4>
+<p><b>Question:</b> Consider the state sequence $X_0, X_1, \dots, X_n$. The time homogeneous stationary property states that</p>
+<p><b>Explanation:</b></p>
+<p>A Markov chain is <b>time-homogeneous</b> if its transition probabilities are independent of time. This means the probability of transitioning from one state to another does not depend on how many steps the process has already taken. It only depends on the starting and ending states.</p>
+<p>Mathematically, the probability of moving from state $s_i$ to state $s_j$ is the same at any time $n$ as it is at time 0. The option that best represents this is:</p>
+<p><b>$Pr(X_{n+1} = s_j | X_n) = Pr(X_1 = s_j | X_0)$</b></p>
+<p>This equation says that the transition probability at step $n$ is the same as the transition probability at step 0, which is the definition of time-homogeneity. (Note: The property itself is just called time-homogeneity; stationarity refers to the distribution, not the transitions).</p>
+
+<hr>
+
+<h4>Question 9</h4>
+<p><b>Question:</b> Consider the one step transition probability matrix $P$ for a DTMC and the stationary probability distribution $\bar{\pi}$ such that the sum of elements of $\bar{\pi}$ equals one. Then, $\bar{\pi}$ is</p>
+<p><b>Explanation:</b></p>
+<p>The stationary distribution $\pi$ is a probability vector that remains unchanged after being multiplied by the transition matrix $P$.
+<ul>
+    <li>If $\pi$ is a <b>row vector</b>, the condition is $\pi P = \pi$. This can be written as $\pi P = 1 \cdot \pi$, which means $\pi$ is a <b>left eigenvector</b> of $P$ with an eigenvalue of 1. Taking the transpose gives $P^T \pi^T = \pi^T$, meaning $\pi^T$ is a <b>right eigenvector</b> of $P^T$.</li>
+    <li>If $\pi$ is a <b>column vector</b>, the condition is $P \pi = \pi$, which means $\pi$ is a <b>right eigenvector</b> of $P$ with an eigenvalue of 1.</li>
+</ul>
+<p>According to the Perron-Frobenius theorem for stochastic matrices, the eigenvalue 1 is the largest eigenvalue (dominant eigenvalue). The options provided are:</p>
+<ul>
+    <li>Dominant right singular vector of P</li>
+    <li>Belongs to the null-space of P</li>
+    <li>An eigenvector of $P^T$</li>
+    <li>Dominant left singular vector of P</li>
+</ul>
+<p>Based on the analysis, if $\pi$ is treated as a row vector (a common convention), then its transpose $\pi^T$ is a right eigenvector of $P^T$ corresponding to the dominant eigenvalue 1. Therefore, the statement that $\pi$ is related to "<b>An eigenvector of $P^T$</b>" is correct.</p>
+
+<hr>
+
+<h4>Question 10</h4>
+<p><b>Question:</b> The transition probability matrix of a DTMC has the property</p>
+<p><b>Explanation:</b></p>
+<p>In a transition probability matrix $P$, the element $P_{ij}$ represents the probability of moving from state $i$ to state $j$. For any given starting state $i$, the process must transition to one of the possible states in the next step. The sum of the probabilities of all possible transitions from state $i$ must therefore be equal to 1.</p>
+<p>This means that for any row $i$, the sum of all elements in that row must be 1:</p>
+\$$ \sum_{j} P_{ij} = 1 \quad \text{for all } i $$
+<p>This property defines a (right) stochastic matrix, which is the standard convention for transition matrices.</p>
+<p>Therefore, the correct property is: <b>Elements in each row sum to one</b>.</p>
+
+</div></div>
+</body>
+</html>

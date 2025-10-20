@@ -1,0 +1,735 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week4</title>
+
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+      };
+    </script>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 2em;
+        }
+        .mjx-display {
+            margin: 2.5em 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="week" id="week_4"><h1 class="week-title">Week 4</h1><h2>Transcript Explanations</h2><div class="chapter" id="Lecture 17 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 17 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts surrounding Positive Semi-Definite (PSD) and Positive Definite (PD) matrices as presented in the transcript.</p>
+
+<b>1. Definition of Positive Semi-Definite (PSD) and Positive Definite (PD) Matrices</b>
+
+<p>The transcript introduces a special class of square, symmetric matrices known as PSD and PD matrices. The core idea is to define a matrix's "positivity" through a specific quadratic form.</p>
+
+<p>A matrix $ \mathbf{A} $ is required to be <b>symmetric</b> (for real matrices) or <b>Hermitian</b> (for complex matrices). This means:</p>
+<ul>
+    <li>For a real matrix: $ \mathbf{A} = \mathbf{A}^T $ (where $ T $ denotes the transpose).</li>
+    <li>For a complex matrix: $ \mathbf{A} = \mathbf{A}^H $ (where $ H $ denotes the Hermitian transpose, i.e., conjugate transpose). This property is also called Hermitian symmetry.</li>
+</ul>
+
+<p>With this prerequisite, the definitions are as follows:</p>
+
+<p><b>For Real Matrices:</b></p>
+<ul>
+    <li>A matrix $ \mathbf{A} $ is <b>Positive Semi-Definite (PSD)</b> if the quadratic form $ \mathbf{x}^T \mathbf{A} \mathbf{x} $ is non-negative for any non-zero real vector $ \mathbf{x} $.
+    \$$ \mathbf{x}^T \mathbf{A} \mathbf{x} \ge 0 \quad \text{for all } \mathbf{x} $$
+    </li>
+    <li>A matrix $ \mathbf{A} $ is <b>Positive Definite (PD)</b> if the quadratic form is strictly positive for any non-zero real vector $ \mathbf{x} $.
+    \$$ \mathbf{x}^T \mathbf{A} \mathbf{x} > 0 \quad \text{for all } \mathbf{x} \neq \mathbf{0} $$
+    </li>
+</ul>
+
+<p><b>For Complex Matrices:</b></p>
+<ul>
+    <li>A matrix $ \mathbf{A} $ is <b>Positive Semi-Definite (PSD)</b> if:
+    \$$ \mathbf{x}^H \mathbf{A} \mathbf{x} \ge 0 \quad \text{for all } \mathbf{x} $$
+    </li>
+    <li>A matrix $ \mathbf{A} $ is <b>Positive Definite (PD)</b> if:
+    \$$ \mathbf{x}^H \mathbf{A} \mathbf{x} > 0 \quad \text{for all } \mathbf{x} \neq \mathbf{0} $$
+    </li>
+</ul>
+
+<br>
+<b>2. Properties of PSD Matrices</b>
+
+<p>The transcript details several fundamental properties that arise from the definition of PSD matrices. The proofs are shown for the more general complex case (using the Hermitian transpose), which also covers the real case.</p>
+
+<b>Property 1: The Eigenvalues of a PSD Matrix are Real.</b>
+<p>To prove this, consider an eigenvector $\mathbf{u}$ and its corresponding eigenvalue $\lambda$ for a PSD matrix $\mathbf{A}$. The eigenvalue equation is:</p>
+\$$ \mathbf{A}\mathbf{u} = \lambda\mathbf{u} $$
+<p><b>Step 1:</b> Pre-multiply by $\mathbf{u}^H$:</p>
+\$$ \mathbf{u}^H \mathbf{A}\mathbf{u} = \mathbf{u}^H (\lambda\mathbf{u}) = \lambda \mathbf{u}^H \mathbf{u} = \lambda \|\mathbf{u}\|^2 $$
+<p>This gives us our first key equation:</p>
+\$$ \mathbf{u}^H \mathbf{A}\mathbf{u} = \lambda \|\mathbf{u}\|^2 \quad \text{(Equation 1)} $$
+<p><b>Step 2:</b> Take the Hermitian (conjugate transpose) of Equation 1. Since the expression is a scalar, the Hermitian is simply its complex conjugate.</p>
+\$$ (\mathbf{u}^H \mathbf{A}\mathbf{u})^H = (\lambda \|\mathbf{u}\|^2)^H $$
+\$$ \mathbf{u}^H \mathbf{A}^H (\mathbf{u}^H)^H = \lambda^* (\|\mathbf{u}\|^2)^H $$
+<p>Using the properties $(\mathbf{u}^H)^H = \mathbf{u}$ and that the squared norm $\|\mathbf{u}\|^2$ is a real scalar, this simplifies to:</p>
+\$$ \mathbf{u}^H \mathbf{A}^H \mathbf{u} = \lambda^* \|\mathbf{u}\|^2 $$
+<p><b>Step 3:</b> Since $\mathbf{A}$ is a PSD matrix, it is Hermitian by definition ($\mathbf{A} = \mathbf{A}^H$).</p>
+\$$ \mathbf{u}^H \mathbf{A}\mathbf{u} = \lambda^* \|\mathbf{u}\|^2 \quad \text{(Equation 2)} $$
+<p><b>Step 4:</b> Comparing Equation 1 and Equation 2, we see that:</p>
+\$$ \lambda \|\mathbf{u}\|^2 = \lambda^* \|\mathbf{u}\|^2 $$
+<p>Since $\mathbf{u}$ is an eigenvector, it is non-zero, so $\|\mathbf{u}\|^2 > 0$. We can divide by it to get:</p>
+\$$ \lambda = \lambda^* $$
+<p>A number that equals its own complex conjugate must be a real number. Thus, the eigenvalues of a PSD matrix are real.</p>
+
+<b>Property 2: The Eigenvalues of a PSD Matrix are Non-negative.</b>
+<p>This property follows directly from the definition of a PSD matrix and the result from Property 1.</p>
+<p>From the eigenvalue equation, we derived:</p>
+\$$ \mathbf{u}^H \mathbf{A}\mathbf{u} = \lambda \|\mathbf{u}\|^2 $$
+<p>By the definition of a PSD matrix, the left-hand side is non-negative:</p>
+\$$ \mathbf{u}^H \mathbf{A}\mathbf{u} \ge 0 $$
+<p>Therefore, the right-hand side must also be non-negative:</p>
+\$$ \lambda \|\mathbf{u}\|^2 \ge 0 $$
+<p>Since $\|\mathbf{u}\|^2$ is strictly positive for an eigenvector, the eigenvalue $\lambda$ must be non-negative:</p>
+\$$ \lambda \ge 0 $$
+<p><b>Conclusion:</b> The eigenvalues of a PSD matrix are real and greater than or equal to zero. For a <b>PD matrix</b>, the inequality is strict ($ \mathbf{u}^H \mathbf{A}\mathbf{u} > 0 $), which means its eigenvalues are strictly positive ($\lambda > 0$).</p>
+
+<b>Property 3: Eigenvectors Corresponding to Distinct Eigenvalues are Orthogonal.</b>
+<p>Let $(\lambda_1, \mathbf{u}_1)$ and $(\lambda_2, \mathbf{u}_2)$ be two eigenpairs of a PSD matrix $\mathbf{A}$, with $\lambda_1 \neq \lambda_2$.</p>
+\$$ \mathbf{A}\mathbf{u}_1 = \lambda_1\mathbf{u}_1 \quad \text{(Eq. a)} $$
+\$$ \mathbf{A}\mathbf{u}_2 = \lambda_2\mathbf{u}_2 \quad \text{(Eq. b)} $$
+<p><b>Step 1:</b> Pre-multiply Eq. (a) by $\mathbf{u}_2^H$:</p>
+\$$ \mathbf{u}_2^H \mathbf{A}\mathbf{u}_1 = \mathbf{u}_2^H (\lambda_1\mathbf{u}_1) = \lambda_1 (\mathbf{u}_2^H \mathbf{u}_1) \quad \text{(Eq. 3)} $$
+<p><b>Step 2:</b> Pre-multiply Eq. (b) by $\mathbf{u}_1^H$ and take the Hermitian of the entire equation:</p>
+\$$ (\mathbf{u}_1^H \mathbf{A}\mathbf{u}_2)^H = (\lambda_2 \mathbf{u}_1^H \mathbf{u}_2)^H $$
+\$$ \mathbf{u}_2^H \mathbf{A}^H \mathbf{u}_1 = \lambda_2^* (\mathbf{u}_2^H \mathbf{u}_1) $$
+<p>Since $\mathbf{A} = \mathbf{A}^H$ (Hermitian) and $\lambda_2 = \lambda_2^*$ (eigenvalues are real), this becomes:</p>
+\$$ \mathbf{u}_2^H \mathbf{A}\mathbf{u}_1 = \lambda_2 (\mathbf{u}_2^H \mathbf{u}_1) \quad \text{(Eq. 4)} $$
+<p><b>Step 3:</b> The left-hand sides of Eq. 3 and Eq. 4 are identical. Equating their right-hand sides gives:</p>
+\$$ \lambda_1 (\mathbf{u}_2^H \mathbf{u}_1) = \lambda_2 (\mathbf{u}_2^H \mathbf{u}_1) $$
+<p>Rearranging the terms:</p>
+\$$ (\lambda_1 - \lambda_2) (\mathbf{u}_2^H \mathbf{u}_1) = 0 $$
+<p>Since we assumed the eigenvalues are distinct ($\lambda_1 \neq \lambda_2$), the term $(\lambda_1 - \lambda_2)$ is non-zero. Therefore, the other term must be zero:</p>
+\$$ \mathbf{u}_2^H \mathbf{u}_1 = 0 $$
+<p>This proves that the eigenvectors $\mathbf{u}_1$ and $\mathbf{u}_2$ are orthogonal.</p>
+
+<br>
+<b>3. Eigenvalue Decomposition (EVD) for PSD Matrices</b>
+
+<p>The properties above lead to a special form of the Eigenvalue Decomposition (EVD) for PSD matrices.</p>
+<ol>
+    <li>The eigenvectors corresponding to distinct eigenvalues are orthogonal. Even if eigenvalues are repeated, a full set of orthogonal eigenvectors can be constructed.</li>
+    <li>Each eigenvector can be normalized to have a unit norm ($\|\mathbf{u}_i\|=1$).</li>
+</ol>
+<p>Combining these two points, we can form an <b>orthonormal set of eigenvectors</b> $\{\mathbf{u}_1, \mathbf{u}_2, \dots, \mathbf{u}_n\}$ for an $n \times n$ PSD matrix $\mathbf{A}$.</p>
+<p>Let $\mathbf{U}$ be the matrix whose columns are these orthonormal eigenvectors, and $\mathbf{\Lambda}$ be the diagonal matrix of the corresponding real, non-negative eigenvalues.</p>
+\$$ \mathbf{U} = [\mathbf{u}_1 | \mathbf{u}_2 | \dots | \mathbf{u}_n] \quad , \quad \mathbf{\Lambda} = \begin{pmatrix} \lambda_1 & & 0 \\ & \ddots & \\ 0 & & \lambda_n \end{pmatrix} $$
+<p>Because the columns of $\mathbf{U}$ are orthonormal, $\mathbf{U}$ is a <b>unitary matrix</b>. A key property of a unitary matrix is that its inverse is equal to its Hermitian transpose:</p>
+\$$ \mathbf{U}^{-1} = \mathbf{U}^H $$
+<p>The general EVD for any diagonalizable matrix is $\mathbf{A} = \mathbf{U}\mathbf{\Lambda}\mathbf{U}^{-1}$. For a PSD matrix, this simplifies to:</p>
+\$$ \mathbf{A} = \mathbf{U}\mathbf{\Lambda}\mathbf{U}^H $$
+<p>This is the special form of the EVD for PSD (and PD) matrices.</p>
+
+<br>
+<b>4. Cholesky Factorization</b>
+
+<p>The transcript presents a decomposition derived from the EVD, which is related to the Cholesky factorization. This decomposition expresses a PSD matrix as the product of another matrix and its Hermitian transpose.</p>
+
+<p><b>Step 1:</b> Start with the EVD of the PSD matrix $\mathbf{A}$:</p>
+\$$ \mathbf{A} = \mathbf{U}\mathbf{\Lambda}\mathbf{U}^H $$
+<p><b>Step 2:</b> Since all eigenvalues $\lambda_i$ are non-negative, we can define a matrix $\mathbf{\Lambda}^{1/2}$ as the diagonal matrix containing the square roots of the eigenvalues:</p>
+\$$ \mathbf{\Lambda}^{1/2} = \begin{pmatrix} \sqrt{\lambda_1} & & 0 \\ & \ddots & \\ 0 & & \sqrt{\lambda_n} \end{pmatrix} $$
+<p>The matrix $\mathbf{\Lambda}$ can be written as:</p>
+\$$ \mathbf{\Lambda} = \mathbf{\Lambda}^{1/2} \mathbf{\Lambda}^{1/2} $$
+<p><b>Step 3:</b> Substitute this back into the EVD equation:</p>
+\$$ \mathbf{A} = \mathbf{U} (\mathbf{\Lambda}^{1/2} \mathbf{\Lambda}^{1/2}) \mathbf{U}^H $$
+<p><b>Step 4:</b> Group the terms as follows. Since $\mathbf{\Lambda}^{1/2}$ is a real diagonal matrix, it is its own Hermitian ($(\mathbf{\Lambda}^{1/2})^H = \mathbf{\Lambda}^{1/2}$).</p>
+\$$ \mathbf{A} = (\mathbf{U} \mathbf{\Lambda}^{1/2}) (\mathbf{\Lambda}^{1/2} \mathbf{U}^H) = (\mathbf{U} \mathbf{\Lambda}^{1/2}) (\mathbf{\Lambda}^{1/2})^H \mathbf{U}^H $$
+<p>Using the property $(\mathbf{B}\mathbf{C})^H = \mathbf{C}^H \mathbf{B}^H$, we can write this as:</p>
+\$$ \mathbf{A} = (\mathbf{U} \mathbf{\Lambda}^{1/2}) (\mathbf{U} \mathbf{\Lambda}^{1/2})^H $$
+<p>If we define a new matrix $\tilde{\mathbf{A}} = \mathbf{U} \mathbf{\Lambda}^{1/2}$, then any PSD matrix $\mathbf{A}$ can be decomposed as:</p>
+\$$ \mathbf{A} = \tilde{\mathbf{A}} \tilde{\mathbf{A}}^H $$
+<p>This result is called the <b>Cholesky factorization</b>. It is conceptually similar to writing a non-negative real number $x$ as the product of its square root with itself ($x = \sqrt{x} \cdot \sqrt{x}$). For matrices, this becomes the product of a matrix and its Hermitian transpose. This factorization is widely used in numerical linear algebra, statistics, and machine learning.</p>
+</div></div><div class="chapter" id="Lecture 18 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 18 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts from the transcript, focusing on Positive Semi-Definite (PSD) and Positive Definite (PD) matrices, their properties, and their application in the context of covariance matrices for random vectors.</p>
+
+<h3>1. Positive Semi-Definite (PSD) and Positive Definite (PD) Matrices</h3>
+<p>The transcript begins by defining the terms PSD (Positive Semi-Definite) and PD (Positive Definite) and then tests a specific matrix to see which category it falls into.</p>
+<p>A symmetric matrix $\mathbf{A}$ is:</p>
+<ul>
+    <li><b>Positive Semi-Definite (PSD)</b> if the quadratic form $\mathbf{x}^T \mathbf{A} \mathbf{x} \ge 0$ for every non-zero vector $\mathbf{x}$. The equality $\mathbf{x}^T \mathbf{A} \mathbf{x} = 0$ is allowed for some non-zero $\mathbf{x}$.</li>
+    <li><b>Positive Definite (PD)</b> if the quadratic form $\mathbf{x}^T \mathbf{A} \mathbf{x} > 0$ for every non-zero vector $\mathbf{x}$.</li>
+</ul>
+
+<h4>Example: Testing a 2x2 Matrix</h4>
+<p>The transcript analyzes the matrix:</p>
+\$$ \mathbf{A} = \begin{pmatrix} 1 & 3 \\ 3 & 9 \end{pmatrix} $$
+<p>To determine if $\mathbf{A}$ is PSD or PD, we compute the quadratic form $\mathbf{x}^T \mathbf{A} \mathbf{x}$ for an arbitrary 2-dimensional vector $\mathbf{x} = \begin{pmatrix} x_1 \\ x_2 \end{pmatrix}$.</p>
+\$$ \mathbf{x}^T \mathbf{A} \mathbf{x} = \begin{pmatrix} x_1 & x_2 \end{pmatrix} \begin{pmatrix} 1 & 3 \\ 3 & 9 \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} $$
+<p>First, multiplying the row vector by the matrix:</p>
+\$$ \begin{pmatrix} x_1 & x_2 \end{pmatrix} \begin{pmatrix} 1 & 3 \\ 3 & 9 \end{pmatrix} = \begin{pmatrix} (x_1 + 3x_2) & (3x_1 + 9x_2) \end{pmatrix} $$
+<p>Next, multiplying this result by the column vector:</p>
+\$$ \begin{pmatrix} (x_1 + 3x_2) & (3x_1 + 9x_2) \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} = x_1(x_1 + 3x_2) + x_2(3x_1 + 9x_2) $$
+<p>This expands to:</p>
+\$$ x_1^2 + 3x_1x_2 + 3x_1x_2 + 9x_2^2 = x_1^2 + 6x_1x_2 + 9x_2^2 $$
+<p>This expression can be factored into a perfect square:</p>
+\$$ \mathbf{x}^T \mathbf{A} \mathbf{x} = (x_1 + 3x_2)^2 $$
+<p>Since the result is a square, it is always greater than or equal to zero ($\ge 0$). Importantly, the expression can be equal to zero for non-zero vectors. For instance, if $x_1 = -3x_2$, then $\mathbf{x}^T \mathbf{A} \mathbf{x} = 0$. A non-zero vector satisfying this is $\mathbf{x} = \begin{pmatrix} -3 \\ 1 \end{pmatrix}$. Because the quadratic form can be zero for non-zero vectors, the matrix $\mathbf{A}$ is <b>Positive Semi-Definite (PSD) but not Positive Definite (PD)</b>.</p>
+
+<h3>2. Eigenvalues and Eigenvectors of the PSD Matrix</h3>
+
+<h4>Finding the Eigenvalues</h4>
+<p>A key property of PSD and PD matrices is related to their eigenvalues. The eigenvalues ($\lambda$) are found by solving the characteristic equation $\det(\mathbf{A} - \lambda\mathbf{I}) = 0$.</p>
+\$$ \det\left(\begin{pmatrix} 1 & 3 \\ 3 & 9 \end{pmatrix} - \lambda \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}\right) = 0 $$
+\$$ \det\begin{pmatrix} 1-\lambda & 3 \\ 3 & 9-\lambda \end{pmatrix} = 0 $$
+<p>Expanding the determinant:</p>
+\$$ (1-\lambda)(9-\lambda) - (3)(3) = 0 $$
+\$$ 9 - \lambda - 9\lambda + \lambda^2 - 9 = 0 $$
+\$$ \lambda^2 - 10\lambda = 0 $$
+\$$ \lambda(\lambda - 10) = 0 $$
+<p>The eigenvalues are $\lambda_1 = 10$ and $\lambda_2 = 0$.</p>
+<p><b>Key Property Connection:</b> The eigenvalues of a symmetric matrix are always real. For a PSD matrix, all eigenvalues must be non-negative ($\lambda \ge 0$). For a PD matrix, all eigenvalues must be strictly positive ($\lambda > 0$). Since one of the eigenvalues is 0, this confirms that the matrix $\mathbf{A}$ is PSD but not PD.</p>
+
+<h4>Finding the Eigenvectors</h4>
+<p>Eigenvectors are found by finding the null space of $\mathbf{A} - \lambda\mathbf{I}$ for each eigenvalue.</p>
+<p><b>For $\lambda_1 = 10$:</b></p>
+<p>We solve $(\mathbf{A} - 10\mathbf{I})\mathbf{x} = \mathbf{0}$:</p>
+\$$ \begin{pmatrix} 1-10 & 3 \\ 3 & 9-10 \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} = \begin{pmatrix} -9 & 3 \\ 3 & -1 \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix} $$
+<p>Both rows give the same equation: $3x_1 - x_2 = 0$, or $x_2 = 3x_1$. An eigenvector is of the form $\begin{pmatrix} k \\ 3k \end{pmatrix}$. Choosing $k=1$, we get the eigenvector $\mathbf{x_1} = \begin{pmatrix} 1 \\ 3 \end{pmatrix}$. The corresponding unit-norm eigenvector $\mathbf{u_1}$ is:</p>
+\$$ \mathbf{u_1} = \frac{\mathbf{x_1}}{||\mathbf{x_1}||} = \frac{1}{\sqrt{1^2 + 3^2}} \begin{pmatrix} 1 \\ 3 \end{pmatrix} = \frac{1}{\sqrt{10}} \begin{pmatrix} 1 \\ 3 \end{pmatrix} $$
+
+<p><b>For $\lambda_2 = 0$:</b></p>
+<p>We solve $(\mathbf{A} - 0\mathbf{I})\mathbf{x} = \mathbf{A}\mathbf{x} = \mathbf{0}$. This means the eigenvector corresponding to $\lambda=0$ lies in the null space of $\mathbf{A}$.</p>
+\$$ \begin{pmatrix} 1 & 3 \\ 3 & 9 \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix} $$
+<p>This gives the equation $x_1 + 3x_2 = 0$, or $x_1 = -3x_2$. An eigenvector is of the form $\begin{pmatrix} -3k \\ k \end{pmatrix}$. Choosing $k=1$, we get $\mathbf{x_2} = \begin{pmatrix} -3 \\ 1 \end{pmatrix}$. The corresponding unit-norm eigenvector $\mathbf{u_2}$ is:</p>
+\$$ \mathbf{u_2} = \frac{\mathbf{x_2}}{||\mathbf{x_2}||} = \frac{1}{\sqrt{(-3)^2 + 1^2}} \begin{pmatrix} -3 \\ 1 \end{pmatrix} = \frac{1}{\sqrt{10}} \begin{pmatrix} -3 \\ 1 \end{pmatrix} $$
+
+<h4>Orthogonality of Eigenvectors and Eigenvalue Decomposition</h4>
+<p>For a symmetric matrix (including PSD matrices), eigenvectors corresponding to distinct eigenvalues are orthogonal. Let's verify this:</p>
+\$$ \mathbf{u_1}^T \mathbf{u_2} = \left(\frac{1}{\sqrt{10}} \begin{pmatrix} 1 & 3 \end{pmatrix}\right) \left(\frac{1}{\sqrt{10}} \begin{pmatrix} -3 \\ 1 \end{pmatrix}\right) = \frac{1}{10} (1 \cdot (-3) + 3 \cdot 1) = \frac{1}{10} (-3+3) = 0 $$
+<p>The eigenvalue decomposition of a symmetric matrix is $\mathbf{A} = \mathbf{U\Lambda U}^T$, where $\mathbf{U}$ is the matrix whose columns are the orthonormal eigenvectors and $\mathbf{\Lambda}$ is the diagonal matrix of eigenvalues.</p>
+\$$ \mathbf{U} = \begin{pmatrix} \mathbf{u_1} & \mathbf{u_2} \end{pmatrix} = \frac{1}{\sqrt{10}} \begin{pmatrix} 1 & -3 \\ 3 & 1 \end{pmatrix} $$
+\$$ \mathbf{\Lambda} = \begin{pmatrix} \lambda_1 & 0 \\ 0 & \lambda_2 \end{pmatrix} = \begin{pmatrix} 10 & 0 \\ 0 & 0 \end{pmatrix} $$
+<p>The matrix $\mathbf{U}$ is unitary (or orthogonal for real matrices), meaning $\mathbf{U}^T\mathbf{U} = \mathbf{I}$ and $\mathbf{U}^T = \mathbf{U}^{-1}$.</p>
+
+<h3>3. Application: Covariance Matrices and Whitening</h3>
+
+<h4>Covariance Matrices are PSD</h4>
+<p>A very important application of PSD matrices is in the study of random vectors. The covariance matrix $\mathbf{R}$ of a zero-mean random vector $\mathbf{z}$ is defined as:</p>
+\$$ \mathbf{R} = E[\mathbf{z}\mathbf{z}^T] $$
+<p>The transcript proves that any covariance matrix $\mathbf{R}$ is always PSD. The proof involves checking the quadratic form $\mathbf{x}^T \mathbf{R} \mathbf{x}$ for an arbitrary non-zero vector $\mathbf{x}$:</p>
+<p>$\mathbf{x}^T \mathbf{R} \mathbf{x} = \mathbf{x}^T E[\mathbf{z}\mathbf{z}^T] \mathbf{x}$</p>
+<p>Since $\mathbf{x}$ is a constant vector, we can move it inside the expectation:</p>
+<p>$\mathbf{x}^T \mathbf{R} \mathbf{x} = E[\mathbf{x}^T \mathbf{z}\mathbf{z}^T \mathbf{x}]$</p>
+<p>Note that $\mathbf{x}^T\mathbf{z}$ is a scalar. The term $\mathbf{z}^T\mathbf{x}$ is its transpose, which is the same scalar. Therefore, $(\mathbf{x}^T\mathbf{z})(\mathbf{z}^T\mathbf{x}) = (\mathbf{x}^T\mathbf{z})^2$.</p>
+<p>$\mathbf{x}^T \mathbf{R} \mathbf{x} = E[(\mathbf{x}^T\mathbf{z})^2]$</p>
+<p>The quantity $(\mathbf{x}^T\mathbf{z})^2$ is a squared real number, so it is always non-negative. The expected value of a non-negative random variable is also non-negative. Thus:</p>
+\$$ \mathbf{x}^T \mathbf{R} \mathbf{x} \ge 0 $$
+<p>This proves by definition that $\mathbf{R}$ is a PSD matrix.</p>
+
+<h4>Cholesky Decomposition, Whitening, and Coloring</h4>
+<p>Since $\mathbf{R}$ is PSD, it has a Cholesky-like decomposition (or "square root"):</p>
+\$$ \mathbf{R} = \mathbf{R}_{\text{tilde}} \mathbf{R}_{\text{tilde}}^T $$
+<p>This property is used for two important processes in signal processing and statistics:</p>
+
+<p><b>1. Whitening: From Correlated (Colored) to Uncorrelated (White) Noise</b></p>
+<p>Given a random vector $\mathbf{z}$ with covariance $\mathbf{R}$, we can create a new vector $\tilde{\mathbf{z}}$ whose components are uncorrelated and have unit variance. This new vector is called "white noise," and the process is called <b>whitening</b>.</p>
+\$$ \tilde{\mathbf{z}} = \mathbf{R}_{\text{tilde}}^{-1} \mathbf{z} $$
+<p>The covariance of $\tilde{\mathbf{z}}$ is the identity matrix:</p>
+\$$ E[\tilde{\mathbf{z}}\tilde{\mathbf{z}}^T] = E[(\mathbf{R}_{\text{tilde}}^{-1} \mathbf{z})(\mathbf{R}_{\text{tilde}}^{-1} \mathbf{z})^T] = \mathbf{R}_{\text{tilde}}^{-1} E[\mathbf{z}\mathbf{z}^T] (\mathbf{R}_{\text{tilde}}^{-1})^T $$
+\$$ = \mathbf{R}_{\text{tilde}}^{-1} (\mathbf{R}) (\mathbf{R}_{\text{tilde}}^T)^{-1} = \mathbf{R}_{\text{tilde}}^{-1} (\mathbf{R}_{\text{tilde}} \mathbf{R}_{\text{tilde}}^T) (\mathbf{R}_{\text{tilde}}^T)^{-1} = \mathbf{I} $$
+<p>An identity covariance matrix means the off-diagonal elements are zero (uncorrelated components) and the diagonal elements are one (unit variance). If the original vector $\mathbf{z}$ is Gaussian, the components of the whitened vector $\tilde{\mathbf{z}}$ are not just uncorrelated but also independent.</p>
+
+<p><b>2. Coloring: From White Noise to Colored Noise</b></p>
+<p>The inverse process is used to generate a random vector with a specific, arbitrary covariance matrix $\mathbf{R}$. This is useful in simulations. We start with a "white" random vector $\tilde{\mathbf{z}}$ (components are IID, mean 0, variance 1), which is easy to generate, and "color" it.</p>
+\$$ \mathbf{z} = \mathbf{R}_{\text{tilde}} \tilde{\mathbf{z}} $$
+<p>The covariance of this new vector $\mathbf{z}$ is the desired matrix $\mathbf{R}$:</p>
+\$$ E[\mathbf{z}\mathbf{z}^T] = E[(\mathbf{R}_{\text{tilde}} \tilde{\mathbf{z}})(\mathbf{R}_{\text{tilde}} \tilde{\mathbf{z}})^T] = \mathbf{R}_{\text{tilde}} E[\tilde{\mathbf{z}}\tilde{\mathbf{z}}^T] \mathbf{R}_{\text{tilde}}^T $$
+\$$ = \mathbf{R}_{\text{tilde}} (\mathbf{I}) \mathbf{R}_{\text{tilde}}^T = \mathbf{R}_{\text{tilde}} \mathbf{R}_{\text{tilde}}^T = \mathbf{R} $$
+<p>This demonstrates how the properties of PSD matrices provide a powerful tool for manipulating and generating random vectors with specific statistical properties.</p>
+
+</div></div><div class="chapter" id="Lecture 19 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 19 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of Principal Component Analysis (PCA), a fundamental technique in machine learning for dimensionality reduction and feature extraction. The explanation follows the concepts, theories, and formulas presented in the transcript.</p>
+
+<h3>1. Introduction to Principal Component Analysis (PCA)</h3>
+<p><b>Principal Component Analysis (PCA)</b> is an important application of linear algebra concepts, particularly those related to positive semi-definite matrices, eigenvalues, and eigenvectors. It is one of the most widely used techniques in machine learning for addressing the challenges posed by high-dimensional data.</p>
+
+<p>
+    <b>The Problem of High Dimensionality:</b>
+    <br>
+    In many real-world applications, such as facial image recognition, data vectors can have an extremely high number of dimensions. For instance, a 256x256 pixel image, when flattened into a vector, has $256^2 = 65,536$ dimensions. Analyzing and processing such high-dimensional data is computationally expensive and complex. This is often referred to as the "curse of dimensionality."
+</p>
+<p>
+    <b>The Goal of PCA:</b>
+    <br>
+    PCA aims to simplify this complexity by reducing the number of dimensions in the data. This process is known as <b>dimensionality reduction</b> or <b>feature extraction</b>. The core idea is to transform the data into a new, lower-dimensional space while retaining as much of the original information as possible. "Information" in this context is quantified by the variance in the data. PCA identifies the directions (principal components) along which the data has the largest variance or "spread."
+</p>
+
+<h3>2. The Intuition Behind PCA</h3>
+<p>
+    Imagine a two-dimensional dataset that is spread out like an ellipse.
+    <ul>
+        <li>There is one direction along which the data has the <b>most spread</b> (largest variance). This is the major axis of the ellipse.</li>
+        <li>Perpendicular to this, there is another direction along which the data has a <b>smaller spread</b> (smaller variance). This is the minor axis.</li>
+    </ul>
+    PCA identifies these directions of varying spread. The direction with the largest variance is the most "important" because it captures the most significant structure in the data. By projecting the data onto this single direction, we can reduce the dimensionality from two to one while preserving the most crucial information.
+</p>
+<p>
+    The key properties of these directions, called <b>principal directions</b>, are:
+    <ol>
+        <li>They are ordered by the amount of variance they capture, from largest to smallest.</li>
+        <li>They are orthogonal (perpendicular) to each other. In a statistical sense, this means the resulting principal components are <b>uncorrelated</b>.</li>
+    </ol>
+</p>
+<p>The projection of the original data onto these principal directions yields the <b>principal components</b>.</p>
+
+<h3>3. The Mathematical Procedure of PCA</h3>
+<p>The process of performing PCA involves several key steps, starting from a raw dataset and ending with a lower-dimensional representation.</p>
+
+<p><b>Step 1: Data Preparation (Mean Centering)</b></p>
+<p>
+    Let the dataset consist of $n$ data points $\{\tilde{\mathbf{x}}_1, \tilde{\mathbf{x}}_2, \dots, \tilde{\mathbf{x}}_n\}\$, where each data point $\tilde{\mathbf{x}}_i$ is a vector of size $M \times 1$.
+</p>
+<ol>
+    <li>
+        <b>Calculate the Sample Mean:</b> First, compute the mean vector $\bar{\mu}$ of the dataset.
+        \$$ \bar{\mu} = \frac{1}{n} \sum_{i=1}^{n} \tilde{\mathbf{x}}_i $$
+    </li>
+    <li>
+        <b>Center the Data:</b> Subtract the mean vector from each data point to create a new dataset $\{\bar{\mathbf{x}}_1, \bar{\mathbf{x}}_2, \dots, \bar{\mathbf{x}}_n\}\$ with a zero mean.
+        \$$ \bar{\mathbf{x}}_i = \tilde{\mathbf{x}}_i - \bar{\mu} $$
+    </li>
+</ol>
+<p>This step is crucial because PCA is designed to find the directions of maximum variance, and variance is measured relative to the mean.</p>
+
+<p><b>Step 2: Compute the Covariance Matrix</b></p>
+<p>
+    The next step is to estimate the sample covariance matrix, denoted by $\mathbf{R}$, from the mean-centered data. The covariance matrix describes the relationships between the different dimensions in the data.
+    \$$ \mathbf{R} = \frac{1}{n-1} \sum_{i=1}^{n} \bar{\mathbf{x}}_i \bar{\mathbf{x}}_i^T $$
+</p>
+<p>The covariance matrix $\mathbf{R}$ has important properties:</p>
+<ul>
+    <li>It is a <b>positive semi-definite (PSD)</b> matrix.</li>
+    <li>This implies all its eigenvalues $\lambda_i$ are non-negative ($\lambda_i \ge 0$).</li>
+    <li>Eigenvectors corresponding to distinct eigenvalues are orthogonal.</li>
+</ul>
+
+<p><b>Step 3: Finding the Principal Directions via Optimization</b></p>
+<p>The first principal direction, $\bar{\mathbf{v}}_1$, is the direction in space that maximizes the variance of the projected data. Let's formalize this.</p>
+<ol>
+    <li>
+        <b>Projection and Variance:</b> The projection of a data point $\bar{\mathbf{x}}_i$ onto a direction vector $\bar{\mathbf{v}}_1$ is given by the inner product $\bar{\mathbf{v}}_1^T \bar{\mathbf{x}}_i$. The variance of all these projections is:
+        \$$ \text{Variance} = \frac{1}{n-1} \sum_{i=1}^{n} (\bar{\mathbf{v}}_1^T \bar{\mathbf{x}}_i)^2 $$
+        This expression can be simplified as follows:
+        \$$ \text{Variance} = \frac{1}{n-1} \sum_{i=1}^{n} (\bar{\mathbf{v}}_1^T \bar{\mathbf{x}}_i)(\bar{\mathbf{x}}_i^T \bar{\mathbf{v}}_1) = \bar{\mathbf{v}}_1^T \left( \frac{1}{n-1} \sum_{i=1}^{n} \bar{\mathbf{x}}_i \bar{\mathbf{x}}_i^T \right) \bar{\mathbf{v}}_1 = \bar{\mathbf{v}}_1^T \mathbf{R} \bar{\mathbf{v}}_1 $$
+    </li>
+    <li>
+        <b>The Optimization Problem:</b> We want to find the vector $\bar{\mathbf{v}}_1$ that maximizes this variance, with the constraint that $\bar{\mathbf{v}}_1$ must be a unit vector (i.e., its norm is 1). This constraint is necessary because otherwise, we could make the variance arbitrarily large just by increasing the length of $\bar{\mathbf{v}}_1$.
+        <p>
+            Maximize: $\bar{\mathbf{v}}_1^T \mathbf{R} \bar{\mathbf{v}}_1$
+            <br>
+            Subject to: $\Vert\bar{\mathbf{v}}_1\Vert^2 = \bar{\mathbf{v}}_1^T \bar{\mathbf{v}}_1 = 1$
+        </p>
+    </li>
+    <li>
+        <b>Solving with Lagrange Multipliers:</b> This constrained optimization problem can be solved using the method of Lagrange multipliers. The Lagrangian function $\mathcal{L}$ is:
+        \$$ \mathcal{L}(\bar{\mathbf{v}}_1, \lambda) = \bar{\mathbf{v}}_1^T \mathbf{R} \bar{\mathbf{v}}_1 + \lambda (1 - \bar{\mathbf{v}}_1^T \bar{\mathbf{v}}_1) $$
+        To find the maximum, we take the gradient of $\mathcal{L}$ with respect to $\bar{\mathbf{v}}_1$ and set it to zero:
+        \$$ \nabla_{\bar{\mathbf{v}}_1} \mathcal{L} = 2\mathbf{R}\bar{\mathbf{v}}_1 - 2\lambda\bar{\mathbf{v}}_1 = 0 $$
+        This simplifies to the fundamental eigenvalue equation:
+        \$$ \mathbf{R}\bar{\mathbf{v}}_1 = \lambda\bar{\mathbf{v}}_1 $$
+    </li>
+    <li>
+        <b>The Solution:</b> This equation shows that the direction $\bar{\mathbf{v}}_1$ must be an <b>eigenvector</b> of the covariance matrix $\mathbf{R}$, and $\lambda$ is its corresponding <b>eigenvalue</b>.
+        <p>
+            To determine which eigenvector to choose, we substitute this result back into the variance formula:
+            \$$ \text{Variance} = \bar{\mathbf{v}}_1^T \mathbf{R} \bar{\mathbf{v}}_1 = \bar{\mathbf{v}}_1^T (\lambda \bar{\mathbf{v}}_1) = \lambda (\bar{\mathbf{v}}_1^T \bar{\mathbf{v}}_1) = \lambda(1) = \lambda $$
+            This reveals that the variance along an eigenvector is equal to its corresponding eigenvalue. Therefore, to maximize the variance, we must choose the eigenvector $\bar{\mathbf{v}}_1$ corresponding to the <b>largest eigenvalue</b> of $\mathbf{R}$.
+        </p>
+    </li>
+</ol>
+<p>
+    This logic extends to finding subsequent principal directions. The second principal direction, $\bar{\mathbf{v}}_2$, is the eigenvector corresponding to the second-largest eigenvalue, and so on. If we want to reduce our data to $P$ dimensions, we select the $P$ eigenvectors $\{\bar{\mathbf{v}}_1, \bar{\mathbf{v}}_2, \dots, \bar{\mathbf{v}}_P\}$ that correspond to the $P$ largest eigenvalues of $\mathbf{R}$.
+</p>
+
+<h3>4. Dimensionality Reduction with Principal Components</h3>
+<p>Once the principal directions (eigenvectors) are identified, we can project the original data onto this new, lower-dimensional basis.</p>
+
+<p>
+    <b>Transforming a Single Data Point:</b>
+    <br>
+    To obtain the principal components for a single mean-centered data point $\bar{\mathbf{x}}_i$, we project it onto each of the chosen principal directions.
+    \$$
+    \begin{pmatrix}
+    \text{1st principal component} \\
+    \text{2nd principal component} \\
+    \vdots \\
+    \text{P-th principal component}
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+    \bar{\mathbf{v}}_1^T \bar{\mathbf{x}}_i \\
+    \bar{\mathbf{v}}_2^T \bar{\mathbf{x}}_i \\
+    \vdots \\
+    \bar{\mathbf{v}}_P^T \bar{\mathbf{x}}_i
+    \end{pmatrix}
+    $$
+    This can be written compactly in matrix form. Let $\mathbf{V}$ be a matrix whose columns are the $P$ chosen eigenvectors: $\mathbf{V} = [\bar{\mathbf{v}}_1, \bar{\mathbf{v}}_2, \dots, \bar{\mathbf{v}}_P]\$. The new, reduced-dimension vector $\check{\mathbf{x}}_i$ is:
+    \$$ \check{\mathbf{x}}_i = \mathbf{V}^T \bar{\mathbf{x}}_i $$
+    If the original vector $\bar{\mathbf{x}}_i$ was $M \times 1$ and $\mathbf{V}$ is $M \times P$, the new vector $\check{\mathbf{x}}_i$ is $P \times 1$. Since we choose $P \ll M$, we have achieved dimensionality reduction.
+</p>
+
+<p>
+    <b>Transforming the Entire Dataset:</b>
+    <br>
+    We can apply this transformation to the entire dataset at once. Let $\mathbf{X} = [\bar{\mathbf{x}}_1, \bar{\mathbf{x}}_2, \dots, \bar{\mathbf{x}}_n]$ be the $M \times n$ matrix of mean-centered data. The transformed dataset $\check{\mathbf{X}}$ is:
+    \$$ \check{\mathbf{X}} = \mathbf{V}^T \mathbf{X} $$
+    The resulting matrix $\check{\mathbf{X}}$ has dimensions $P \times n$, containing the principal components for all data points. This is the final, lower-dimensional representation of the dataset.
+</p>
+</div></div><div class="chapter" id="Lecture 20 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 20 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the <b>Eigenfaces algorithm</b>, a significant application of linear algebra, specifically Principal Component Analysis (PCA), in the field of machine learning for face recognition.</p>
+
+<h3>1. Introduction to Eigenfaces</h3>
+<p>The Eigenfaces algorithm is a foundational method for computer-based face recognition. It treats face recognition as a dimensionality reduction problem. Instead of working with high-dimensional image data directly, it identifies a lower-dimensional subspace, often called "face space," that captures the most significant variations among a set of training face images. The core idea is that any face image can be approximated by a combination of a set of basis images, known as "eigenfaces," which are the principal components of the training set of faces.</p>
+
+<h3>2. Representing Face Images Mathematically</h3>
+<p>Before applying the algorithm, each face image must be converted into a suitable mathematical format.</p>
+<p>
+  <b>Step 1: Image as a Matrix</b><br>
+  A grayscale digital image is a grid of pixels, where each pixel has an intensity value. This can be represented as a matrix. Let's say a facial image has $m_r$ rows and $m_c$ columns of pixels. The total number of pixels in the image is:
+  \$$ m = m_r \times m_c $$
+  The $i^{th}$ image in a dataset can be represented by a matrix $X_i$ of size $m_r \times m_c$.
+  \$$ X_i = \begin{bmatrix} x_{i,1} & x_{i,2} & \cdots & x_{i,m_c} \end{bmatrix} $$
+  Here, $x_{i,j}$ represents the $j^{th}$ column of the $i^{th}$ image matrix.
+</p>
+<p>
+  <b>Step 2: Vectorization (Image as a Vector)</b><br>
+  To apply linear algebra techniques like PCA, the 2D image matrix is converted into a 1D column vector. This is achieved by stacking the columns of the image matrix one after another. This process is also known as the <b>vec</b> operation.
+  \$$ \tilde{x}_i = \text{vec}(X_i) = \begin{bmatrix} x_{i,1} \\ x_{i,2} \\ \vdots \\ x_{i,m_c} \end{bmatrix} $$
+  The resulting vector $\tilde{x}_i$ has a dimension of $m \times 1$. For example, a 256x256 pixel image becomes a single vector with $256 \times 256 = 65,536$ elements. This vector represents the $i^{th}$ face in the high-dimensional image space.
+</p>
+
+<h3>3. The Eigenfaces Algorithm: Procedure</h3>
+<p>The algorithm can be divided into two main phases: a training phase where the "face space" is created from a database of known faces, and a recognition phase where a new face is identified.</p>
+
+<h4>Phase 1: Training - Creating the Face Space</h4>
+<p>Assume we have a training database of $N$ face images, represented by the vectors $\tilde{x}_1, \tilde{x}_2, \dots, \tilde{x}_N$.</p>
+<p>
+  <b>1. Calculate the Mean Face:</b><br>
+  The first step is to compute the average face vector, $\bar{\mu}$, which represents a "typical" face from the training set.
+  \$$ \bar{\mu} = \frac{1}{N} \sum_{i=1}^{N} \tilde{x}_i $$
+</p>
+<p>
+  <b>2. Center the Face Vectors:</b><br>
+  Subtract the mean face from each individual face vector. This centers the data around the origin, highlighting the unique variations of each face.
+  \$$ \bar{x}_i = \tilde{x}_i - \bar{\mu} $$
+</p>
+<p>
+  <b>3. Compute the Covariance Matrix:</b><br>
+  Next, compute the sample covariance matrix $R$ of the centered face vectors. This $m \times m$ matrix describes how the pixel values vary together across the dataset.
+  \$$ R = \frac{1}{N-1} \sum_{i=1}^{N} \bar{x}_i \bar{x}_i^T $$
+  (Note: The transcript mentions $\bar{x}_i^H$ or Hermitian transpose, which is equivalent to the standard transpose $\bar{x}_i^T$ for real-valued pixel data.)
+</p>
+<p>
+  <b>4. Eigenvalue Decomposition of the Covariance Matrix:</b><br>
+  The core of the method is to find the eigenvectors and eigenvalues of the large covariance matrix $R$.
+  \$$ R = V \Lambda V^T $$
+  <ul>
+    <li><b>Eigenvectors ($V$):</b> The columns of the matrix $V$ are the eigenvectors of $R$. When reshaped back into an $m_r \times m_c$ grid, these eigenvectors look like ghostly face-like images, which is why they are called <b>"eigenfaces"</b>. They form an orthonormal basis for the "face space."</li>
+    <li><b>Eigenvalues ($\Lambda$):</b> The diagonal matrix $\Lambda$ contains the eigenvalues. Each eigenvalue indicates the amount of variance in the data captured by its corresponding eigenvector (eigenface).</li>
+  </ul>
+</p>
+<p>
+  <b>5. Select the Principal Components:</b><br>
+  The eigenfaces are sorted in descending order based on their corresponding eigenvalues. The eigenfaces with the largest eigenvalues capture the most significant variations in the set of face images. We select the top $p$ eigenfaces (where $p \ll m$) to form a lower-dimensional basis.
+  \$$ V_p = [\bar{v}_1, \bar{v}_2, \dots, \bar{v}_p] $$
+  This $m \times p$ matrix $V_p$ defines the principal directions of our "face space."
+</p>
+<p>
+  <b>6. Project Known Faces onto the Face Space:</b><br>
+  Each centered face vector $\bar{x}_i$ from the database is projected onto this new, lower-dimensional face space. This projection results in a <b>weight vector</b> $\bar{w}_i$ for each face.
+  \$$ \bar{w}_i = V_p^T \bar{x}_i $$
+  Each weight vector $\bar{w}_i$ is a compact, $p \times 1$ representation of the $i^{th}$ face. The set of weight vectors $\{\bar{w}_1, \bar{w}_2, \dots, \bar{w}_N\}$ constitutes our trained database of known faces.
+</p>
+
+<h4>Phase 2: Recognition - Identifying a New Face</h4>
+<p>Given a new, unidentified face image, represented by the vector $\tilde{x}$, the goal is to determine which person from the database it matches.</p>
+<p>
+  <b>1. Pre-process the New Image:</b><br>
+  The new image vector is centered by subtracting the same mean face $\bar{\mu}$ calculated during training.
+  \$$ \bar{x} = \tilde{x} - \bar{\mu} $$
+</p>
+<p>
+  <b>2. Project onto Face Space:</b><br>
+  The centered new face vector is projected onto the same face space to obtain its corresponding weight vector, $\bar{w}$.
+  \$$ \bar{w} = V_p^T \bar{x} $$
+</p>
+<p>
+  <b>3. Find the Closest Match:</b><br>
+  The algorithm now compares the weight vector $\bar{w}$ of the unknown face with all the weight vectors $\bar{w}_i$ in the trained database. The distance between them is calculated, typically using the Euclidean distance (L2-norm).
+  \$$ d_i = \| \bar{w} - \bar{w}_i \|_2 $$
+</p>
+<p>
+  <b>4. Recognition Decision:</b><br>
+  The person in the database whose weight vector has the minimum distance to the unknown face's weight vector is declared the match. The index of the recognized face, $\tilde{i}$, is found by:
+  \$$ \tilde{i} = \underset{i}{\operatorname{argmin}} \, d_i $$
+  The input face is thus recognized as person $\tilde{i}$.
+</p>
+
+<h3>4. Handling Unknown Faces with a Threshold</h3>
+<p>A practical system must handle cases where the new face does not belong to anyone in the database. This is achieved by setting a distance threshold, $\epsilon$.</p>
+<p>
+  After finding the minimum distance $d_{\tilde{i}}$, it is compared to the threshold:
+  <ul>
+    <li>If $d_{\tilde{i}} \leq \epsilon$: The match is considered valid, and the face is identified as person $\tilde{i}$.</li>
+    <li>If $d_{\tilde{i}} > \epsilon$: The distance is too large, implying the new face is not close enough to any face in the database. The face is declared "unknown" or "not recognized."</li>
+  </ul>
+</p>
+
+<h3>5. Conclusion</h3>
+<p>The Eigenfaces algorithm is a powerful demonstration of how linear algebra can solve complex real-world problems. By applying PCA, it achieves significant <b>dimensionality reduction</b>, transforming the computationally intensive task of comparing high-dimensional image vectors into a much more efficient comparison of low-dimensional weight vectors. This reduces storage requirements and speeds up the recognition process, making it a foundational technique in computer vision and machine learning.</p>
+</div></div><h2>Weekly Summary</h2><div>
+<h2>Positive Semi-Definite (PSD) and Positive Definite (PD) Matrices</h2>
+<p>This week introduces a crucial class of matrices in linear algebra: Positive Semi-Definite (PSD) and Positive Definite (PD) matrices. These are symmetric (or Hermitian for complex matrices) square matrices with important properties that appear frequently in machine learning and data analysis.</p>
+<b>Key Takeaways:</b>
+<ul>
+    <li><b>Definition:</b> A symmetric matrix $A$ is defined as:
+        <ul>
+            <li><b>PSD</b> if $\mathbf{x}^T A \mathbf{x} \ge 0$ for all non-zero vectors $\mathbf{x}$. For complex matrices, this is $\mathbf{x}^H A \mathbf{x} \ge 0$.</li>
+            <li><b>PD</b> if $\mathbf{x}^T A \mathbf{x} > 0$ for all non-zero vectors $\mathbf{x}$. For complex matrices, this is $\mathbf{x}^H A \mathbf{x} > 0$.</li>
+        </ul>
+    </li>
+    <li><b>Eigenvalue Properties:</b> The eigenvalues ($\lambda$) of a PSD/PD matrix are always real.
+        <ul>
+            <li>For a <b>PSD</b> matrix, all eigenvalues are non-negative ($\lambda \ge 0$). A matrix is PSD but not PD if it has at least one zero eigenvalue.</li>
+            <li>For a <b>PD</b> matrix, all eigenvalues are strictly positive ($\lambda > 0$).</li>
+        </ul>
+    </li>
+    <li><b>Eigenvector Properties:</b> Eigenvectors corresponding to distinct eigenvalues of a PSD/PD matrix are orthogonal. This allows for the construction of an orthonormal basis of eigenvectors.</li>
+    <li><b>Eigenvalue Decomposition (EVD):</b> Because the eigenvectors form an orthonormal basis, the EVD of a PSD matrix $A$ simplifies to $A = U \Lambda U^H$, where $U$ is a unitary matrix ($U^H = U^{-1}$) whose columns are the orthonormal eigenvectors, and $\Lambda$ is the diagonal matrix of real, non-negative eigenvalues.</li>
+    <li><b>Cholesky / Square-Root Factorization:</b> Any PSD matrix $A$ can be decomposed into the form $A = \tilde{A} \tilde{A}^H$. This is analogous to the square root of a positive real number and is a key property used in applications.</li>
+</ul>
+
+<h2>Applications Involving Covariance Matrices</h2>
+<p>The properties of PSD matrices are demonstrated through a concrete 2x2 example and a significant application involving the covariance matrix of random vectors.</p>
+<b>Key Takeaways:</b>
+<ul>
+    <li><b>Covariance Matrix is always PSD:</b> For any zero-mean random vector $\mathbf{z}$, its covariance matrix $R = E[\mathbf{z}\mathbf{z}^T]$ is always a positive semi-definite matrix. This is because for any vector $\mathbf{x}$, the quantity $\mathbf{x}^T R \mathbf{x} = E[(\mathbf{x}^T\mathbf{z})^2]$ is an expected value of a squared term, which must be non-negative.</li>
+    <li><b>Whitening Transformation:</b> Since the covariance matrix $R$ is PSD, it can be factored as $R = \tilde{R}\tilde{R}^T$. A "whitening" transformation can be applied to a correlated random vector $\mathbf{z}$ by computing $\tilde{\mathbf{z}} = \tilde{R}^{-1}\mathbf{z}$. The resulting vector $\tilde{\mathbf{z}}$ will have uncorrelated components with unit variance, meaning its covariance matrix is the identity matrix.</li>
+    <li><b>Generating Correlated Data:</b> The inverse process, known as "coloring," can be used to generate a random vector with a specific desired covariance structure. Starting with a "white" random vector $\tilde{\mathbf{z}}$ (with an identity covariance matrix), a new vector $\mathbf{z} = \tilde{R}\tilde{\mathbf{z}}$ can be generated that will have the covariance matrix $R$.</li>
+</ul>
+
+<h2>Principal Component Analysis (PCA) and Eigenfaces</h2>
+<p>This section covers Principal Component Analysis (PCA), a powerful dimensionality reduction technique, and its direct application in the Eigenfaces algorithm for face recognition. Both heavily rely on the properties of the covariance matrix.</p>
+<b>Key Takeaways:</b>
+<ul>
+    <li><b>Principal Component Analysis (PCA):</b>
+        <ul>
+            <li><b>Goal:</b> To reduce the dimensionality of high-dimensional data while retaining the maximum amount of variance (information).</li>
+            <li><b>Method:</b> PCA identifies the "principal directions" of the data, which are the directions of maximum spread or variance. These directions are found to be the <b>eigenvectors</b> of the data's covariance matrix.</li>
+            <li>The corresponding <b>eigenvalues</b> represent the amount of variance along each eigenvector. The principal components are obtained by projecting the data onto the eigenvectors associated with the largest eigenvalues.</li>
+        </ul>
+    </li>
+    <li><b>Eigenfaces Algorithm:</b>
+        <ul>
+            <li><b>Concept:</b> A direct application of PCA to a database of face images for the purpose of recognition.</li>
+            <li><b>Procedure:</b>
+                <ol>
+                    <li>Represent a training set of face images as high-dimensional vectors.</li>
+                    <li>Compute the sample covariance matrix of these vectors.</li>
+                    <li>The eigenvectors of this covariance matrix are the "eigenfaces." They form a basis representing the most significant variations among the faces in the dataset.</li>
+                    <li>Each face in the database is represented as a low-dimensional "weight vector" by projecting it onto the most significant eigenfaces.</li>
+                    <li>To recognize a new face, it is also projected onto the eigenfaces to get its weight vector. This vector is then compared (e.g., using Euclidean distance) to the weight vectors of known faces in the database to find the closest match.</li>
+                </ol>
+            </li>
+        </ul>
+    </li>
+</ul>
+</div><h2>Assignment Explanation</h2><div>
+<p>Here is an explanation of the questions and answers from the assignment.</p>
+
+<hr>
+
+<h3>Question 1: Adjacency Matrix of a Circuit</h3>
+<p><b>Question:</b> This question asks to identify the correct adjacency matrix for a given circuit diagram. The circuit diagram itself is not visible in the provided text.</p>
+<p><b>Explanation:</b></p>
+<p>The term "adjacency matrix" in the context of circuit analysis often refers to the <b>node-branch incidence matrix</b>, denoted as $A$. This matrix describes how the nodes (junctions) are connected by the branches (components like resistors, sources, etc.).</p>
+<p>The construction of this matrix follows a standard convention:</p>
+<ul>
+    <li>The rows of the matrix correspond to the nodes in the circuit.</li>
+    <li>The columns of the matrix correspond to the branches.</li>
+    <li>Each branch is given an assumed direction for current flow.</li>
+    <li>The entry $A_{ij}$ (in the i-th row and j-th column) is determined as follows:
+        <ul>
+            <li>$A_{ij} = +1$ if the current in branch $j$ flows <i>away from</i> node $i$.</li>
+            <li>$A_{ij} = -1$ if the current in branch $j$ flows <i>into</i> node $i$.</li>
+            <li>$A_{ij} = 0$ if branch $j$ is not connected to node $i$.</li>
+        </ul>
+    </li>
+</ul>
+<p>A key property of an incidence matrix is that the sum of the elements in each column is zero, because every branch must connect two nodes (one entry will be +1 and the other -1).</p>
+<p>To solve this problem, one would need to look at the provided circuit diagram, label the nodes and branches, assume a direction for the current in each branch, and then construct the matrix based on the rules above. The correct option is the one that accurately represents the connections and directions in the circuit diagram.</p>
+
+<hr>
+
+<h3>Question 2: Gram-Schmidt Procedure</h3>
+<p><b>Question:</b> Given two vectors $\bar{x}_1 = \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix}$ and $\bar{x}_2 = \begin{bmatrix} -1 \\ 2 \\ -2 \\ -3 \end{bmatrix}$, find a set of orthonormal basis vectors $\{\bar{v}_1, \bar{v}_2\}$ using the Gram-Schmidt procedure.</p>
+<p><b>Answer Explanation:</b></p>
+<p>The Gram-Schmidt procedure is a method to convert a set of linearly independent vectors into an orthonormal set that spans the same subspace.</p>
+<p><b>Step 1: Find the first orthonormal vector $\bar{v}_1$.</b></p>
+<p>We start with $\bar{u}_1 = \bar{x}_1 = \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix}$. Then we normalize it.</p>
+<p>The norm is $\|\bar{u}_1\| = \sqrt{1^2 + 1^2 + 1^2 + 1^2} = \sqrt{4} = 2$.</p>
+<p>So, $\bar{v}_1 = \frac{\bar{u}_1}{\|\bar{u}_1\|} = \frac{1}{2} \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix}$.</p>
+
+<p><b>Step 2: Find the second orthonormal vector $\bar{v}_2$.</b></p>
+<p>First, we find an orthogonal vector $\bar{u}_2$ by subtracting the projection of $\bar{x}_2$ onto $\bar{u}_1$ from $\bar{x}_2$.</p>
+\$$ \bar{u}_2 = \bar{x}_2 - \text{proj}_{\bar{u}_1}(\bar{x}_2) = \bar{x}_2 - \frac{\bar{x}_2 \cdot \bar{u}_1}{\|\bar{u}_1\|^2} \bar{u}_1 $$
+<p>The dot product is $\bar{x}_2 \cdot \bar{u}_1 = (-1)(1) + (2)(1) + (-2)(1) + (-3)(1) = -1 + 2 - 2 - 3 = -4$.</p>
+<p>The squared norm $\|\bar{u}_1\|^2 = 4$.</p>
+\$$ \bar{u}_2 = \begin{bmatrix} -1 \\ 2 \\ -2 \\ -3 \end{bmatrix} - \frac{-4}{4} \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix} = \begin{bmatrix} -1 \\ 2 \\ -2 \\ -3 \end{bmatrix} - (-1) \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix} = \begin{bmatrix} -1+1 \\ 2+1 \\ -2+1 \\ -3+1 \end{bmatrix} = \begin{bmatrix} 0 \\ 3 \\ -1 \\ -2 \end{bmatrix} $$
+<p>Now, we normalize $\bar{u}_2$.</p>
+<p>The norm is $\|\bar{u}_2\| = \sqrt{0^2 + 3^2 + (-1)^2 + (-2)^2} = \sqrt{0 + 9 + 1 + 4} = \sqrt{14}$.</p>
+<p>So, $\bar{v}_2 = \frac{\bar{u}_2}{\|\bar{u}_2\|} = \frac{1}{\sqrt{14}} \begin{bmatrix} 0 \\ 3 \\ -1 \\ -2 \end{bmatrix}$.</p>
+<p>The correct set of orthonormal vectors is $\bar{v}_1 = \frac{1}{2}\begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix}$ and $\bar{v}_2 = \frac{1}{\sqrt{14}}\begin{bmatrix} 0 \\ 3 \\ -1 \\ -2 \end{bmatrix}$, which matches the accepted answer.</p>
+
+<hr>
+
+<h3>Question 3: Variance of a Linear Combination of Random Variables</h3>
+<p><b>Question:</b> Given independent, zero-mean Gaussian random variables $x_1, x_2, \dots, x_n$ with variances $\text{Var}(x_i) = i$ for $i=1, \dots, n$. What is the variance of the quantity $Y = x_1 + \sqrt{2}x_2 + \dots + \sqrt{n}x_n$?</p>
+<p><i>Note: The question states the variables are "i.i.d." (independent and identically distributed), but then assigns different variances. This is contradictory. The calculation assumes they are <b>independent</b> but not identically distributed.</i></p>
+<p><b>Answer Explanation:</b></p>
+<p>We need to find $\text{Var}(Y) = \text{Var}\left(\sum_{i=1}^n \sqrt{i} x_i\right)$.</p>
+<p>We use two key properties of variance:</p>
+<ol>
+    <li>For any random variable $X$ and constant $a$, $\text{Var}(aX) = a^2 \text{Var}(X)$.</li>
+    <li>For independent random variables $X_1, \dots, X_n$, the variance of their sum is the sum of their variances: $\text{Var}(\sum X_i) = \sum \text{Var}(X_i)$.</li>
+</ol>
+<p>Combining these properties for our linear combination of independent variables:</p>
+\$$ \text{Var}(Y) = \text{Var}\left(\sum_{i=1}^n \sqrt{i} x_i\right) = \sum_{i=1}^n \text{Var}(\sqrt{i} x_i) = \sum_{i=1}^n (\sqrt{i})^2 \text{Var}(x_i) $$
+<p>We are given that $\text{Var}(x_i) = i$. Substituting this in:</p>
+\$$ \text{Var}(Y) = \sum_{i=1}^n i \cdot (i) = \sum_{i=1}^n i^2 $$
+<p>This is the sum of the first $n$ square numbers, for which there is a standard formula:</p>
+\$$ \sum_{i=1}^n i^2 = \frac{n(n+1)(2n+1)}{6} $$
+<p>This matches the accepted answer.</p>
+
+<hr>
+
+<h3>Question 4: Null Space of a Matrix</h3>
+<p><b>Question:</b> Which of the given vectors lies in the null space of the matrix $A = \begin{bmatrix} 1 & 5 & 1 & -2 & 1 \\ 4 & 1 & -3 & 1 & 1 \end{bmatrix}$?</p>
+<p><b>Answer Explanation:</b></p>
+<p>A vector $\bar{x}$ lies in the null space of a matrix $A$ if and only if the product $A\bar{x}$ equals the zero vector $\bar{0}$. To solve this, we must multiply the matrix $A$ by each of the option vectors and see which one results in $\begin{bmatrix} 0 \\ 0 \end{bmatrix}$.</p>
+<p>Let's check the vector from the accepted answer: $\bar{x} = \begin{bmatrix} 2 \\ 1 \\ 1 \\ 2 \\ -6 \end{bmatrix}$.</p>
+\$$ A\bar{x} = \begin{bmatrix} 1 & 5 & 1 & -2 & 1 \\ 4 & 1 & -3 & 1 & 1 \end{bmatrix} \begin{bmatrix} 2 \\ 1 \\ 1 \\ 2 \\ -6 \end{bmatrix} $$
+\$$ = \begin{bmatrix} (1)(2) + (5)(1) + (1)(1) + (-2)(2) + (1)(-6) \\ (4)(2) + (1)(1) + (-3)(1) + (1)(2) + (1)(-6) \end{bmatrix} $$
+\$$ = \begin{bmatrix} 2 + 5 + 1 - 4 - 6 \\ 8 + 1 - 3 + 2 - 6 \end{bmatrix} = \begin{bmatrix} 8 - 10 \\ 11 - 9 \end{bmatrix} = \begin{bmatrix} -2 \\ 2 \end{bmatrix} $$
+<p>The result is $\begin{bmatrix} -2 \\ 2 \end{bmatrix}$, which is not the zero vector $\begin{bmatrix} 0 \\ 0 \end{bmatrix}$. Checking the other options also shows that none of them result in the zero vector.</p>
+<p><b>Conclusion:</b> There appears to be a typographical error in the problem statement (either the matrix $A$ or the vector options) or in the recorded correct answer, as none of the provided vectors are in the null space of the given matrix $A$.</p>
+
+<hr>
+
+<h3>Question 5: Gaussian Classifier</h3>
+<p><b>Question:</b> For a two-class problem where $C_1 \sim \mathcal{N}(\mu_1, \Sigma)$ and $C_2 \sim \mathcal{N}(\mu_2, \Sigma)$ with $\mu_1 = \begin{bmatrix} -2 \\ 4 \end{bmatrix}$, $\mu_2 = \begin{bmatrix} 4 \\ -2 \end{bmatrix}$, and $\Sigma = \begin{bmatrix} 1/2 & 0 \\ 0 & 1/4 \end{bmatrix}$, find the decision rule to classify a new vector $\bar{x} = [x_1, x_2]^T$ into class $C_1$.</p>
+<p><b>Answer Explanation:</b></p>
+<p>When the covariance matrices are equal for both classes and we assume equal prior probabilities, a new sample $\bar{x}$ is assigned to the class with the closer mean. The "closeness" is measured by the Mahalanobis distance. We choose $C_1$ if $\bar{x}$ is closer to $\mu_1$ than to $\mu_2$:</p>
+\$$ (\bar{x} - \mu_1)^T \Sigma^{-1} (\bar{x} - \mu_1) \leq (\bar{x} - \mu_2)^T \Sigma^{-1} (\bar{x} - \mu_2) $$
+<p>Expanding this quadratic form and canceling common terms ($\bar{x}^T\Sigma^{-1}\bar{x}$) leads to a linear decision boundary:</p>
+\$$ -2\mu_1^T\Sigma^{-1}\bar{x} + \mu_1^T\Sigma^{-1}\mu_1 \leq -2\mu_2^T\Sigma^{-1}\bar{x} + \mu_2^T\Sigma^{-1}\mu_2 $$
+<p>Rearranging gives:</p>
+\$$ 2(\mu_2 - \mu_1)^T \Sigma^{-1} \bar{x} \leq \mu_2^T\Sigma^{-1}\mu_2 - \mu_1^T\Sigma^{-1}\mu_1 $$
+<p>Let's compute the terms:</p>
+<p>The inverse covariance matrix is $\Sigma^{-1} = \begin{bmatrix} 2 & 0 \\ 0 & 4 \end{bmatrix}$.</p>
+<p>$\mu_2 - \mu_1 = \begin{bmatrix} 4 - (-2) \\ -2 - 4 \end{bmatrix} = \begin{bmatrix} 6 \\ -6 \end{bmatrix}$.</p>
+<p>The left side of the inequality is: $2 \begin{bmatrix} 6 & -6 \end{bmatrix} \begin{bmatrix} 2 & 0 \\ 0 & 4 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = 2 \begin{bmatrix} 12 & -24 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = 24x_1 - 48x_2$.</p>
+<p>For the right side: $\mu_2^T\Sigma^{-1}\mu_2 = \begin{bmatrix} 4 & -2 \end{bmatrix} \begin{bmatrix} 2 & 0 \\ 0 & 4 \end{bmatrix} \begin{bmatrix} 4 \\ -2 \end{bmatrix} = 48$. And $\mu_1^T\Sigma^{-1}\mu_1 = \begin{bmatrix} -2 & 4 \end{bmatrix} \begin{bmatrix} 2 & 0 \\ 0 & 4 \end{bmatrix} \begin{bmatrix} -2 \\ 4 \end{bmatrix} = 72$.</p>
+<p>The inequality becomes: $24x_1 - 48x_2 \leq 48 - 72$, which simplifies to $24x_1 - 48x_2 \leq -24$. Dividing by 24 gives $x_1 - 2x_2 \leq -1$.</p>
+<p>The accepted answer is $-x_1 + 2x_2 \geq 1$. Multiplying this by -1 yields $x_1 - 2x_2 \leq -1$, which confirms our result.</p>
+
+<hr>
+
+<h3>Question 6: Mean and Covariance of a Transformed Random Vector</h3>
+<p><b>Question:</b> A random vector $\bar{x}$ is distributed with mean $\bar{\mu}$ and covariance matrix $\Sigma$. Find the mean and covariance of the transformed vector $\bar{y} = A\bar{x} + \bar{b}$.</p>
+<p><b>Answer Explanation:</b></p>
+<p>This is a standard result for an affine transformation of a random vector.</p>
+<p><b>1. Mean of $\bar{y}$:</b></p>
+<p>The expectation operator $E[\cdot]$ is linear. We can apply it directly:</p>
+\$$ E[\bar{y}] = E[A\bar{x} + \bar{b}] = E[A\bar{x}] + E[\bar{b}] $$
+<p>Since $A$ and $\bar{b}$ are constants:</p>
+\$$ E[\bar{y}] = A E[\bar{x}] + \bar{b} = A\bar{\mu} + \bar{b} $$
+<p><b>2. Covariance of $\bar{y}$:</b></p>
+<p>The covariance matrix is defined as $\text{Cov}(\bar{y}) = E[(\bar{y} - E[\bar{y}])(\bar{y} - E[\bar{y}])^T]$.</p>
+<p>First, find the deviation from the mean:</p>
+\$$ \bar{y} - E[\bar{y}] = (A\bar{x} + \bar{b}) - (A\bar{\mu} + \bar{b}) = A\bar{x} - A\bar{\mu} = A(\bar{x} - \bar{\mu}) $$
+<p>Now, substitute this into the covariance definition:</p>
+\$$ \text{Cov}(\bar{y}) = E\left[ \left( A(\bar{x} - \bar{\mu}) \right) \left( A(\bar{x} - \bar{\mu}) \right)^T \right] $$
+<p>Using the transpose property $(BC)^T = C^T B^T$:</p>
+\$$ \text{Cov}(\bar{y}) = E\left[ A(\bar{x} - \bar{\mu}) (\bar{x} - \bar{\mu})^T A^T \right] $$
+<p>Since $A$ is a constant matrix, it can be pulled out of the expectation:</p>
+\$$ \text{Cov}(\bar{y}) = A \ E\left[ (\bar{x} - \bar{\mu}) (\bar{x} - \bar{\mu})^T \right] \ A^T $$
+<p>The expression inside the expectation is the definition of the covariance matrix of $\bar{x}$, which is $\Sigma$.</p>
+\$$ \text{Cov}(\bar{y}) = A \Sigma A^T $$
+<p>Therefore, the new mean is $A\bar{\mu} + \bar{b}$ and the new covariance is $A\Sigma A^T$.</p>
+
+<hr>
+
+<h3>Question 7: Variance of a Linear Combination (revisited)</h3>
+<p><b>Question:</b> Given i.i.d. zero-mean Gaussian random variables $x_1, \dots, x_n$ with variance $\sigma^2$. Find the variance of the quantity $\bar{a}^T\bar{x}$.</p>
+<p><b>Answer Explanation:</b></p>
+<p>The quantity $Y = \bar{a}^T\bar{x}$ is a scalar value, which can be written as the sum $Y = \sum_{i=1}^n a_i x_i$.</p>
+<p>We need to find $\text{Var}(Y)$. Since the $x_i$ are independent, we can use the same properties as in Question 3:</p>
+\$$ \text{Var}(Y) = \text{Var}\left(\sum_{i=1}^n a_i x_i\right) = \sum_{i=1}^n \text{Var}(a_i x_i) = \sum_{i=1}^n a_i^2 \text{Var}(x_i) $$
+<p>We are given that $\text{Var}(x_i) = \sigma^2$ for all $i$.</p>
+\$$ \text{Var}(Y) = \sum_{i=1}^n a_i^2 \sigma^2 = \sigma^2 \left(\sum_{i=1}^n a_i^2\right) $$
+<p>The sum $\sum_{i=1}^n a_i^2$ is the squared Euclidean norm (or L2-norm) of the vector $\bar{a}$, denoted by $\|\bar{a}\|^2$.</p>
+<p>Therefore, the variance is $\sigma^2 \|\bar{a}\|^2$.</p>
+
+<hr>
+
+<h3>Question 8: Definition of Covariance Matrix</h3>
+<p><b>Question:</b> For a random column vector $\bar{x}$ with mean $\bar{\mu}$, its covariance matrix is defined as ...</p>
+<p><b>Answer Explanation:</b></p>
+<p>This is a definitional question. The covariance matrix, typically denoted by $\Sigma$, measures the variation of each component of the random vector and the correlation between different components. It is defined as the expected value of the <b>outer product</b> of the deviation vector $(\bar{x} - \bar{\mu})$ with itself.</p>
+<p>The deviation vector is $\bar{x} - \bar{\mu}$.</p>
+<p>The outer product of this vector with itself is $(\bar{x} - \bar{\mu})(\bar{x} - \bar{\mu})^T$. If $\bar{x}$ is an $n \times 1$ vector, this product results in an $n \times n$ matrix.</p>
+<p>The definition of the covariance matrix is the expectation of this matrix:</p>
+\$$ \Sigma = E\left[ (\bar{x} - \bar{\mu})(\bar{x} - \bar{\mu})^T \right] $$
+<p>The other options are incorrect. For instance, $E[\bar{x}^T\bar{x}]$ is the expected value of the inner product, which is a scalar (the expected squared norm), not a matrix.</p>
+
+<hr>
+
+<h3>Question 9: Norm of a Normalized Vector</h3>
+<p><b>Question:</b> Let $\bar{v} = \frac{\bar{u}}{\|\bar{u}\|_2}$. What is the value of $\|\bar{v}\|_2$?</p>
+<p><b>Answer Explanation:</b></p>
+<p>This question asks for the norm of a normalized vector. A vector is normalized by dividing it by its own norm. This process creates a <b>unit vector</b>, which is a vector with a norm of 1.</p>
+<p>We can show this formally using the properties of vector norms. For any vector $\bar{x}$ and scalar $\alpha$, we have $\|\alpha \bar{x}\|_2 = |\alpha| \|\bar{x}\|_2$.</p>
+<p>In our case, the vector is $\bar{u}$ and the scalar is $\alpha = \frac{1}{\|\bar{u}\|_2}$. Assuming $\bar{u}$ is not the zero vector, its norm is a positive real number, so $|\alpha| = \alpha$.</p>
+\$$ \|\bar{v}\|_2 = \left\| \frac{\bar{u}}{\|\bar{u}\|_2} \right\|_2 = \left\| \left(\frac{1}{\|\bar{u}\|_2}\right) \bar{u} \right\|_2 $$
+\$$ = \left(\frac{1}{\|\bar{u}\|_2}\right) \|\bar{u}\|_2 = 1 $$
+<p>The norm of any non-zero vector that has been normalized is always 1.</p>
+
+<hr>
+
+<h3>Question 10: Minor of a Matrix</h3>
+<p><b>Question:</b> For the matrix $A = \begin{bmatrix} 3 & -4 & 1 \\ -2 & 1 & -2 \\ -3 & 6 & 3 \end{bmatrix}$, find the minor $M_{3,2}$.</p>
+<p><b>Answer Explanation:</b></p>
+<p>The minor $M_{i,j}$ of a matrix is the determinant of the submatrix formed by deleting the i-th row and j-th column.</p>
+<p>Here, we need $M_{3,2}$. We delete the 3rd row and the 2nd column from matrix $A$:</p>
+\$$ A = \begin{bmatrix} 3 & \mathbf{-4} & 1 \\ -2 & \mathbf{1} & -2 \\ \mathbf{-3} & \mathbf{6} & \mathbf{3} \end{bmatrix} $$
+<p>After removing row 3 and column 2, the remaining submatrix is:</p>
+\$$ \begin{bmatrix} 3 & 1 \\ -2 & -2 \end{bmatrix} $$
+<p>Now, we calculate the determinant of this $2 \times 2$ submatrix:</p>
+\$$ M_{3,2} = \det\begin{pmatrix} 3 & 1 \\ -2 & -2 \end{pmatrix} = (3)(-2) - (1)(-2) = -6 - (-2) = -6 + 2 = -4 $$
+<p>The calculated minor is -4.</p>
+<p><b>Note:</b> The accepted answer for this question is listed as 6. The calculation based on the provided matrix gives -4. This discrepancy suggests there may be a typo in the question's matrix. For example, if the top-left element $A_{1,1}$ was -2 instead of 3, the submatrix would be $\begin{bmatrix} -2 & 1 \\ -2 & -2 \end{bmatrix}$, and its determinant would be $(-2)(-2) - (1)(-2) = 4 + 2 = 6$. Given the provided matrix, the correct answer is -4.</p>
+</div></div>
+</body>
+</html>

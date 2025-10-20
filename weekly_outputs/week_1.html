@@ -1,0 +1,596 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week1</title>
+
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+      };
+    </script>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 2em;
+        }
+        .mjx-display {
+            margin: 2.5em 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="week" id="week_1"><h1 class="week-title">Week 1</h1><h2>Transcript Explanations</h2><div class="chapter" id="Lecture 1| Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 1| Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the fundamental concepts of linear algebra introduced in the lecture, focusing on vectors, their operations, and their applications in fields like signal processing, data analytics, and machine learning.</p>
+
+<b><h3>1. Introduction to Vectors</h3></b>
+<p>The lecture begins by establishing the vector as a fundamental concept in linear algebra, essential for representing data. A vector can be visualized as a point or a directed line segment in an n-dimensional space.</p>
+<p>An <b>n-dimensional vector</b>, denoted as $\bar{u}$, is an ordered collection of $n$ numbers, called components or elements. It is typically represented as a column:</p>
+\$$ \bar{u} = \begin{bmatrix} u_1 \\ u_2 \\ \vdots \\ u_n \end{bmatrix} $$
+<p>The space to which a vector belongs depends on the nature of its components:</p>
+<ul>
+    <li><b>N-dimensional Real Space ($\mathbb{R}^n$)</b>: If the components $u_1, u_2, \dots, u_n$ are all real numbers, the vector $\bar{u}$ belongs to the n-dimensional real space. This is the default space considered in many applications.</li>
+    <li><b>N-dimensional Complex Space ($\mathbb{C}^n$)</b>: If the components are complex numbers, the vector belongs to the n-dimensional complex space.</li>
+</ul>
+
+<b><h4>Applications of Vectors</h4></b>
+<p>Vectors are versatile tools for representing various types of data:</p>
+<ul>
+    <li><b>Signals</b>: An analog signal sampled at $n$ points in time can be represented as an n-dimensional vector, where each component is a sample value.</li>
+    <li><b>Sensor Data</b>: A series of $n$ measurements (e.g., temperature, pressure) from a sensor can be organized into an n-dimensional vector.</li>
+    <li><b>Physical Space</b>: A location in 3D space is commonly represented by a 3-dimensional vector with x, y, and z coordinates: $\bar{u} = [u_1, u_2, u_3]$.</li>
+</ul>
+
+<b><h3>2. Basic Vector Operations</h3></b>
+<p>The lecture outlines two fundamental operations on vectors: addition and scalar multiplication.</p>
+
+<b><h4>Vector Addition</h4></b>
+<p>The sum of two n-dimensional vectors, $\bar{u}$ and $\bar{v}$, is another n-dimensional vector obtained by adding their corresponding components.</p>
+<p>If $\bar{u} = [u_1, u_2, \dots, u_n]$ and $\bar{v} = [v_1, v_2, \dots, v_n]$, their sum is:</p>
+\$$ \bar{u} + \bar{v} = \begin{bmatrix} u_1 + v_1 \\ u_2 + v_2 \\ \vdots \\ u_n + v_n \end{bmatrix} $$
+
+<b><h4>Scalar Multiplication</h4></b>
+<p>Multiplying a vector $\bar{u}$ by a scalar (a single number) $k$ results in a new vector where each component of $\bar{u}$ is multiplied by $k$.</p>
+\$$ k\bar{u} = \begin{bmatrix} ku_1 \\ ku_2 \\ \vdots \\ ku_n \end{bmatrix} $$
+
+<b><h3>3. Linear Combination of Vectors</h3></b>
+<p>A linear combination is a crucial concept formed by combining vector addition and scalar multiplication. Given a set of $m$ vectors $\bar{u}_1, \bar{u}_2, \dots, \bar{u}_m$ and a corresponding set of $m$ scalars $k_1, k_2, \dots, k_m$, their linear combination is:</p>
+\$$ k_1\bar{u}_1 + k_2\bar{u}_2 + \dots + k_m\bar{u}_m $$
+<p>This operation involves scaling each vector by its corresponding scalar and then adding the resulting vectors together.</p>
+
+<b><h3>4. The Inner Product</h3></b>
+<p>The inner product (also known as the dot product) is an operation that takes two vectors and produces a single scalar value. It is fundamental for defining concepts like length, distance, and angle (orthogonality) between vectors.</p>
+
+<b><h4>Inner Product for Real Vectors</h4></b>
+<p>For two real vectors $\bar{u}, \bar{v} \in \mathbb{R}^n$, the inner product is defined as $\bar{u}^T \bar{v}$. Here, $\bar{u}^T$ is the <b>transpose</b> of the column vector $\bar{u}$, which converts it into a row vector. The operation is the sum of the products of corresponding components:</p>
+\$$ \bar{u}^T \bar{v} = \begin{bmatrix} u_1 & u_2 & \dots & u_n \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \\ \vdots \\ v_n \end{bmatrix} = \sum_{i=1}^{n} u_i v_i = u_1v_1 + u_2v_2 + \dots + u_nv_n $$
+<p><b>Example:</b> For $\bar{u} = [2, 1, -1]$ and $\bar{v} = [1, -1, 3]$:</p>
+\$$ \bar{u}^T \bar{v} = (2)(1) + (1)(-1) + (-1)(3) = 2 - 1 - 3 = -2 $$
+
+<b><h4>Inner Product for Complex Vectors</h4></b>
+<p>For complex vectors, the definition is slightly modified to ensure that the inner product of a vector with itself is a real number. It uses the <b>Hermitian transpose</b> (or conjugate transpose), denoted by $\bar{u}^H$, which involves taking the transpose and the complex conjugate of each element.</p>
+<p>For two complex vectors $\bar{u}, \bar{v} \in \mathbb{C}^n$, the inner product is:</p>
+\$$ \bar{u}^H \bar{v} = \sum_{i=1}^{n} u_i^* v_i = u_1^*v_1 + u_2^*v_2 + \dots + u_n^*v_n $$
+<p>where $u_i^*$ is the complex conjugate of $u_i$.</p>
+
+<b><h3>5. Orthogonality</h3></b>
+<p>Two vectors are said to be <b>orthogonal</b> if their inner product is zero. Geometrically, in 2D or 3D space, this means the vectors are perpendicular to each other.</p>
+<ul>
+    <li>For real vectors: $\bar{u}^T \bar{v} = 0$</li>
+    <li>For complex vectors: $\bar{u}^H \bar{v} = 0$</li>
+</ul>
+
+<b><h4>Example: Orthogonality of Complex Sinusoids</h4></b>
+<p>A very important application of orthogonality is found in Fourier analysis. Complex sinusoids with different discrete frequencies are orthogonal. Consider two vectors representing sinusoids with discrete frequencies $f_1 = 1/n$ and $f_2 = 2/n$. The $l$-th element (for $l=0, \dots, n-1$) of the first vector is $e^{j2\pi l/n}$ and for the second vector is $e^{j4\pi l/n}$.</p>
+<p>Their inner product is calculated as:</p>
+\$$ \bar{u}^H \bar{v} = \sum_{l=0}^{n-1} (e^{j2\pi l/n})^* (e^{j4\pi l/n}) = \sum_{l=0}^{n-1} e^{-j2\pi l/n} e^{j4\pi l/n} = \sum_{l=0}^{n-1} e^{j2\pi l/n} $$
+<p>This is a geometric series with ratio $r = e^{j2\pi/n}$. The sum is:</p>
+\$$ \frac{1 - (e^{j2\pi/n})^n}{1 - e^{j2\pi/n}} = \frac{1 - e^{j2\pi}}{1 - e^{j2\pi/n}} = \frac{1 - 1}{1 - e^{j2\pi/n}} = 0 $$
+<p>This result shows that the two sinusoids are orthogonal. This property is the cornerstone of Fourier analysis, which decomposes signals into a sum of orthogonal sinusoids.</p>
+
+<b><h3>6. The Norm of a Vector</h3></b>
+<p>The <b>norm</b> of a vector, denoted $\|\bar{u}\|$, is a measure of its length or magnitude. It is defined as the square root of the inner product of the vector with itself.</p>
+
+<b><h4>Norm for Real Vectors (L2-Norm)</h4></b>
+<p>For a real vector $\bar{u}$, the norm is the square root of the sum of the squares of its components:</p>
+\$$ \|\bar{u}\| = \sqrt{\bar{u}^T\bar{u}} = \sqrt{u_1^2 + u_2^2 + \dots + u_n^2} $$
+
+<b><h4>Norm for Complex Vectors</h4></b>
+<p>For a complex vector, the norm is the square root of the sum of the squared magnitudes of its components:</p>
+\$$ \|\bar{u}\| = \sqrt{\bar{u}^H\bar{u}} = \sqrt{|u_1|^2 + |u_2|^2 + \dots + |u_n|^2} $$
+
+<b><h4>Properties of the Norm</h4></b>
+<ul>
+    <li>The norm is always non-negative: $\|\bar{u}\| \geq 0$.</li>
+    <li>The norm is zero if and only if the vector is the zero vector (a vector where all components are zero): $\|\bar{u}\| = 0 \iff \bar{u} = \mathbf{0}$.</li>
+</ul>
+</div></div><div class="chapter" id="Lecture 2 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 2 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts discussed in the transcript, focusing on the norm of a vector, the distance between vectors, the Cauchy-Schwarz inequality, and the application of these concepts in signal processing, particularly in radar systems.</p>
+
+<b>1. The Norm of a Vector and Unit Norm Vectors</b>
+<p>The <b>norm</b> of a vector, denoted as $ \|\bar{u}\| $, is a measure of its length or magnitude. It is derived from the inner product of the vector with itself.</p>
+<ul>
+    <li><b>Unit Norm Vector:</b> A vector $ \bar{u} $ is called a <b>unit norm vector</b> (or simply a unit vector) if its norm is equal to 1.
+    \$$ \|\bar{u}\| = 1 $$
+    </li>
+    <li><b>Normalization:</b> Any non-zero vector $ \bar{u} $ can be converted into a unit norm vector by dividing it by its norm. This process is called normalization. The resulting unit vector, let's call it $ \hat{u} $, points in the same direction as $ \bar{u} $ but has a length of 1.
+    \$$ \hat{u} = \frac{\bar{u}}{\|\bar{u}\|} $$
+    </li>
+</ul>
+
+<b>2. Norm and Signal Energy</b>
+<p>In the context of signal processing, a signal can be represented as a vector where each component is a sample of the signal. The square of the norm of a signal vector has a significant physical interpretation: it represents the <b>total energy</b> of the signal.</p>
+<p>For a real signal vector $ \bar{u} = (u_1, u_2, \dots, u_n) $, the energy is given by:</p>
+\$$ \|\bar{u}\|^2 = u_1^2 + u_2^2 + \dots + u_n^2 $$
+
+<b>Example Calculation:</b>
+<p>Consider the vector $ \bar{u} = (-1, 3, -2, 1) $.</p>
+<ul>
+    <li><b>Calculating the norm:</b> The norm is the square root of the sum of the squares of its components.
+    \$$ \|\bar{u}\| = \sqrt{(-1)^2 + 3^2 + (-2)^2 + 1^2} = \sqrt{1 + 9 + 4 + 1} = \sqrt{15} $$
+    </li>
+    <li><b>Finding the unit norm vector:</b> To normalize $ \bar{u} $, we divide each of its components by its norm, $ \sqrt{15} $.
+    \$$ \hat{u} = \frac{1}{\sqrt{15}} \begin{pmatrix} -1 \\ 3 \\ -2 \\ 1 \end{pmatrix} $$
+    This new vector $ \hat{u} $ is a unit norm vector.
+    </li>
+</ul>
+
+<b>3. Distance Between Two Vectors</b>
+<p>The concept of the norm can be extended to define the distance between two vectors (or points) $ \bar{u} $ and $ \bar{v} $ in a vector space. The distance is defined as the norm of the difference between the two vectors.</p>
+<p>For two vectors $ \bar{u} = (u_1, \dots, u_n) $ and $ \bar{v} = (v_1, \dots, v_n) $, the distance $ d(\bar{u}, \bar{v}) $ is:</p>
+\$$ d(\bar{u}, \bar{v}) = \|\bar{u} - \bar{v}\| = \sqrt{(u_1 - v_1)^2 + (u_2 - v_2)^2 + \dots + (u_n - v_n)^2} $$
+<p>This formula corresponds to the standard Euclidean distance between two points in n-dimensional space. The distance can also be expressed using the inner product:</p>
+\$$ \|\bar{u} - \bar{v}\| = \sqrt{\langle \bar{u} - \bar{v}, \bar{u} - \bar{v} \rangle} $$
+
+<b>4. The Cauchy-Schwarz Inequality</b>
+<p>The Cauchy-Schwarz inequality is a fundamental theorem in linear algebra that establishes a relationship between the inner product of two vectors and their individual norms. It provides an upper bound on the magnitude of the inner product.</p>
+<p><b>General Form:</b> The magnitude of the inner product of two vectors $ \bar{u} $ and $ \bar{v} $ is less than or equal to the product of their norms.</p>
+\$$ |\langle \bar{u}, \bar{v} \rangle| \le \|\bar{u}\| \|\bar{v}\| $$
+<p>This is often expressed in its squared form, which avoids square roots:</p>
+\$$ |\langle \bar{u}, \bar{v} \rangle|^2 \le \|\bar{u}\|^2 \|\bar{v}\|^2 $$
+<p>The inequality has specific forms depending on whether the vectors are real or complex:</p>
+<ul>
+    <li>For <b>real vectors</b>, the inner product is the dot product ($\bar{u}^T \bar{v}$):
+    \$$ (\bar{u}^T \bar{v})^2 \le \|\bar{u}\|^2 \|\bar{v}\|^2 $$
+    </li>
+    <li>For <b>complex vectors</b>, the inner product uses the Hermitian transpose ($\bar{u}^H \bar{v}$):
+    \$$ |\bar{u}^H \bar{v}|^2 \le \|\bar{u}\|^2 \|\bar{v}\|^2 $$
+    </li>
+</ul>
+
+<b>Proof for 2D Real Vectors:</b>
+<p>The transcript provides a simple proof for the 2D real vector case. Let $ \bar{u} = (u_1, u_2) $ and $ \bar{v} = (v_1, v_2) $.</p>
+<ol>
+    <li>Start with the square of the inner product:
+    \$$ (\bar{u}^T \bar{v})^2 = (u_1 v_1 + u_2 v_2)^2 = u_1^2 v_1^2 + u_2^2 v_2^2 + 2 u_1 u_2 v_1 v_2 $$
+    </li>
+    <li>Apply the Arithmetic Mean-Geometric Mean (AM-GM) inequality. A form of this inequality states that for non-negative numbers $a$ and $b$, $2ab \le a^2 + b^2$. Let $ a = u_1 v_2 $ and $ b = u_2 v_1 $. Then $ 2(u_1 v_2)(u_2 v_1) \le (u_1 v_2)^2 + (u_2 v_1)^2 $.
+    \$$ 2 u_1 u_2 v_1 v_2 \le u_1^2 v_2^2 + u_2^2 v_1^2 $$
+    </li>
+    <li>Substitute this inequality back into the expression for $ (\bar{u}^T \bar{v})^2 $:
+    \$$ (\bar{u}^T \bar{v})^2 \le u_1^2 v_1^2 + u_2^2 v_2^2 + u_1^2 v_2^2 + u_2^2 v_1^2 $$
+    </li>
+    <li>Rearrange and factor the terms on the right-hand side:
+    \$$ u_1^2 v_1^2 + u_2^2 v_1^2 + u_1^2 v_2^2 + u_2^2 v_2^2 = (u_1^2 + u_2^2)(v_1^2 + v_2^2) $$
+    </li>
+    <li>Recognize that these factors are the squared norms of $ \bar{u} $ and $ \bar{v} $:
+    \$$ (u_1^2 + u_2^2)(v_1^2 + v_2^2) = \|\bar{u}\|^2 \|\bar{v}\|^2 $$
+    </li>
+</ol>
+<p>This completes the proof, showing that $ (\bar{u}^T \bar{v})^2 \le \|\bar{u}\|^2 \|\bar{v}\|^2 $.</p>
+
+<b>5. Application: Correlation in Radar Signal Processing</b>
+<p>The inner product has a powerful application as a measure of similarity or <b>correlation</b> between two signals. This is used extensively in fields like radar for target detection.</p>
+<p><b>Scenario:</b> A radar system transmits a signal $ \bar{x} $ and listens for a reflected signal $ \bar{y} $.</p>
+<ul>
+    <li><b>Target Present:</b> If an object (target) is present, the received signal $ \bar{y} $ will be a reflected copy of the transmitted signal $ \bar{x} $ corrupted by noise $ \bar{w} $. The noise is often modeled as Additive White Gaussian Noise (AWGN).
+    \$$ \bar{y} = \bar{x} + \bar{w} $$
+    In this case, $ \bar{y} $ is highly correlated with $ \bar{x} $, meaning their inner product will be large.
+    </li>
+    <li><b>Target Absent:</b> If there is no object, the received signal $ \bar{y} $ consists only of background noise.
+    \$$ \bar{y} = \bar{w} $$
+    In this case, the received signal $ \bar{y} $ has low correlation with the transmitted signal $ \bar{x} $, and their inner product will be small.
+    </li>
+</ul>
+<p><b>Detection Strategy (Hypothesis Testing):</b></p>
+<p>To decide whether a target is present, the system calculates the correlation between the received signal $ \bar{y} $ and the known transmitted signal $ \bar{x} $. This value is then compared to a pre-defined <b>threshold</b> $ \gamma $.</p>
+<p>The decision rule is:</p>
+<ul>
+    <li>If $ |\bar{x}^H \bar{y}|^2 > \gamma $ &rarr; <b>Target is present</b>.</li>
+    <li>If $ |\bar{x}^H \bar{y}|^2 \le \gamma $ &rarr; <b>Target is absent</b>.</li>
+</ul>
+<p>This is a classic example of a <b>binary hypothesis testing</b> problem, where the system must decide between two possibilities (hypotheses). This same principle can be used to measure the similarity between any two data vectors, such as images or audio signals.</p>
+</div></div><div class="chapter" id="Lecture 3| Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 3| Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This transcript explains the concept of <b>beamforming</b> in wireless communication systems, demonstrating a practical and important application of the inner product. The explanation builds from a high-level concept to a detailed mathematical model, culminating in the formula for an optimal beamformer.</p>
+
+<h3>1. What is Beamforming?</h3>
+<p>Beamforming is a signal processing technique used in systems with multiple antennas (antenna arrays) to control the directionality of signal transmission or reception. The core idea is to combine the signals from the multiple antennas in a way that forms a focused, narrow "beam" of signal sensitivity in a specific direction. </p>
+<p>
+    <b>Key benefits mentioned:</b>
+    <ul>
+        <li><b>Enhanced Signal Quality:</b> By focusing the receiver's sensitivity towards the desired user, the strength of the user's signal is increased relative to background noise and interference. This significantly improves the <b>Signal-to-Noise Ratio (SNR)</b>.</li>
+        <li><b>Gain Proportional to Antennas:</b> With $L$ antennas, the SNR can theoretically be increased by a factor of $L$. This is a substantial improvement in signal quality and a primary motivation for using multiple antennas.</li>
+    </ul>
+    This technology is a cornerstone of modern wireless standards like 4G, 5G, and Wi-Fi.
+</p>
+
+<h3>2. The System Model: Single-Input Multiple-Output (SIMO)</h3>
+<p>The transcript models a simple yet fundamental wireless system to explain beamforming. This is a <b>Single-Input Multiple-Output (SIMO)</b> system.</p>
+<p>
+    <b>Components:</b>
+    <ul>
+        <li>A single user (e.g., a mobile phone) with one antenna, transmitting a symbol $x$. This is the "single input".</li>
+        <li>A base station with $L$ antennas, receiving the signal. This is the "multiple output".</li>
+        <li>The signal from the user to each of the $L$ receiver antennas travels through a different path. The effect of each path on the signal is modeled by a <b>channel coefficient</b>, denoted $h_i$ for the $i^{th}$ antenna. These are often complex numbers representing both attenuation and phase shift.</li>
+        <li>Each antenna also picks up random noise, denoted $n_i$.</li>
+    </ul>
+</p>
+<p>The relationship between the transmitted symbol $x$ and the symbol received at the $i^{th}$ antenna, $y_i$, is given by the following linear model:</p>
+\$$ y_i = h_i x + n_i $$
+<p>Here:</p>
+<ul>
+    <li>$y_i$ is the complex symbol received at antenna $i$.</li>
+    <li>$h_i$ is the complex channel coefficient for the path to antenna $i$.</li>
+    <li>$x$ is the complex symbol transmitted by the user.</li>
+    <li>$n_i$ is the complex noise received at antenna $i$.</li>
+</ul>
+
+<h3>3. The Vector Model of the System</h3>
+<p>To handle the signals from all $L$ antennas simultaneously, the individual equations are "stacked" into a vector form. This provides a compact and powerful representation.</p>
+<p>
+    The received signal vector $\bar{y}$, channel vector $\bar{h}$, and noise vector $\bar{n}$ are defined as:
+    \$$ \bar{y} = \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_L \end{bmatrix}, \quad \bar{h} = \begin{bmatrix} h_1 \\ h_2 \\ \vdots \\ h_L \end{bmatrix}, \quad \bar{n} = \begin{bmatrix} n_1 \\ n_2 \\ \vdots \\ n_L \end{bmatrix} $$
+</p>
+<p>Using these vectors, the entire system of $L$ equations can be written as a single vector equation:</p>
+\$$ \bar{y} = \bar{h}x + \bar{n} $$
+
+<h3>4. Beamforming as a Weighted Combination (Inner Product)</h3>
+<p>
+    The core of beamforming at the receiver is to combine the $L$ received signals ($y_1, y_2, \dots, y_L$) into a single, higher-quality output. This is done by calculating a <b>weighted linear combination</b> of the received signals. Each signal $y_i$ is multiplied by a complex weight $w_i^*$ (the conjugate of $w_i$) and then summed up.
+</p>
+<p>The combined output is:</p>
+\$$ w_1^* y_1 + w_2^* y_2 + \dots + w_L^* y_L $$
+<p>This operation can be elegantly expressed using vector notation. Let $\bar{w}$ be the vector of weights, called the <b>beamformer</b> or <b>beamforming vector</b>:</p>
+\$$ \bar{w} = \begin{bmatrix} w_1 \\ w_2 \\ \vdots \\ w_L \end{bmatrix} $$
+<p>The weighted sum is then the <b>inner product</b> of the beamforming vector $\bar{w}$ and the received signal vector $\bar{y}$. This is written using the Hermitian transpose (conjugate transpose) of $\bar{w}$, denoted $\bar{w}^H$:</p>
+\$$ \bar{w}^H \bar{y} = \begin{bmatrix} w_1^* & w_2^* & \dots & w_L^* \end{bmatrix} \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_L \end{bmatrix} $$
+<p>This shows that the mathematical foundation of receive beamforming is the inner product. The goal is to choose the vector $\bar{w}$ in a way that optimizes the output signal quality.</p>
+
+<h3>5. Optimal Beamforming: Maximal Ratio Combining (MRC)</h3>
+<p>The key question is how to choose the weights in the vector $\bar{w}$ to achieve the best possible signal quality. "Optimal" in this context means choosing $\bar{w}$ to maximize the Signal-to-Noise Ratio (SNR) of the combined signal.</p>
+<p>The transcript presents the optimal beamforming vector, which is known as the <b>Maximal Ratio Combiner (MRC)</b>. The formula for the optimal $\bar{w}$ is:</p>
+\$$ \bar{w}_{\text{opt}} = \frac{\bar{h}}{||\bar{h}||} $$
+<p>Let's break down this important result:</p>
+<ul>
+    <li><b>Matched Filter:</b> The optimal beamformer $\bar{w}_{\text{opt}}$ is proportional to the channel vector $\bar{h}$. This means the beamformer is "matched" to the channel conditions. It aligns with the channel to coherently combine the signal components from all antennas, effectively amplifying the signal as much as possible.</li>
+    <li><b>Unit Norm Vector:</b> The vector $\bar{h}$ is divided by its norm, $||\bar{h}||$. This normalization ensures that the beamforming vector $\bar{w}_{\text{opt}}$ has a length (norm) of 1. This is a standard constraint to prevent the beamformer from adding arbitrary amounts of power.</li>
+</ul>
+<p>In summary, the MRC technique provides the highest possible SNR at the receiver in a SIMO system by choosing a beamforming vector that is a normalized version of the channel vector itself. This is a classic and powerful result in wireless communications, directly linking the concept of an inner product to a method for optimizing signal reception.</p>
+</div></div><div class="chapter" id="Lecture 4 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 4 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the fundamental concepts of matrices as introduced in the transcript, including their definition, notation, and basic operations such as addition, scalar multiplication, and matrix multiplication.</p>
+
+<b>1. Introduction to Matrices</b>
+<p>A matrix is a fundamental object in linear algebra. It is a rectangular array or grid of numbers, symbols, or expressions, arranged in rows and columns.</p>
+
+<p><b>Definition:</b> An $ m \times n $ (read as "m by n") matrix is a rectangular array of scalars with $ m $ rows and $ n $ columns. If $ n = 1 $, the matrix is a column vector.</p>
+
+<p>A general $ m \times n $ matrix, denoted by $ A $, is written as:</p>
+\$$
+A =
+\begin{pmatrix}
+a_{11} & a_{12} & \cdots & a_{1n} \\
+a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m1} & a_{m2} & \cdots & a_{mn}
+\end{pmatrix}
+$$
+<p>Here:</p>
+<ul>
+    <li>$ m $ is the number of rows.</li>
+    <li>$ n $ is the number of columns.</li>
+    <li>$ a_{ij} $ represents the element (or entry, coefficient) in the <b>i-th row</b> and the <b>j-th column</b>. The first subscript, $ i $, is the <b>row index</b> ($ 1 \le i \le m $), and the second subscript, $ j $, is the <b>column index</b> ($ 1 \le j \le n $).</li>
+</ul>
+
+<p>A matrix can also be viewed as a collection of column vectors placed side-by-side. If we let $ \mathbf{a_j} $ be the j-th column vector, the matrix $ A $ can be represented as:</p>
+\$$ A = \begin{bmatrix} | & | & & | \\ \mathbf{a_1} & \mathbf{a_2} & \cdots & \mathbf{a_n} \\ | & | & & | \end{bmatrix} $$
+<p>where each $ \mathbf{a_j} $ is a vector of size $ m \times 1 $.</p>
+
+<p><b>Example:</b></p>
+<p>Consider the matrix:</p>
+\$$ A = \begin{pmatrix} 3 & -1 & 2 \\ -2 & 4 & 3 \end{pmatrix} $$
+<p>This is a $ 2 \times 3 $ matrix because it has 2 rows and 3 columns. Some of its elements are:</p>
+<ul>
+    <li>$ a_{22} $ (the element in the second row, second column) is 4.</li>
+    <li>$ a_{23} $ (the element in the second row, third column) is 3.</li>
+</ul>
+
+<p><b>Types of Matrices (based on elements):</b></p>
+<ul>
+    <li><b>Real Matrix:</b> A matrix is called a real matrix if all of its elements $ a_{ij} $ are real numbers. We use the notation $ A \in \mathbb{R}^{m \times n} $ to denote that $ A $ is a member of the set of all $ m \times n $ real matrices.</li>
+    <li><b>Complex Matrix:</b> A matrix is called a complex matrix if its elements can be complex numbers. We use the notation $ A \in \mathbb{C}^{m \times n} $ for this set.</li>
+</ul>
+
+<b>2. Basic Matrix Operations</b>
+
+<b>a) Matrix Addition</b>
+<p>Two matrices can be added together only if they have the exact same dimensions (i.e., the same number of rows and the same number of columns).</p>
+<p><b>Rule:</b> If $ A $ and $ B $ are both $ m \times n $ matrices, their sum, $ C = A + B $, is also an $ m \times n $ matrix. The addition is performed element-wise.</p>
+<p><b>Formula:</b> The element in the i-th row and j-th column of the resulting matrix $ C $ is the sum of the corresponding elements in $ A $ and $ B $.</p>
+\$$ c_{ij} = a_{ij} + b_{ij} $$
+
+<p><b>Example:</b></p>
+<p>Let $ A = \begin{pmatrix} 3 & -1 & 2 \\ -2 & 4 & 3 \end{pmatrix} $ and $ B = \begin{pmatrix} 4 & -3 & 6 \\ 2 & 2 & -1 \end{pmatrix} $. Both are $ 2 \times 3 $ matrices.</p>
+<p>Their sum $ C = A + B $ is:</p>
+\$$
+C = \begin{pmatrix} 3+4 & -1+(-3) & 2+6 \\ -2+2 & 4+2 & 3+(-1) \end{pmatrix} = \begin{pmatrix} 7 & -4 & 8 \\ 0 & 6 & 2 \end{pmatrix}
+$$
+
+<b>b) Scalar Multiplication</b>
+<p>Any matrix can be multiplied by a scalar (a single number). The result is a new matrix of the same dimensions.</p>
+<p><b>Rule:</b> To multiply a matrix $ A $ by a scalar $ k $, you multiply every element of $ A $ by $ k $.</p>
+<p><b>Formula:</b> If $ C = kA $, then the elements of $ C $ are given by:</p>
+\$$ c_{ij} = k \cdot a_{ij} $$
+
+<p><b>Example:</b></p>
+<p>Let $ A = \begin{pmatrix} 3 & -1 & 2 \\ -2 & 4 & 3 \end{pmatrix} $ and the scalar $ k = 2 $.</p>
+<p>Then $ 2A $ is:</p>
+\$$
+2A = 2 \cdot \begin{pmatrix} 3 & -1 & 2 \\ -2 & 4 & 3 \end{pmatrix} = \begin{pmatrix} 2 \cdot 3 & 2 \cdot (-1) & 2 \cdot 2 \\ 2 \cdot (-2) & 2 \cdot 4 & 2 \cdot 3 \end{pmatrix} = \begin{pmatrix} 6 & -2 & 4 \\ -4 & 8 & 6 \end{pmatrix}
+$$
+
+<b>c) Matrix Multiplication</b>
+<p>Matrix multiplication is more complex than addition or scalar multiplication. Two matrices $ A $ and $ B $ can be multiplied to form the product $ AB $ only if a specific condition on their dimensions is met.</p>
+<p><b>Condition:</b> For the product $ C = AB $ to be defined, the number of columns of the first matrix ($ A $) must be equal to the number of rows of the second matrix ($ B $).</p>
+<p>If $ A $ is an $ m \times n $ matrix and $ B $ is a $ p \times q $ matrix, the product $ AB $ is defined only if $ n = p $. The resulting matrix $ C $ will have dimensions $ m \times q $.</p>
+
+<p><b>Formula:</b> The element $ c_{ij} $ in the i-th row and j-th column of the product matrix $ C = AB $ is calculated by taking the <b>inner product</b> (or dot product) of the <b>i-th row of A</b> and the <b>j-th column of B</b>.</p>
+<p>The formula for $ c_{ij} $ is:</p>
+\$$ c_{ij} = \sum_{l=1}^{n} a_{il} b_{lj} = a_{i1}b_{1j} + a_{i2}b_{2j} + \cdots + a_{in}b_{nj} $$
+
+<p><b>Example:</b></p>
+<p>Let $ A = \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{pmatrix} $ and $ B = \begin{pmatrix} 1 & -2 \\ -1 & 1 \\ 1 & 3 \end{pmatrix} $.</p>
+<ul>
+    <li>$ A $ is a $ 2 \times 3 $ matrix.</li>
+    <li>$ B $ is a $ 3 \times 2 $ matrix.</li>
+</ul>
+<p>The number of columns of $ A $ (3) equals the number of rows of $ B $ (3), so the product $ C = AB $ is defined. The resulting matrix $ C $ will be of size $ 2 \times 2 $.</p>
+
+<p>Let's calculate the elements of $ C = \begin{pmatrix} c_{11} & c_{12} \\ c_{21} & c_{22} \end{pmatrix} $:</p>
+<ul>
+    <li><b>$ c_{11} $</b>: Inner product of the 1st row of A and the 1st column of B.<br>
+    $ c_{11} = (1 \cdot 1) + (2 \cdot -1) + (3 \cdot 1) = 1 - 2 + 3 = 2 $</li>
+    <br>
+    <li><b>$ c_{12} $</b>: Inner product of the 1st row of A and the 2nd column of B.<br>
+    $ c_{12} = (1 \cdot -2) + (2 \cdot 1) + (3 \cdot 3) = -2 + 2 + 9 = 9 $</li>
+    <br>
+    <li><b>$ c_{21} $</b>: Inner product of the 2nd row of A and the 1st column of B.<br>
+    $ c_{21} = (4 \cdot 1) + (5 \cdot -1) + (6 \cdot 1) = 4 - 5 + 6 = 5 $</li>
+    <br>
+    <li><b>$ c_{22} $</b>: Inner product of the 2nd row of A and the 2nd column of B.<br>
+    $ c_{22} = (4 \cdot -2) + (5 \cdot 1) + (6 \cdot 3) = -8 + 5 + 18 = 15 $</li>
+</ul>
+
+<p>So, the final product is:</p>
+\$$ AB = \begin{pmatrix} 2 & 9 \\ 5 & 15 \end{pmatrix} $$
+
+</div></div><div class="chapter" id="Lecture 5 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 5 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts discussed in the transcript, focusing on the rank of a matrix, column space, linear independence, and the process of Gaussian elimination to determine the rank.</p>
+
+<b>1. The Matrix and its Column Vectors</b>
+<p>The discussion begins by considering a general $m \times n$ matrix, denoted as <b>A</b>. This matrix has $m$ rows and $n$ columns.</p>
+\$$
+A =
+\begin{pmatrix}
+a_{11} & a_{12} & \cdots & a_{1n} \\
+a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m1} & a_{m2} & \cdots & a_{mn}
+\end{pmatrix}
+$$
+<p>An important perspective is to view this matrix as a collection of $n$ column vectors, where each column is a vector of size $m \times 1$. These column vectors are denoted as $\bar{A_1}, \bar{A_2}, \dots, \bar{A_n}$.</p>
+\$$
+A = \begin{bmatrix} | & | & & | \\ \bar{A_1} & \bar{A_2} & \cdots & \bar{A_n} \\ | & | & & | \end{bmatrix}
+$$
+
+<b>2. Column Space</b>
+<p>The <b>column space</b> of a matrix <b>A</b>, denoted as $C(A)$, is the set of all possible vectors that can be formed by a linear combination of its column vectors.</p>
+<p>A vector $\bar{y}$ is in the column space of <b>A</b> if it can be expressed as the product of the matrix <b>A</b> and some vector $\bar{x}$:</p>
+\$$ \bar{y} = A\bar{x} $$
+<p>If we expand this matrix-vector multiplication, we see that $\bar{y}$ is a weighted sum of the columns of <b>A</b>, where the weights are the components of the vector $\bar{x}$.</p>
+\$$
+\bar{y} =
+\begin{bmatrix} | & | & & | \\ \bar{A_1} & \bar{A_2} & \cdots & \bar{A_n} \\ | & | & & | \end{bmatrix}
+\begin{pmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{pmatrix}
+= x_1\bar{A_1} + x_2\bar{A_2} + \cdots + x_n\bar{A_n}
+$$
+<p>Therefore, the column space $C(A)$ is the subspace spanned by the columns of <b>A</b>. It contains every possible linear combination of the matrix's column vectors.</p>
+
+<b>3. Linear Independence</b>
+<p>A crucial concept for understanding the rank is <b>linear independence</b>. A set of vectors $\{\bar{A_1}, \bar{A_2}, \dots, \bar{A_n}\}$ is said to be <b>linearly independent</b> if the only way their linear combination can equal the zero vector is if all the coefficients (scalars) are zero.</p>
+<p>Mathematically, the equation:</p>
+\$$ x_1\bar{A_1} + x_2\bar{A_2} + \cdots + x_n\bar{A_n} = \bar{0} $$
+<p>is true <i>if and only if</i> $x_1 = x_2 = \cdots = x_n = 0$.</p>
+<p>Conversely, if there exists a set of scalars $x_1, x_2, \dots, x_n$, where at least one is non-zero, that satisfies the equation above, the set of vectors is called <b>linearly dependent</b>. This means at least one vector in the set can be expressed as a linear combination of the others.</p>
+
+<p><b>Example of Linear Dependence:</b></p>
+<p>Consider the three vectors:</p>
+\$$ \bar{A_1} = \begin{pmatrix} 1 \\ -1 \\ 1 \end{pmatrix}, \quad \bar{A_2} = \begin{pmatrix} 2 \\ 1 \\ -3 \end{pmatrix}, \quad \bar{A_3} = \begin{pmatrix} 7 \\ -1 \\ -3 \end{pmatrix} $$
+<p>The transcript shows that a linear combination of $\bar{A_1}$ and $\bar{A_2}$ can form $\bar{A_3}$:</p>
+\$$ 3\bar{A_1} + 2\bar{A_2} = 3\begin{pmatrix} 1 \\ -1 \\ 1 \end{pmatrix} + 2\begin{pmatrix} 2 \\ 1 \\ -3 \end{pmatrix} = \begin{pmatrix} 3 \\ -3 \\ 3 \end{pmatrix} + \begin{pmatrix} 4 \\ 2 \\ -6 \end{pmatrix} = \begin{pmatrix} 7 \\ -1 \\ -3 \end{pmatrix} = \bar{A_3} $$
+<p>By rearranging this equation, we get a linear combination that equals the zero vector, with non-zero coefficients:</p>
+\$$ 3\bar{A_1} + 2\bar{A_2} - \bar{A_3} = \bar{0} $$
+<p>Since the coefficients $x_1=3, x_2=2, x_3=-1$ are not all zero, the vectors $\bar{A_1}, \bar{A_2}, \bar{A_3}$ are <b>linearly dependent</b>.</p>
+
+<b>4. The Rank of a Matrix</b>
+<p>The <b>rank</b> of a matrix <b>A</b> is a fundamental property that is defined in two equivalent ways:</p>
+<ol>
+    <li><b>Column Rank:</b> The maximum number of linearly independent columns in the matrix.</li>
+    <li><b>Row Rank:</b> The maximum number of linearly independent rows in the matrix.</li>
+</ol>
+<p>A key theorem in linear algebra states that for any matrix, the column rank is equal to the row rank. This common value is simply called the rank of the matrix.</p>
+\$$ \text{Column Rank} = \text{Row Rank} = \text{Rank}(A) $$
+<p>The rank of an $m \times n$ matrix is always less than or equal to the smaller of its dimensions.</p>
+\$$ \text{Rank}(A) \le \min(m, n) $$
+
+<b>5. Determining the Rank via Gaussian Elimination</b>
+<p>A systematic procedure to find the rank of a matrix is <b>Gaussian elimination</b>, which uses a series of elementary row operations to transform the matrix into a simpler form called <b>Row Echelon Form</b>.</p>
+<p>Let's use the matrix formed by the vectors from the previous example:</p>
+\$$ A = \begin{pmatrix} 1 & 2 & 7 \\ -1 & 1 & -1 \\ 1 & -3 & -3 \end{pmatrix} $$
+<p>The goal of the row operations is to create zeros below the leading non-zero element of each row.</p>
+
+<p><b>Step 1:</b> Replace Row 2 with (Row 2 + Row 1). Operation: $R_2 \to R_2 + R_1$</p>
+\$$ \begin{pmatrix} 1 & 2 & 7 \\ 0 & 3 & 6 \\ 1 & -3 & -3 \end{pmatrix} $$
+
+<p><b>Step 2:</b> Simplify Row 2 by dividing by 3. Operation: $R_2 \to R_2 / 3$</p>
+\$$ \begin{pmatrix} 1 & 2 & 7 \\ 0 & 1 & 2 \\ 1 & -3 & -3 \end{pmatrix} $$
+
+<p><b>Step 3:</b> Replace Row 3 with (Row 3 - Row 1). Operation: $R_3 \to R_3 - R_1$</p>
+\$$ \begin{pmatrix} 1 & 2 & 7 \\ 0 & 1 & 2 \\ 0 & -5 & -10 \end{pmatrix} $$
+
+<p><b>Step 4:</b> Replace Row 3 with (Row 3 + 5 * Row 2). Operation: $R_3 \to R_3 + 5R_2$</p>
+\$$ \begin{pmatrix} 1 & 2 & 7 \\ 0 & 1 & 2 \\ 0 & 0 & 0 \end{pmatrix} $$
+
+<p>This final matrix is in <b>Row Echelon Form</b>. The leading non-zero entries in each non-zero row are called <b>pivots</b>. In this case, the pivots are the '1' in the first row and the '1' in the second row.</p>
+<p>The rank of the matrix is equal to the number of non-zero rows (or the number of pivots) in its row echelon form. Since there are two non-zero rows, the rank is 2.</p>
+\$$ \text{Rank}(A) = 2 $$
+<p>This result confirms our earlier finding: the three column vectors are linearly dependent, but the maximum number of linearly independent vectors among them is two (e.g., $\bar{A_1}$ and $\bar{A_2}$ are linearly independent).</p>
+</div></div><h2>Weekly Summary</h2><div>
+<p>This week's lectures introduce the foundational concepts of linear algebra, starting with vectors and their applications, and then moving to matrices and their fundamental properties. The content is framed within the context of signal processing, data analytics, and machine learning.</p>
+
+<b>1. Vectors: Representation and Basic Operations</b><br>
+<p>
+    <i>Main Topics:</i> The course begins by establishing vectors as the fundamental tool for representing data. An n-dimensional vector $\bar{u} = [u_1, u_2, \dots, u_n]$ is defined as a point in an n-dimensional space, which can be real $\mathbb{R}^n$ or complex $\mathbb{C}^n$. Practical examples include representing signal samples, sensor readings, or image data. The lectures cover basic vector operations:
+<ul>
+<li><b>Vector Addition:</b> An element-wise operation, $\bar{u} + \bar{v} = [u_1+v_1, u_2+v_2, \dots, u_n+v_n]$.</li>
+<li><b>Scalar Multiplication:</b> Multiplying each component of a vector by a scalar $k$, $k\bar{u} = [ku_1, ku_2, \dots, ku_n]$.</li>
+<li><b>Linear Combination:</b> A weighted sum of vectors, e.g., $k_1\bar{u}_1 + k_2\bar{u}_2 + \dots + k_m\bar{u}_m$.</li>
+</ul>
+</p>
+<p>
+    <i>Key Takeaways:</i> Vectors are not just abstract mathematical objects but are essential for representing real-world data in a structured way. Basic arithmetic operations on vectors form the building blocks for more complex algorithms in data science and signal processing.
+</p>
+
+<b>2. Inner Product, Orthogonality, and Norm</b><br>
+<p>
+    <i>Main Topics:</i> The concept of the inner product is introduced as a way to measure the relationship between two vectors.
+<ul>
+<li>For real vectors, the inner product is $\bar{u}^T\bar{v} = \sum_{i=1}^{n} u_i v_i$.</li>
+<li>For complex vectors, it is $\bar{u}^H\bar{v} = \sum_{i=1}^{n} u_i^* v_i$, where $u_i^*$ is the complex conjugate.</li>
+</ul>
+Two vectors are <b>orthogonal</b> if their inner product is zero. A key example is the orthogonality of complex sinusoids at different frequencies, which is the foundation of Fourier Analysis. The <b>norm</b> (or L2-norm) of a vector, $\|\bar{u}\| = \sqrt{\bar{u}^H\bar{u}}$, is defined as its length or magnitude. For a signal vector, the squared norm $\|\bar{u}\|^2$ represents the signal's energy.
+</p>
+<p>
+    <i>Key Takeaways:</i> The inner product is a powerful tool for measuring similarity or correlation between vectors. Orthogonality is a special case of zero similarity that is fundamental in many areas, including signal decomposition (e.g., Fourier Transform). The norm provides a measure of a vector's size or a signal's energy.
+</p>
+
+<b>3. Applications of the Inner Product and the Cauchy-Schwarz Inequality</b><br>
+<p>
+    <i>Main Topics:</i> The lectures highlight the <b>Cauchy-Schwarz inequality</b>, which states that the magnitude of the inner product is bounded by the product of the vector norms: $|\bar{u}^H \bar{v}|^2 \le \|\bar{u}\|^2 \|\bar{v}\|^2$. Practical applications of the inner product (correlation) are discussed in detail:
+<ul>
+<li><b>Radar Detection:</b> To detect a target, a radar system correlates the received signal with the transmitted signal. A high correlation value suggests a target is present, forming a basis for hypothesis testing.</li>
+<li><b>Wireless Beamforming:</b> In systems with multiple antennas (SIMO), a received signal vector $\bar{y}$ is combined using a beamforming vector $\bar{w}$. The operation is an inner product $\bar{w}^H\bar{y}$. The optimal beamformer that maximizes signal quality is the <b>Maximal Ratio Combiner (MRC)</b>, which is a normalized version of the channel vector, $\bar{w} = \bar{h} / \|\bar{h}\|$.</li>
+</ul>
+</p>
+<p>
+    <i>Key Takeaways:</i> The inner product is a core computational tool in engineering. It is used for signal detection in radar by measuring similarity and for optimizing signal reception in modern wireless communications (4G/5G) through beamforming.
+</p>
+
+<b>4. Introduction to Matrices and their Operations</b><br>
+<p>
+    <i>Main Topics:</i> Matrices are introduced as $m \times n$ rectangular arrays of scalars, which can be viewed as collections of column vectors. Basic matrix operations are defined:
+<ul>
+<li><b>Addition:</b> Element-wise, defined only for matrices of the same dimensions.</li>
+<li><b>Scalar Multiplication:</b> Multiplying every element of the matrix by a scalar.</li>
+<li><b>Matrix Multiplication:</b> The product $C = AB$ is defined if the number of columns in $A$ equals the number of rows in $B$. The resulting element $c_{ij}$ is the inner product of the i-th row of $A$ and the j-th column of $B$.</li>
+</ul>
+</p>
+<p>
+    <i>Key Takeaways:</i> Matrices provide a way to organize data and represent linear transformations. Matrix multiplication is a key operation that combines information from two matrices based on a series of inner products.
+</p>
+
+<b>5. The Rank of a Matrix</b><br>
+<p>
+    <i>Main Topics:</i> The concept of <b>linear independence</b> is introduced to define the rank. A set of vectors is linearly independent if no vector in the set can be written as a linear combination of the others. The <b>rank</b> of a matrix is the maximum number of linearly independent columns (or, equivalently, rows). The rank can be determined systematically using <b>Gaussian elimination</b> to transform the matrix into <b>row echelon form</b>.
+</p>
+<p>
+    <i>Key Takeaways:</i> The rank is a fundamental property of a matrix that describes the dimension of the space spanned by its columns (or rows). A low rank implies redundancy in the data represented by the matrix. Gaussian elimination is the standard algorithm to compute the rank by identifying the number of non-zero rows (pivots) in the matrix's echelon form.
+</p>
+</div><h2>Assignment Explanation</h2><div>
+<p>This document explains the questions and answers from the "Week 1 - Assignment-1" of the NPTEL course "Applied Linear Algebra for Signal Processing, Data Analytics and Machine Learning".</p>
+
+<p><b>Question 1:</b> Consider the real vector $\bar{x} = \begin{bmatrix} x_1 \\ \vdots \\ x_n \end{bmatrix}$. Its Euclidean norm is</p>
+<p><b>Answer:</b> $\sqrt{x_1^2 + x_2^2 + \dots + x_n^2}$</p>
+<p><b>Explanation:</b> The Euclidean norm (also known as the $L_2$-norm) of a real vector is a measure of its length or magnitude. It is calculated by taking the square root of the sum of the squares of its components. This is a direct application of the definition of the Euclidean norm.</p>
+<br>
+
+<p><b>Question 2:</b> Consider the complex sinusoidal vector $\bar{u}(f) = [1, e^{j2\pi f}, e^{j4\pi f}, \dots, e^{j2(N-1)\pi f}]^T$. Then, $\bar{u}^H(\frac{k}{N}) \bar{u}(\frac{l}{N})$, for $l \neq k$, equals</p>
+<p><b>Answer:</b> 0</p>
+<p><b>Explanation:</b> This question is about the orthogonality of Discrete Fourier Transform (DFT) basis vectors. The vectors $\bar{u}(\frac{k}{N})$ and $\bar{u}(\frac{l}{N})$ are two distinct basis vectors for the DFT. The expression $\bar{u}^H(\frac{k}{N}) \bar{u}(\frac{l}{N})$ represents the inner product of these two vectors. A fundamental property of DFT basis vectors is that they are orthogonal to each other. The inner product of any two distinct orthogonal vectors is, by definition, zero.</p>
+<br>
+
+<p><b>Question 3:</b> The vectors $\bar{u} = \begin{bmatrix} 1 \\ -2 \\ 3 \end{bmatrix}$ and $\bar{v} = \begin{bmatrix} 1 \\ 2 \\ 1 \end{bmatrix}$ are</p>
+<p><b>Answer:</b> Both orthogonal and linearly independent</p>
+<p><b>Explanation:</b>
+<ul>
+<li><b>Orthogonality:</b> Two vectors are orthogonal if their inner product (dot product for real vectors) is zero.
+\$$\bar{u}^T\bar{v} = (1)(1) + (-2)(2) + (3)(1) = 1 - 4 + 3 = 0$$
+Since the inner product is 0, the vectors are orthogonal.</li>
+<li><b>Linear Independence:</b> A set of non-zero orthogonal vectors is always linearly independent. Since both $\bar{u}$ and $\bar{v}$ are non-zero and we have shown they are orthogonal, they must also be linearly independent.</li>
+</ul>
+</p>
+<br>
+
+<p><b>Question 4:</b> Consider the real vectors $\bar{u}$ and $\bar{v}$ of size $n \times 1$. The inner product of $\bar{u}$ and $\bar{v}$ is defined as</p>
+<p><b>Answer:</b> $\bar{u}^T\bar{v}$</p>
+<p><b>Explanation:</b> The standard inner product (or dot product) for two real column vectors is defined as the matrix product of the transpose of the first vector with the second vector. If $\bar{u}$ is an $n \times 1$ vector, its transpose $\bar{u}^T$ is a $1 \times n$ row vector. Multiplying a $1 \times n$ vector by an $n \times 1$ vector results in a $1 \times 1$ scalar, which is the value of the inner product.</p>
+<br>
+
+<p><b>Question 5:</b> Orthogonal vectors $\bar{u} = [u_1, u_2, \dots, u_n]^T$ and $\bar{v} = [v_1, v_2, \dots, v_n]^T$ satisfy the property</p>
+<p><b>Answer:</b> $\bar{u}^H\bar{v} = 0$</p>
+<p><b>Explanation:</b> Two vectors are orthogonal if their inner product is zero. For complex vectors, the inner product is defined using the conjugate transpose (Hermitian transpose), denoted by $H$. The inner product of $\bar{u}$ and $\bar{v}$ is $\langle \bar{u}, \bar{v} \rangle = \bar{u}^H\bar{v}$. Therefore, the orthogonality condition is $\bar{u}^H\bar{v} = 0$. This definition also holds for real vectors, as the conjugate transpose is the same as the regular transpose for real numbers.</p>
+<br>
+
+<p><b>Question 6:</b> The linear equation $3x_1 - 5x_2 = -1$ has</p>
+<p><b>Answer:</b> an infinite number of solutions</p>
+<p><b>Explanation:</b> This is a single linear equation with two variables. Geometrically, it represents a line in a two-dimensional plane. A line consists of an infinite number of points. Algebraically, you can express one variable in terms of the other (e.g., $x_1 = \frac{5x_2 - 1}{3}$). For every real number you choose for $x_2$, you can calculate a corresponding value for $x_1$. Since there are infinite choices for $x_2$, there are infinitely many solutions $(x_1, x_2)$ that satisfy the equation.</p>
+<br>
+
+<p><b>Question 7:</b> Consider the complex vector $\bar{x} = \begin{bmatrix} x_1 \\ \vdots \\ x_n \end{bmatrix}$. Its Euclidean norm is</p>
+<p><b>Answer:</b> $\sqrt{|x_1|^2 + |x_2|^2 + \dots + |x_n|^2}$</p>
+<p><b>Explanation:</b> For a complex vector, the Euclidean norm is defined as the square root of the inner product of the vector with itself: $\Vert\bar{x}\Vert = \sqrt{\bar{x}^H \bar{x}}$. The inner product $\bar{x}^H \bar{x}$ is the sum of the products of the conjugate of each component with the component itself: $\sum_{i=1}^n x_i^* x_i$. For any complex number $z$, $z^*z = |z|^2$ (the squared modulus). Thus, the norm is $\sqrt{\sum_{i=1}^n |x_i|^2}$.</p>
+<br>
+
+<p><b>Question 8:</b> The Cauchy-Schwarz inequality for complex vectors $\bar{u}$ and $\bar{v}$ of size $n \times 1$ is given as</p>
+<p><b>Answer:</b> $|\bar{u}^H\bar{v}| \le \Vert\bar{u}\Vert \Vert\bar{v}\Vert$</p>
+<p><b>Explanation:</b> The Cauchy-Schwarz inequality provides an upper bound on the magnitude of the inner product of two vectors. It states that the modulus (or absolute value) of the inner product of two vectors ($\bar{u}^H\bar{v}$ for complex vectors) is less than or equal to the product of their norms ($\Vert\bar{u}\Vert$ and $\Vert\bar{v}\Vert$).</p>
+<br>
+
+<p><b>Question 9:</b> Consider the matrix $\begin{bmatrix} 3 & -6 & 7 \\ 8 & -1 & 5 \\ 4 & -4 & -2 \end{bmatrix}$. The transpose of the given matrix is</p>
+<p><b>Answer:</b> $\begin{bmatrix} 3 & 8 & 4 \\ -6 & -1 & -4 \\ 7 & 5 & -2 \end{bmatrix}$</p>
+<p><b>Explanation:</b> The transpose of a matrix, denoted $A^T$, is obtained by interchanging its rows and columns. The first row of the original matrix becomes the first column of the transposed matrix, the second row becomes the second column, and so on.
+<ul>
+<li>Row 1: [3, -6, 7] becomes Column 1.</li>
+<li>Row 2: [8, -1, 5] becomes Column 2.</li>
+<li>Row 3: [4, -4, -2] becomes Column 3.</li>
+</ul>
+</p>
+<br>
+
+<p><b>Question 10:</b> Consider two vectors $\bar{u} = [u_1, u_2, \dots, u_n]^T$ and $\bar{v} = [v_1, v_2, \dots, v_n]^T$. The quantity $\bar{u}\bar{v}^T$ has the size</p>
+<p><b>Answer:</b> $n \times n$</p>
+<p><b>Explanation:</b> This operation is known as the **outer product**. The vector $\bar{u}$ is a column vector of size $n \times 1$. The transpose of vector $\bar{v}$, which is $\bar{v}^T$, is a row vector of size $1 \times n$. When you multiply a matrix of size $n \times 1$ by a matrix of size $1 \times n$, the resulting matrix has the size $n \times n$.</p>
+</div></div>
+</body>
+</html>

@@ -1,0 +1,808 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week2</title>
+
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+      };
+    </script>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 2em;
+        }
+        .mjx-display {
+            margin: 2.5em 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="week" id="week_2"><h1 class="week-title">Week 2</h1><h2>Transcript Explanations</h2><div class="chapter" id="Lecture 6 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 6 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts presented in the transcript, focusing on the determinant and inverse of a matrix. The explanation clarifies the definitions, formulas, and step-by-step calculations discussed.</p>
+
+<b><h3>1. Determinant of a Matrix</h3></b>
+<p>The transcript begins by introducing the concept of a determinant, which is a fundamental property of square matrices and a prerequisite for calculating the matrix inverse.</p>
+<p><b>Key Points:</b></p>
+<ul>
+    <li>The determinant is a scalar value that can be computed from the elements of a square matrix.</li>
+    <li>It is defined only for square matrices, i.e., matrices with an equal number of rows and columns ($m \times n$ where $m=n$).</li>
+</ul>
+
+<h4>a. Determinant of a 2x2 Matrix</h4>
+<p>For a standard 2x2 matrix, the calculation is straightforward.</p>
+<p>Given a matrix $\mathbf{A}$:
+\$$ \mathbf{A} = \begin{pmatrix} a & b \\ c & d \end{pmatrix} $$
+The determinant of $\mathbf{A}$, denoted as $\det(\mathbf{A})$ or $|\mathbf{A}|$, is calculated with the formula:
+\$$ \det(\mathbf{A}) = ad - bc $$
+</p>
+<p><b>Example from Transcript:</b></p>
+<p>Let the matrix $\mathbf{A}$ be:
+\$$ \mathbf{A} = \begin{pmatrix} 2 & -3 \\ 1 & -2 \end{pmatrix} $$
+The determinant is calculated as:
+\$$ \det(\mathbf{A}) = (2)(-2) - (1)(-3) = -4 - (-3) = -4 + 3 = -1 $$
+</p>
+
+<h4>b. Determinant of an n x n Matrix (General Case)</h4>
+<p>For larger square matrices, the determinant is typically calculated recursively using a method called <b>cofactor expansion</b> (or Laplace expansion). This can be done along any row or any column of the matrix.</p>
+<p>Given an $m \times m$ matrix $\mathbf{A}$, the determinant can be found by expanding along the $i$-th row:
+\$$ \det(\mathbf{A}) = \sum_{j=1}^{m} a_{ij} C_{ij} $$
+Or by expanding along the $j$-th column:
+\$$ \det(\mathbf{A}) = \sum_{i=1}^{m} a_{ij} C_{ij} $$
+where:
+<ul>
+    <li>$a_{ij}$ is the element in the $i$-th row and $j$-th column.</li>
+    <li>$C_{ij}$ is the <b>cofactor</b> of the element $a_{ij}$.</li>
+</ul>
+</p>
+<p><b>Cofactors and Minors:</b></p>
+<p>The cofactor $C_{ij}$ is defined as:
+\$$ C_{ij} = (-1)^{i+j} M_{ij} $$
+Here, $M_{ij}$ is the <b>minor</b> of the element $a_{ij}$. The minor $M_{ij}$ is the determinant of the sub-matrix that remains after removing the $i$-th row and $j$-th column from the original matrix. This recursive definition means that the determinant of a 3x3 matrix is found using determinants of 2x2 matrices, a 4x4 using 3x3s, and so on.</p>
+
+<p><b>Example from Transcript (3x3 Matrix):</b></p>
+<p>Consider the matrix $\mathbf{A}$:
+\$$ \mathbf{A} = \begin{pmatrix} 7 & 2 & 1 \\ 0 & 3 & -1 \\ -3 & 4 & -2 \end{pmatrix} $$
+To find the determinant, we can expand along the first row (where $i=1$):
+\$$ \det(\mathbf{A}) = a_{11}C_{11} + a_{12}C_{12} + a_{13}C_{13} $$
+\$$ \det(\mathbf{A}) = 7 \cdot C_{11} + 2 \cdot C_{12} + 1 \cdot C_{13} $$
+Now, we calculate each cofactor:
+<ul>
+    <li><b>$C_{11}$</b>: Remove the 1st row and 1st column.
+    \$$ C_{11} = (-1)^{1+1} \det \begin{pmatrix} 3 & -1 \\ 4 & -2 \end{pmatrix} = (1) \cdot ((3)(-2) - (4)(-1)) = -6 + 4 = -2 $$
+    </li>
+    <li><b>$C_{12}$</b>: Remove the 1st row and 2nd column.
+    \$$ C_{12} = (-1)^{1+2} \det \begin{pmatrix} 0 & -1 \\ -3 & -2 \end{pmatrix} = (-1) \cdot ((0)(-2) - (-3)(-1)) = (-1) \cdot (0 - 3) = 3 $$
+    </li>
+    <li><b>$C_{13}$</b>: Remove the 1st row and 3rd column.
+    \$$ C_{13} = (-1)^{1+3} \det \begin{pmatrix} 0 & 3 \\ -3 & 4 \end{pmatrix} = (1) \cdot ((0)(4) - (-3)(3)) = 0 + 9 = 9 $$
+    </li>
+</ul>
+Substituting these values back:
+\$$ \det(\mathbf{A}) = 7(-2) + 2(3) + 1(9) = -14 + 6 + 9 = 1 $$
+
+<b><h3>2. Inverse of a Matrix</h3></b>
+<p>The transcript then moves on to matrix inversion, which relies on the determinant.</p>
+<p><b>Key Points:</b></p>
+<ul>
+    <li>The inverse of a square matrix $\mathbf{A}$ is denoted by $\mathbf{A}^{-1}$.</li>
+    <li>It is defined only for square matrices.</li>
+    <li>The inverse, if it exists, satisfies the property:
+    \$$ \mathbf{A}\mathbf{A}^{-1} = \mathbf{A}^{-1}\mathbf{A} = \mathbf{I} $$
+    where $\mathbf{I}$ is the identity matrix of the same dimension.</li>
+</ul>
+
+<h4>a. Existence of the Inverse</h4>
+<p>A matrix does not always have an inverse. The existence is determined by its determinant.</p>
+<ul>
+    <li>If $\det(\mathbf{A}) \neq 0$, the matrix $\mathbf{A}$ is called <b>invertible</b> (or non-singular), and its inverse $\mathbf{A}^{-1}$ exists.</li>
+    <li>If $\det(\mathbf{A}) = 0$, the matrix $\mathbf{A}$ is called <b>singular</b>, and it does not have an inverse.</li>
+</ul>
+
+<h4>b. Formula for the Matrix Inverse</h4>
+<p>If a matrix $\mathbf{A}$ is invertible, its inverse is calculated using the following formula:
+\$$ \mathbf{A}^{-1} = \frac{1}{\det(\mathbf{A})} \text{adj}(\mathbf{A}) $$
+where $\text{adj}(\mathbf{A})$ is the <b>adjoint</b> (or adjugate) of matrix $\mathbf{A}$.</p>
+<p>The <b>adjoint matrix</b> is the transpose of the matrix of cofactors:
+\$$ \text{adj}(\mathbf{A}) = \mathbf{C}^T $$
+Here, $\mathbf{C}$ is the matrix formed by replacing each element $a_{ij}$ of $\mathbf{A}$ with its corresponding cofactor $C_{ij}$.</p>
+
+<h4>c. Example from Transcript (3x3 Inverse)</h4>
+<p>Using the same matrix $\mathbf{A}$ as before:
+\$$ \mathbf{A} = \begin{pmatrix} 7 & 2 & 1 \\ 0 & 3 & -1 \\ -3 & 4 & -2 \end{pmatrix} $$
+<b>Step 1: Calculate the determinant.</b><br>
+We already found that $\det(\mathbf{A}) = 1$. Since it is non-zero, the inverse exists.
+
+<p><b>Step 2: Find the matrix of cofactors $\mathbf{C}$.</b><br>
+We need to calculate the cofactor for every element. We already have the first row: $C_{11}=-2, C_{12}=3, C_{13}=9$. The transcript provides the full matrix of cofactors:
+\$$ \mathbf{C} = \begin{pmatrix} -2 & 3 & 9 \\ 8 & -11 & -34 \\ -5 & 7 & 21 \end{pmatrix} $$
+</p>
+<p><b>Step 3: Find the adjoint matrix $\text{adj}(\mathbf{A})$.</b><br>
+The adjoint is the transpose of the cofactor matrix $\mathbf{C}$:
+\$$ \text{adj}(\mathbf{A}) = \mathbf{C}^T = \begin{pmatrix} -2 & 8 & -5 \\ 3 & -11 & 7 \\ 9 & -34 & 21 \end{pmatrix} $$
+</p>
+<p><b>Step 4: Calculate the inverse $\mathbf{A}^{-1}$.</b><br>
+Using the formula:
+\$$ \mathbf{A}^{-1} = \frac{1}{\det(\mathbf{A})} \text{adj}(\mathbf{A}) = \frac{1}{1} \begin{pmatrix} -2 & 8 & -5 \\ 3 & -11 & 7 \\ 9 & -34 & 21 \end{pmatrix} $$
+\$$ \mathbf{A}^{-1} = \begin{pmatrix} -2 & 8 & -5 \\ 3 & -11 & 7 \\ 9 & -34 & 21 \end{pmatrix} $$
+</p>
+<p>To verify the result, one can compute $\mathbf{A}\mathbf{A}^{-1}$ or $\mathbf{A}^{-1}\mathbf{A}$, both of which should result in the 3x3 identity matrix.</p>
+
+<b><h3>3. Inverse vs. Pseudo-Inverse</h3></b>
+<p>The transcript briefly distinguishes the matrix inverse from the <b>pseudo-inverse</b>. The key difference is that the inverse is only defined for invertible (square, non-singular) matrices. The pseudo-inverse is a more general concept that can be defined for any matrix, including non-square or singular matrices, but its properties are different. The transcript notes that if a matrix is invertible, its inverse and pseudo-inverse are the same.</p>
+</div></div><div class="chapter" id="Lecture 7 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 7 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts from the transcript, focusing on the application of matrix inverses to solve systems of linear equations and its practical use in modern wireless communication systems.</p>
+
+<b><h3>1. Solving a System of Linear Equations</h3></b>
+<p>One of the most fundamental applications of matrices and their inverses is in solving systems of linear equations. A system of $n$ linear equations with $n$ unknowns can be represented in a general form.</p>
+
+<b><h4>a. General Form</h4></b>
+<p>A system with $n$ equations and $n$ variables (unknowns) $x_1, x_2, \dots, x_n$ is given by:</p>
+\$$ a_{11}x_1 + a_{12}x_2 + \dots + a_{1n}x_n = b_1 $$
+\$$ a_{21}x_1 + a_{22}x_2 + \dots + a_{2n}x_n = b_2 $$
+\$$ \vdots $$
+\$$ a_{n1}x_1 + a_{n2}x_2 + \dots + a_{nn}x_n = b_n $$
+<p>This is called a "linear" system because the equations are linear in the variables $x_1, x_2, \dots, x_n$. This means the variables only appear to the first power (e.g., no $x_1^2$ or $x_1x_2$ terms).</p>
+
+<b><h4>b. Matrix Representation</h4></b>
+<p>This system of equations can be written more compactly using matrix notation. We can group the coefficients $a_{ij}$, the variables $x_j$, and the constants $b_i$ into matrices and vectors:</p>
+\$$
+\begin{pmatrix}
+a_{11} & a_{12} & \cdots & a_{1n} \\
+a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{n1} & a_{n2} & \cdots & a_{nn}
+\end{pmatrix}
+\begin{pmatrix}
+x_1 \\
+x_2 \\
+\vdots \\
+x_n
+\end{pmatrix}
+=
+\begin{pmatrix}
+b_1 \\
+b_2 \\
+\vdots \\
+b_n
+\end{pmatrix}
+$$
+<p>This can be represented in the simple form:</p>
+\$$ A\mathbf{x} = \mathbf{b} $$
+<p>Where:</p>
+<ul>
+    <li>$A$ is the $n \times n$ square matrix of coefficients.</li>
+    <li>$\mathbf{x}$ is the $n \times 1$ column vector of unknown variables.</li>
+    <li>$\mathbf{b}$ is the $n \times 1$ column vector of constants.</li>
+</ul>
+
+<b><h4>c. Solution using the Matrix Inverse</h4></b>
+<p>If the coefficient matrix $A$ is square and <b>invertible</b> (meaning its inverse, $A^{-1}$, exists), we can find a unique solution for the vector of unknowns $\mathbf{x}$. By pre-multiplying both sides of the equation by $A^{-1}$, we get:</p>
+\$$ A^{-1}(A\mathbf{x}) = A^{-1}\mathbf{b} $$
+<p>Since $A^{-1}A = I$ (the identity matrix) and $I\mathbf{x} = \mathbf{x}$, the solution is:</p>
+\$$ \mathbf{x} = A^{-1}\mathbf{b} $$
+<p>This formula provides a direct way to calculate the values of $x_1, x_2, \dots, x_n$, provided that $A^{-1}$ can be computed. The transcript notes that this simple solution applies only when $A$ is a square, invertible matrix. The cases where $A$ is not square or not invertible are more complex and will be discussed in later parts of the course.</p>
+
+<b><h4>d. Numerical Example</h4></b>
+<p>The transcript provides an example of a 3x3 system of equations:</p>
+\$$ 7x_1 + 2x_2 + x_3 = 2 $$
+\$$ 3x_2 - x_3 = -1 $$
+\$$ -3x_1 + 4x_2 - 2x_3 = 3 $$
+<p>In matrix form $A\mathbf{x} = \mathbf{b}$, this is:</p>
+\$$
+\underbrace{
+\begin{pmatrix}
+7 & 2 & 1 \\
+0 & 3 & -1 \\
+-3 & 4 & -2
+\end{pmatrix}
+}_{A}
+\underbrace{
+\begin{pmatrix}
+x_1 \\
+x_2 \\
+x_3
+\end{pmatrix}
+}_{\mathbf{x}}
+=
+\underbrace{
+\begin{pmatrix}
+2 \\
+-1 \\
+3
+\end{pmatrix}
+}_{\mathbf{b}}
+$$
+<p>The solution is found using $\mathbf{x} = A^{-1}\mathbf{b}$. The transcript states that the inverse matrix $A^{-1}$ was calculated in a previous module and is given as:</p>
+\$$
+A^{-1} = \begin{pmatrix}
+-2 & 8 & -5 \\
+3 & -11 & 7 \\
+9 & -34 & 21
+\end{pmatrix}
+$$
+<p><i>Note: There appears to be a typo in the transcript's final answer for the solution vector. The transcript shows `minus 27, thirty eight, one one five`, but the actual calculation with the provided `A_inverse` and `b` yields a different result. Let's re-evaluate based on the provided matrices. The transcript's inverse matrix seems to be incorrect based on the initial matrix A. However, following the calculation shown in the transcript:</i></p>
+<p>The calculation shown is:</p>
+\$$
+\mathbf{x} = A^{-1}\mathbf{b} = 
+\begin{pmatrix}
+-2 & 8 & -5 \\
+3 & -11 & 7 \\
+9 & -34 & 21
+\end{pmatrix}
+\begin{pmatrix}
+2 \\
+-1 \\
+3
+\end{pmatrix}
+=
+\begin{pmatrix}
+(-2)(2) + (8)(-1) + (-5)(3) \\
+(3)(2) + (-11)(-1) + (7)(3) \\
+(9)(2) + (-34)(-1) + (21)(3)
+\end{pmatrix}
+=
+\begin{pmatrix}
+-4 - 8 - 15 \\
+6 + 11 + 21 \\
+18 + 34 + 63
+\end{pmatrix}
+=
+\begin{pmatrix}
+-27 \\
+38 \\
+115
+\end{pmatrix}
+$$
+<p>Thus, the solution vector is $\mathbf{x} = \begin{pmatrix} -27 \\ 38 \\ 115 \end{pmatrix}$.</p>
+
+<hr>
+
+<b><h3>2. Application in Wireless Communications: MIMO Systems</h3></b>
+<p>The transcript introduces a powerful real-world application of linear algebra in modern wireless systems like 4G, 5G, and Wi-Fi, which use a technology called MIMO.</p>
+
+<b><h4>a. MIMO (Multiple-Input Multiple-Output)</h4></b>
+<p>MIMO technology uses multiple antennas at both the transmitter and the receiver. This setup creates multiple parallel paths for data to travel from the sender to the receiver, which dramatically increases data transmission rates and reliability.</p>
+
+<b><h4>b. The MIMO Channel Matrix (H)</h4></b>
+<p>The wireless path between each transmit antenna and each receive antenna is called a "channel." Each channel is characterized by a complex number called a <b>channel coefficient</b>, denoted by $h_{ij}$, which represents the path between the $i$-th receive antenna and the $j$-th transmit antenna.</p>
+<p>For a system with $r$ receive antennas and $t$ transmit antennas, all these coefficients can be arranged into an $r \times t$ matrix called the <b>MIMO channel matrix</b>, $H$:</p>
+\$$
+H = \begin{pmatrix}
+h_{11} & h_{12} & \cdots & h_{1t} \\
+h_{21} & h_{22} & \cdots & h_{2t} \\
+\vdots & \vdots & \ddots & \vdots \\
+h_{r1} & h_{r2} & \cdots & h_{rt}
+\end{pmatrix}
+$$
+
+<b><h4>c. Role of Matrix Rank and Spatial Multiplexing</h4></b>
+<p>The <b>rank</b> of the channel matrix $H$ is critically important. It determines the maximum number of independent data streams (symbols) that can be transmitted simultaneously over the same time and frequency resource. This capability is known as <b>spatial multiplexing</b>.</p>
+<ul>
+    <li><b>Rank and Data Rate:</b> The maximum number of symbols that can be transmitted is less than or equal to the rank of $H$. Therefore, a larger rank allows for more parallel data streams, which translates to a higher data rate.</li>
+    <li><b>Spatial Multiplexing:</b> This is the core benefit of MIMO. By transmitting multiple data streams "through space," the system can multiply its data capacity without needing more bandwidth.</li>
+</ul>
+
+<b><h4>d. MIMO System Model and Receiver Design</h4></b>
+<p>The relationship between the transmitted signals, the channel, and the received signals can be modeled as a system of linear equations:</p>
+\$$ \mathbf{y} = H\mathbf{x} + \mathbf{n} $$
+<p>Where:</p>
+<ul>
+    <li>$\mathbf{y}$ is the $r \times 1$ vector of received signals.</li>
+    <li>$H$ is the $r \times t$ channel matrix.</li>
+    <li>$\mathbf{x}$ is the $t \times 1$ vector of transmitted signals (symbols).</li>
+    <li>$\mathbf{n}$ is the $r \times 1$ vector of random noise.</li>
+</ul>
+<p>The receiver's job is to recover the original transmitted signal vector $\mathbf{x}$ from the received signal vector $\mathbf{y}$. The transcript discusses a special, simplified case where the number of transmit and receive antennas are equal ($r = t$), making $H$ a square matrix.</p>
+
+<b><h4>e. The Zero-Forcing (ZF) Receiver</h4></b>
+<p>For the special case where $r=t$ and the channel matrix $H$ is invertible, a simple receiver can be designed. Ignoring the noise for a moment, we have $\mathbf{y} \approx H\mathbf{x}$. We can solve for $\mathbf{x}$ just as we did for the general system of linear equations.</p>
+<p>The estimated transmitted vector, denoted $\hat{\mathbf{x}}$, is given by:</p>
+\$$ \hat{\mathbf{x}} = H^{-1}\mathbf{y} $$
+<p>This type of receiver is called a <b>Zero-Forcing (ZF) receiver</b> because it uses the inverse of the channel matrix to completely "force out" or cancel the effects of the channel. However, its major limitation is that it only works when $H$ is square and invertible. The more general cases where $r \neq t$ require more advanced linear algebra techniques.</p>
+</div></div><div class="chapter" id="Lecture 8 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 8 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This transcript explains how linear algebra, particularly the use of matrices to solve systems of linear equations, can be applied to analyze two real-world problems: electrical circuits and traffic flows. The core idea is to model these physical systems with a set of linear equations and then use matrix algebra to find a solution.</p>
+
+<b>1. Application in Circuit Analysis</b>
+
+<p>The first example demonstrates how to find the unknown currents in an electrical circuit using a method called <b>Mesh Analysis</b>.</p>
+
+<b>Key Concepts and Theories:</b>
+<ul>
+    <li><b>Mesh Analysis:</b> A technique used to solve planar circuits for the currents flowing in each "mesh" or closed loop. An independent current is assigned to each mesh (e.g., $i_1$ for mesh 1, $i_2$ for mesh 2). The actual current in a branch shared by two meshes is the algebraic sum (or difference) of the mesh currents. In the given circuit, the current flowing through the central 4Ω resistor is $i_2 - i_1$ to the right.</li>
+    <li><b>Kirchhoff's Voltage Law (KVL):</b> A fundamental law of circuit theory which states that the algebraic sum of the voltage drops around any closed loop in a circuit must be zero. This principle is used to create an equation for each mesh.</li>
+    <li><b>Ohm's Law:</b> This law describes the relationship between voltage (V), current (I), and resistance (R) in a linear resistor. The voltage drop across a resistor is given by the formula:
+    \$$ V = IR $$
+    <p>This formula signifies the voltage drop that occurs when moving across the resistor <i>in the same direction</i> as the current flow.</p>
+    </li>
+</ul>
+
+<b>Derivation of the System of Equations:</b>
+<p>By applying KVL and Ohm's Law to each of the two meshes in the circuit, we can derive a system of two linear equations with two unknowns ($i_1$ and $i_2$). The analysis proceeds by "traveling" clockwise around each loop and summing the voltage drops.</p>
+
+<p><b>For Loop 1:</b></p>
+<ul>
+    <li>Starting from the 8V battery, moving clockwise, we first encounter a voltage drop of 8V.</li>
+    <li>Next is the 1Ω resistor with current $i_1$, causing a voltage drop of $1 \cdot i_1$.</li>
+    <li>Finally, we cross the central 4Ω resistor. The defined current is $i_2 - i_1$ to the right, but we are traveling to the left (opposite direction), so the voltage drop is $-4(i_2 - i_1)$.</li>
+</ul>
+<p>Summing these according to KVL (total drop is zero):</p>
+\$$ 8 + 1 \cdot i_1 - 4(i_2 - i_1) = 0 $$
+<p>Simplifying this equation gives:</p>
+\$$ 5i_1 - 4i_2 = -8 $$
+
+<p><b>For Loop 2:</b></p>
+<ul>
+    <li>Starting at the central 4Ω resistor and moving clockwise, we are in the direction of the current $i_2 - i_1$, so the drop is $4(i_2 - i_1)$.</li>
+    <li>The 2Ω resistor has current $i_2$, causing a drop of $2i_2$.</li>
+    <li>The 4V battery causes a voltage drop of 4V.</li>
+    <li>The final 4Ω resistor has current $i_2$, causing a drop of $4i_2$.</li>
+</ul>
+<p>Summing these according to KVL:</p>
+\$$ 4(i_2 - i_1) + 2i_2 + 4 + 4i_2 = 0 $$
+<p>Simplifying this equation gives:</p>
+\$$ -4i_1 + 10i_2 = -4 $$
+
+<b>Solving with Matrix Algebra:</b>
+<p>The two simplified linear equations form a system that can be written in matrix form $A\mathbf{i} = \mathbf{b}$:</p>
+\$$ \begin{pmatrix} 5 & -4 \\ -4 & 10 \end{pmatrix} \begin{pmatrix} i_1 \\ i_2 \end{pmatrix} = \begin{pmatrix} -8 \\ -4 \end{pmatrix} $$
+<p>The solution for the current vector $\mathbf{i}$ is found by multiplying the inverse of matrix A with the vector $\mathbf{b}$:</p>
+\$$ \mathbf{i} = A^{-1}\mathbf{b} $$
+<p>The inverse of a 2x2 matrix $\begin{pmatrix} a & b \\ c & d \end{pmatrix}$ is $\frac{1}{ad-bc}\begin{pmatrix} d & -b \\ -c & a \end{pmatrix}$. For our matrix A:</p>
+<ul>
+    <li>The determinant is $\det(A) = (5)(10) - (-4)(-4) = 50 - 16 = 34$.</li>
+    <li>The inverse is $A^{-1} = \frac{1}{34} \begin{pmatrix} 10 & 4 \\ 4 & 5 \end{pmatrix}$.</li>
+</ul>
+<p>Now, we can solve for the currents:</p>
+\$$ \begin{pmatrix} i_1 \\ i_2 \end{pmatrix} = \frac{1}{34} \begin{pmatrix} 10 & 4 \\ 4 & 5 \end{pmatrix} \begin{pmatrix} -8 \\ -4 \end{pmatrix} = \frac{1}{34} \begin{pmatrix} (10)(-8) + (4)(-4) \\ (4)(-8) + (5)(-4) \end{pmatrix} = \frac{1}{34} \begin{pmatrix} -96 \\ -52 \end{pmatrix} $$
+<p>The final mesh currents are:</p>
+\$$ i_1 = -\frac{96}{34} = -\frac{48}{17} \text{ Amperes} $$
+\$$ i_2 = -\frac{52}{34} = -\frac{26}{17} \text{ Amperes} $$
+<p>The negative signs indicate that the actual direction of the mesh currents is counter-clockwise, opposite to the direction initially assumed.</p>
+
+<br>
+
+<b>2. Application in Traffic Flow Analysis</b>
+
+<p>The second example shows how linear algebra can model and solve for unknown traffic flows at intersections in a city grid.</p>
+
+<b>Key Concept:</b>
+<ul>
+    <li><b>Conservation of Flow:</b> The fundamental principle is that for any given intersection, the rate of traffic entering must equal the rate of traffic leaving. This ensures that there is no accumulation of vehicles at the intersection. This principle is analogous to Kirchhoff's Current Law (KCL) in circuits.</li>
+</ul>
+
+<b>Derivation of the System of Equations:</b>
+<p>By applying the principle of conservation of flow to each of the four intersections (A, B, C, D), a system of linear equations with the unknown flows ($x_1, x_2, x_3, x_4$) is established.</p>
+<ul>
+    <li><b>Intersection A:</b> Incoming = $75 + x_4$, Outgoing = $50 + x_1$.
+    <br>Equation: $75 + x_4 = 50 + x_1 \implies x_1 - x_4 = 25$</li>
+    <li><b>Intersection B:</b> Incoming = $x_1 + 45$, Outgoing = $x_2 + 80$.
+    <br>Equation: $x_1 + 45 = x_2 + 80 \implies x_1 - x_2 = 35$</li>
+    <li><b>Intersection C:</b> Incoming = $x_2 + x_3$, Outgoing = $35$.
+    <br>Equation: $x_2 + x_3 = 35$</li>
+    <li><b>Intersection D:</b> Incoming = $35$, Outgoing = $x_4 + 55$.
+    <br>Equation: $35 = x_4 + 55 \implies x_4 = -20$</li>
+</ul>
+
+<b>Solving with Matrix Algebra:</b>
+<p>This system of four linear equations can be expressed in the matrix form $A\mathbf{x} = \mathbf{b}$:</p>
+\$$ \begin{pmatrix} 1 & 0 & 0 & -1 \\ 1 & -1 & 0 & 0 \\ 0 & 1 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \\ x_3 \\ x_4 \end{pmatrix} = \begin{pmatrix} 25 \\ 35 \\ 35 \\ -20 \end{pmatrix} $$
+<p>The solution vector $\mathbf{x}$ is found by solving this system, for instance, by calculating $\mathbf{x} = A^{-1}\mathbf{b}$. The transcript provides the final solution:</p>
+\$$ \begin{pmatrix} x_1 \\ x_2 \\ x_3 \\ x_4 \end{pmatrix} = \begin{pmatrix} 5 \\ -30 \\ 65 \\ -20 \end{pmatrix} $$
+<p>The individual traffic flows are:</p>
+<ul>
+    <li>$x_1 = 5$</li>
+    <li>$x_2 = -30$</li>
+    <li>$x_3 = 65$</li>
+    <li>$x_4 = -20$</li>
+</ul>
+<p>A negative value for a flow (like $x_2$ and $x_4$) indicates that the traffic is actually moving in the opposite direction to the arrow shown in the initial diagram.</p>
+</div></div><div class="chapter" id="Lecture 9 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 9 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts presented in the transcript, focusing on the application of linear algebra in graph theory, particularly for analyzing social networks.</p>
+
+<h3>1. Graphs, Social Networks, and the Adjacency Matrix</h3>
+<p>The core idea is to represent a network, such as a social network, as a mathematical object called a <b>graph</b>. This allows for powerful analysis using tools from linear algebra.</p>
+
+<p><b>Key Concepts:</b></p>
+<ul>
+    <li><b>Graph:</b> A structure consisting of <b>nodes</b> (or vertices) and <b>edges</b> that connect pairs of nodes. In the context of a social network, nodes can represent people, and edges can represent relationships between them.</li>
+    <li><b>Directed Graph:</b> A graph where each edge has a direction, indicated by an arrow. This is useful for representing asymmetric relationships. For example, in the transcript's social network analogy, an edge from person $P_i$ to person $P_j$ could mean "$P_i$ influences $P_j$" or "$P_j$ follows $P_i$" (like on Twitter).</li>
+</ul>
+
+<h4>The Adjacency Matrix (M)</h4>
+<p>To analyze a graph using linear algebra, we first convert it into a matrix. The most common way to do this is by creating an <b>adjacency matrix</b>, denoted by $M$.</p>
+<ul>
+    <li>For a graph with $n$ nodes, the adjacency matrix $M$ is an $n \times n$ square matrix.</li>
+    <li>The entry in the $i$-th row and $j$-th column, denoted $M_{ij}$, is defined as:
+    \$$ M_{ij} = \begin{cases} 1 & \text{if there is a directed edge from node } P_i \text{ to node } P_j \\ 0 & \text{otherwise} \end{cases} $$
+    </li>
+</ul>
+
+<p><b>Example 1:</b> For the first graph presented in the transcript, with 5 nodes ($P_1, P_2, P_3, P_4, P_5$), the adjacency matrix $M$ is constructed as follows:</p>
+<ul>
+    <li><b>Row 1 (from $P_1$):</b> There are edges from $P_1$ to $P_3$ and $P_5$. So, $M_{13} = 1$ and $M_{15} = 1$. All other entries in this row are 0.</li>
+    <li><b>Row 2 (from $P_2$):</b> There is an edge from $P_2$ to $P_4$. So, $M_{24} = 1$.</li>
+    <li><b>Row 3 (from $P_3$):</b> There are edges from $P_3$ to $P_2$ and $P_4$. So, $M_{32} = 1$ and $M_{34} = 1$.</li>
+    <li><b>Row 4 (from $P_4$):</b> There is an edge from $P_4$ to $P_5$. So, $M_{45} = 1$.</li>
+    <li><b>Row 5 (from $P_5$):</b> There is an edge from $P_5$ to $P_2$. So, $M_{52} = 1$.</li>
+</ul>
+<p>This results in the following 5x5 adjacency matrix:</p>
+\$$ M = \begin{pmatrix} 0 & 0 & 1 & 0 & 1 \\ 0 & 0 & 0 & 1 & 0 \\ 0 & 1 & 0 & 1 & 0 \\ 0 & 0 & 0 & 0 & 1 \\ 0 & 1 & 0 & 0 & 0 \end{pmatrix} $$
+
+<h3>2. Paths and Powers of the Adjacency Matrix</h3>
+<p>A powerful property of the adjacency matrix is revealed when we compute its powers ($M^2, M^3, \dots, M^r$).</p>
+
+<h4>Key Theory: Paths of Length r</h4>
+<p>The entry in the $i$-th row and $j$-th column of the matrix $M^r$ (the matrix $M$ multiplied by itself $r$ times) gives the <b>number of distinct paths of length $r$</b> from node $P_i$ to node $P_j$.</p>
+<ul>
+    <li>A <b>path of length 1</b> is a direct connection (a single edge). These are counted by $M$.</li>
+    <li>A <b>path of length 2</b> is a two-step connection (e.g., from $P_i$ to $P_k$ and then from $P_k$ to $P_j$). These are counted by $M^2$.</li>
+</ul>
+
+<p><b>Example 2: Two-Step Connections ($M^2$)</b></p>
+<p>The transcript provides the matrix $M^2$ for the first graph:</p>
+\$$ M^2 = \begin{pmatrix} 0 & 2 & 0 & 1 & 0 \\ 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 1 & 1 \\ 0 & 1 & 0 & 0 & 0 \\ 0 & 0 & 0 & 1 & 0 \end{pmatrix} $$
+<p>The entry $ (M^2)_{12} = 2 $. This means there are <b>two paths of length 2</b> from node $P_1$ to node $P_2$. By inspecting the graph, we can verify these paths:</p>
+<ol>
+    <li>$P_1 \to P_3 \to P_2$</li>
+    <li>$P_1 \to P_5 \to P_2$</li>
+</ol>
+
+<p><b>Example 3: Three-Step Connections ($M^3$)</b></p>
+<p>Similarly, the matrix $M^3$ is given as:</p>
+\$$ M^3 = \begin{pmatrix} 0 & 1 & 0 & 2 & 1 \\ 0 & 1 & 0 & 0 & 0 \\ 0 & 0 & 0 & 1 & 1 \\ 0 & 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 0 & 1 \end{pmatrix} $$
+<p>The entry $ (M^3)_{14} = 2 $ indicates there are <b>two paths of length 3</b> from node $P_1$ to node $P_4$. These paths are:</p>
+<ol>
+    <li>$P_1 \to P_3 \to P_2 \to P_4$</li>
+    <li>$P_1 \to P_5 \to P_2 \to P_4$</li>
+</ol>
+
+<h3>3. Dominance Directed Graphs and Finding the Most Influential Node</h3>
+<p>The analysis is extended to a special type of graph with applications in ranking and influence analysis.</p>
+
+<h4>Dominance Directed Graph (or Tournament)</h4>
+<p>This is a directed graph with a specific property: for any pair of distinct nodes $P_i$ and $P_j$, there is an edge in one and only one direction. That is, either there is an edge from $P_i \to P_j$ or an edge from $P_j \to P_i$, but <b>not both</b>. This is analogous to a round-robin tournament where every team plays every other team, and one must win (no draws are allowed).</p>
+<p>In a social network context, this represents a scenario where for any two people, one person definitively influences the other.</p>
+
+<h4>Finding the Most Influential Node</h4>
+<p>The main question is: in such a network, who is the most influential person? The method described uses the adjacency matrix to quantify influence.</p>
+<p>The influence of a node is determined not just by its direct connections (1-step paths) but also by its indirect connections (2-step paths). A person is influential if they influence many people directly, and also if the people they influence are themselves influential.</p>
+
+<p><b>The Formula and Procedure:</b></p>
+<ol>
+    <li>For the dominance directed graph, construct its adjacency matrix $M$.</li>
+    <li>Calculate the matrix $S = M + M^2$. This matrix combines the counts of 1-step paths (direct influence) and 2-step paths (indirect influence).</li>
+    <li>For each row $i$ in the matrix $S$, calculate the <b>row sum</b> (the sum of all entries in that row). The sum of row $i$ represents the total 1-step and 2-step influence exerted by person $P_i$.</li>
+    <li>The node $P_i$ corresponding to the row with the <b>largest sum</b> is considered the most influential node in the network.</li>
+</ol>
+
+<p><b>Example 4: Calculating Influence</b></p>
+<p>For the second graph (the dominance directed graph), the adjacency matrix $M$ is:</p>
+\$$ M = \begin{pmatrix} 0 & 1 & 1 & 1 & 1 \\ 0 & 0 & 0 & 1 & 0 \\ 0 & 1 & 0 & 1 & 0 \\ 0 & 0 & 0 & 0 & 1 \\ 0 & 1 & 1 & 0 & 0 \end{pmatrix} $$
+<p>The transcript provides the resulting matrix for $M + M^2$:</p>
+\$$ S = M + M^2 = \begin{pmatrix} 0 & 3 & 2 & 3 & 2 \\ 0 & 0 & 0 & 1 & 1 \\ 0 & 1 & 0 & 2 & 1 \\ 0 & 1 & 1 & 0 & 1 \\ 0 & 2 & 1 & 2 & 0 \end{pmatrix} $$
+<p>Next, we calculate the sum of each row:</p>
+<ul>
+    <li><b>Row 1 Sum:</b> $0+3+2+3+2 = 10$</li>
+    <li><b>Row 2 Sum:</b> $0+0+0+1+1 = 2$</li>
+    <li><b>Row 3 Sum:</b> $0+1+0+2+1 = 4$</li>
+    <li><b>Row 4 Sum:</b> $0+1+1+0+1 = 3$</li>
+    <li><b>Row 5 Sum:</b> $0+2+1+2+0 = 5$</li>
+</ul>
+<p>Since Row 1 has the maximum sum (10), we conclude that node <b>$P_1$ is the most influential person</b> in this social network.</p>
+
+</div></div><div class="chapter" id="Lecture 10 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 10 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts, theories, and formulas related to the <b>null space of a matrix</b> as presented in the transcript.</p>
+
+<h3>1. Definition of the Null Space</h3>
+<p>The null space of a matrix is a fundamental concept in linear algebra. For any given matrix $A$ of size $m \times n$, its null space is defined as the set of all vectors that, when multiplied by $A$, result in the zero vector.</p>
+<p>The null space of matrix $A$ is denoted by $N(A)$ and is formally defined as:</p>
+\$$ N(A) = \{ \mathbf{x} \mid A\mathbf{x} = \mathbf{0} \} $$
+<p>Here, $\mathbf{x}$ is a column vector of size $n \times 1$, and $\mathbf{0}$ is the $m \times 1$ zero vector. In essence, the null space is the complete solution set to the homogeneous system of linear equations $A\mathbf{x} = \mathbf{0}$.</p>
+
+<h3>2. The Null Space as a Subspace</h3>
+<p>The term "space" in "null space" is mathematically significant because the null space of any matrix is a <b>subspace</b> of $\mathbb{R}^n$. A set is a subspace if it satisfies two key properties:</p>
+<ol>
+    <li>It contains the zero vector.</li>
+    <li>It is closed under linear combinations (i.e., vector addition and scalar multiplication).</li>
+</ol>
+<p>The transcript demonstrates this property. Let's take any two vectors $\mathbf{x}_1$ and $\mathbf{x}_2$ from the null space $N(A)$. By definition, this means:</p>
+\$$ A\mathbf{x}_1 = \mathbf{0} \quad \text{and} \quad A\mathbf{x}_2 = \mathbf{0} $$
+<p>Now, consider an arbitrary linear combination of these two vectors, $\alpha\mathbf{x}_1 + \beta\mathbf{x}_2$, where $\alpha$ and $\beta$ are scalars. To check if this new vector is also in the null space, we multiply it by $A$:</p>
+\$$ A(\alpha\mathbf{x}_1 + \beta\mathbf{x}_2) = A(\alpha\mathbf{x}_1) + A(\beta\mathbf{x}_2) $$
+<p>Using the properties of matrix multiplication, we can pull the scalars out:</p>
+\$$ \alpha(A\mathbf{x}_1) + \beta(A\mathbf{x}_2) = \alpha(\mathbf{0}) + \beta(\mathbf{0}) = \mathbf{0} $$
+<p>Since $A(\alpha\mathbf{x}_1 + \beta\mathbf{x}_2) = \mathbf{0}$, the linear combination $\alpha\mathbf{x}_1 + \beta\mathbf{x}_2$ also belongs to $N(A)$. This proves that the null space is indeed a subspace.</p>
+
+<h3>3. Trivial and Non-Trivial Null Space</h3>
+<p>For any matrix $A$, the zero vector $\mathbf{0}$ is always a solution to $A\mathbf{x} = \mathbf{0}$ because $A\mathbf{0} = \mathbf{0}$. This means the zero vector is always in the null space.</p>
+<ul>
+    <li><b>Trivial Null Space:</b> If the only vector in the null space is the zero vector ($N(A) = \{\mathbf{0}\}$), it is called the trivial null space. This is the "obvious" solution.</li>
+    <li><b>Non-Trivial Null Space:</b> If there exists at least one non-zero vector $\mathbf{x}$ (where $\mathbf{x} \neq \mathbf{0}$) such that $A\mathbf{x} = \mathbf{0}$, the null space is called non-trivial.</li>
+</ul>
+<p>An important consequence of the subspace property is that if a null space is non-trivial, it must contain an infinite number of vectors. If $\mathbf{x} \neq \mathbf{0}$ is in $N(A)$, then any scalar multiple $\alpha\mathbf{x}$ must also be in $N(A)$.</p>
+
+<h3>4. Null Space and Matrix Invertibility</h3>
+<p>For a square matrix $A$ (size $n \times n$), there is a direct connection between its null space and its invertibility.</p>
+<p><b>Theorem:</b> A square matrix $A$ is invertible if and only if its null space is trivial (i.e., $N(A) = \{\mathbf{0}\}$). Conversely, if a square matrix $A$ has a non-trivial null space, it is <b>not invertible</b> (it is singular).</p>
+<p>The transcript provides a proof by contradiction for this statement:</p>
+<ol>
+    <li>Assume $A$ has a non-trivial null space. This means there is a vector $\mathbf{x} \neq \mathbf{0}$ such that $A\mathbf{x} = \mathbf{0}$.</li>
+    <li>Now, assume $A$ is invertible, meaning its inverse $A^{-1}$ exists.</li>
+    <li>Multiply both sides of the equation $A\mathbf{x} = \mathbf{0}$ by $A^{-1}$ from the left:
+    \$$ A^{-1}(A\mathbf{x}) = A^{-1}\mathbf{0} $$</li>
+    <li>This simplifies to:
+    \$$ (A^{-1}A)\mathbf{x} = \mathbf{0} \implies I\mathbf{x} = \mathbf{0} \implies \mathbf{x} = \mathbf{0} $$
+    where $I$ is the identity matrix.</li>
+    <li>This result, $\mathbf{x} = \mathbf{0}$, contradicts our initial assumption that $\mathbf{x} \neq \mathbf{0}$. Therefore, our assumption that $A^{-1}$ exists must be false.</li>
+</ol>
+<p>This connection is part of a larger set of equivalent conditions for a square matrix to be singular, which also includes having a determinant of zero ($\det(A)=0$) and being rank-deficient ($\text{rank}(A) < n$).</p>
+
+<h3>5. Finding a Basis for the Null Space: An Example</h3>
+<p>To find the vectors that constitute the null space, we solve the system $A\mathbf{x} = \mathbf{0}$. The standard method involves reducing the matrix $A$ to its row-reduced echelon form (RREF).</p>
+<p>Consider the example matrix:</p>
+\$$ A = \begin{pmatrix} 1 & 1 & 1 & 1 & 1 \\ 1 & 2 & 3 & 4 & 5 \end{pmatrix} $$
+<p><b>Step 1: Row Reduction</b><br>
+Perform row operations to find the RREF of A.
+<br>1. $R_2 \leftarrow R_2 - R_1$: $ \begin{pmatrix} 1 & 1 & 1 & 1 & 1 \\ 0 & 1 & 2 & 3 & 4 \end{pmatrix} $
+<br>2. $R_1 \leftarrow R_1 - R_2$: $ \begin{pmatrix} 1 & 0 & -1 & -2 & -3 \\ 0 & 1 & 2 & 3 & 4 \end{pmatrix} $
+This is the RREF.</p>
+<p><b>Step 2: Express Pivot Variables in terms of Free Variables</b><br>
+The system of equations corresponding to the RREF is:
+\$$ x_1 - x_3 - 2x_4 - 3x_5 = 0 $$
+\$$ x_2 + 2x_3 + 3x_4 + 4x_5 = 0 $$
+The variables corresponding to the pivot columns (columns 1 and 2) are the pivot variables ($x_1, x_2$). The rest are free variables ($x_3, x_4, x_5$). We solve for the pivot variables:
+\$$ x_1 = x_3 + 2x_4 + 3x_5 $$
+\$$ x_2 = -2x_3 - 3x_4 - 4x_5 $$
+<p><b>Step 3: Write the General Solution and Find the Basis</b><br>
+The general solution vector $\mathbf{x}$ can be written as:
+\$$ \mathbf{x} = \begin{pmatrix} x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5 \end{pmatrix} = \begin{pmatrix} x_3 + 2x_4 + 3x_5 \\ -2x_3 - 3x_4 - 4x_5 \\ x_3 \\ x_4 \\ x_5 \end{pmatrix} $$
+We can separate this vector into a linear combination based on the free variables:
+\$$ \mathbf{x} = x_3 \begin{pmatrix} 1 \\ -2 \\ 1 \\ 0 \\ 0 \end{pmatrix} + x_4 \begin{pmatrix} 2 \\ -3 \\ 0 \\ 1 \\ 0 \end{pmatrix} + x_5 \begin{pmatrix} 3 \\ -4 \\ 0 \\ 0 \\ 1 \end{pmatrix} $$
+The three vectors in this linear combination form a <b>basis</b> for the null space of $A$. Any vector in $N(A)$ can be written as a unique combination of these three basis vectors.</p>
+
+<h3>6. The Rank-Nullity Theorem</h3>
+<p>This example illustrates a fundamental theorem in linear algebra.</p>
+<ul>
+    <li>The <b>rank</b> of a matrix is the dimension of its column space (and row space), which equals the number of pivots in its RREF. For matrix $A$ above, $\text{rank}(A) = 2$.</li>
+    <li>The <b>nullity</b> of a matrix is the dimension of its null space, which equals the number of vectors in its basis (or equivalently, the number of free variables). For matrix $A$, $\text{nullity}(A) = 3$.</li>
+</ul>
+<p>The <b>Rank-Nullity Theorem</b> states that for any $m \times n$ matrix $A$:</p>
+\$$ \text{rank}(A) + \text{nullity}(A) = n \quad (\text{the number of columns}) $$
+<p>For our example, $2 + 3 = 5$, which is the number of columns of $A$, confirming the theorem.</p>
+
+<h3>7. Application: Electrical Circuits and Kirchhoff's Current Law</h3>
+<p>The null space has practical applications, such as in the analysis of electrical circuits. The transcript describes how the null space of a specific matrix formulation can represent Kirchhoff's Current Law (KCL).</p>
+<p><b>Step 1: Construct the Adjacency Matrix (Incidence Matrix)</b><br>
+For a circuit with $n$ nodes and $m$ edges (currents), we can define an $m \times n$ matrix $A$, often called an incidence matrix. The entry $A_{ij}$ is defined as:
+<ul>
+    <li>$A_{ij} = -1$ if current $i$ leaves node $j$.</li>
+    <li>$A_{ij} = +1$ if current $i$ enters node $j$.</li>
+    <li>$A_{ij} = 0$ otherwise.</li>
+</ul>
+For the circuit in the transcript, the $5 \times 4$ matrix $A$ is:
+\$$ A = \begin{pmatrix} -1 & 1 & 0 & 0 \\ 0 & -1 & 0 & 1 \\ 0 & 0 & 1 & -1 \\ 1 & 0 & -1 & 0 \\ 0 & 1 & -1 & 0 \end{pmatrix} $$
+</p>
+<p><b>Step 2: The Null Space of the Transpose</b><br>
+A key insight is that any valid vector of currents $\mathbf{i} = (i_1, i_2, i_3, i_4, i_5)^T$ in the circuit must belong to the null space of the transpose of this matrix, $A^T$. That is:</p>
+\$$ \mathbf{i} \in N(A^T) \quad \text{which means} \quad A^T\mathbf{i} = \mathbf{0} $$
+The transpose $A^T$ is a $4 \times 5$ matrix where each row now corresponds to a node and each column to a current.
+\$$ A^T = \begin{pmatrix} -1 & 0 & 0 & 1 & 0 \\ 1 & -1 & 0 & 0 & 1 \\ 0 & 0 & 1 & -1 & -1 \\ 0 & 1 & -1 & 0 & 0 \end{pmatrix} $$
+<p><b>Step 3: Connecting to Kirchhoff's Current Law (KCL)</b><br>
+The equation $A^T\mathbf{i} = \mathbf{0}$ represents a system of four linear equations. Each equation corresponds to KCL for one of the nodes, which states that the sum of currents entering a node must equal the sum of currents leaving it.</p>
+<ul>
+    <li><b>Row 1 (Node 1):</b> $-i_1 + i_4 = 0 \implies i_4 = i_1$ (Current entering = Current leaving)</li>
+    <li><b>Row 2 (Node 2):</b> $i_1 - i_2 + i_5 = 0 \implies i_1 + i_5 = i_2$ (Sum of currents entering = Current leaving)</li>
+    <li><b>Row 3 (Node 3):</b> $i_3 - i_4 - i_5 = 0 \implies i_3 = i_4 + i_5$ (Current entering = Sum of currents leaving)</li>
+    <li><b>Row 4 (Node 4):</b> $i_2 - i_3 = 0 \implies i_2 = i_3$ (Current entering = Current leaving)</li>
+</ul>
+<p>Thus, the condition that a current vector $\mathbf{i}$ lies in the null space of $A^T$ is a concise mathematical statement of Kirchhoff's Current Law for the entire circuit.</p>
+</div></div><h2>Weekly Summary</h2><div>
+<p>This week's lectures cover the concept of matrix inversion, its applications in solving various real-world problems, and the fundamental concept of a matrix's null space.</p>
+<b>1. Matrix Inversion and Determinants</b>
+<p>The lectures begin by introducing the necessary prerequisites for matrix inversion, starting with the determinant.</p>
+<ul>
+<li><b>Determinant:</b> The determinant is a scalar value defined for square matrices. For a 2x2 matrix, it is calculated as $ad-bc$. For a general $n \times n$ matrix, the determinant is calculated recursively by expanding along a row or column using cofactors and minors. A cofactor $C_{ij}$ is defined as $C_{ij} = (-1)^{i+j} M_{ij}$, where $M_{ij}$ is the minor (the determinant of the submatrix formed by removing row $i$ and column $j$).</li>
+<li><b>Matrix Inverse:</b> The inverse of a square matrix $A$, denoted $A^{-1}$, is a matrix that satisfies the property $A A^{-1} = A^{-1} A = I$, where $I$ is the identity matrix.</li>
+<li><b>Key Takeaway:</b> A square matrix is invertible if and only if its determinant is non-zero. If the determinant is zero, the matrix is called <b>singular</b>. The formula for the inverse is given by:
+\$$ A^{-1} = \frac{1}{\det(A)} \text{adj}(A) $$
+where $\text{adj}(A)$ is the adjoint of A, defined as the transpose of the matrix of cofactors.</li>
+</ul>
+<b>2. Applications of Matrices and Inversion</b>
+<p>A significant portion of the lectures is dedicated to demonstrating the practical application of matrix concepts in various fields.</p>
+<ul>
+<li><b>Solving Systems of Linear Equations:</b> A system of $n$ linear equations with $n$ unknowns can be expressed in matrix form as $A\bar{x} = \bar{b}$. If $A$ is invertible, the system has a unique solution given by $\bar{x} = A^{-1}\bar{b}$.</li>
+<li><b>Wireless Communications (MIMO):</b> In modern 4G/5G wireless systems, Multiple-Input Multiple-Output (MIMO) technology is used. The wireless channel between multiple transmit and receive antennas is modeled by a channel matrix $H$. The <b>rank</b> of this matrix determines the maximum number of data streams that can be sent simultaneously (a property called spatial multiplexing), thus dictating the maximum data rate. In a simplified case where $H$ is square and invertible, a receiver can decode the transmitted signal $\bar{x}$ from the received signal $\bar{y}$ using the formula $\hat{x} = H^{-1}\bar{y}$. This is known as a zero-forcing receiver.</li>
+<li><b>Circuit Analysis:</b> Using mesh analysis and Kirchhoff's Voltage Law (KVL), the currents in an electrical circuit can be determined by setting up and solving a system of linear equations in matrix form.</li>
+<li><b>Traffic Flow Analysis:</b> The flow of traffic through a network of roads and intersections can be modeled using the principle that the total traffic entering an intersection must equal the total traffic leaving it. This creates a system of linear equations that can be solved to find the unknown traffic flows.</li>
+</ul>
+<b>3. Graph Theory and Social Networks</b>
+<p>Linear algebra provides powerful tools for analyzing graphs, which are used to model networks like social networks.</p>
+<ul>
+<li><b>Adjacency Matrix:</b> A directed graph can be represented by an adjacency matrix $M$, where $M_{ij} = 1$ indicates an edge from node $i$ to node $j$.</li>
+<li><b>Key Takeaway:</b> The matrix power $M^r$ contains information about connectivity in the graph. Specifically, the element $(M^r)_{ij}$ gives the number of distinct paths of length $r$ from node $i$ to node $j$. This can be used to analyze relationships in a social network. For a special "dominance-directed graph," the most influential node can be found by calculating $M + M^2$ and identifying the row with the largest sum.</li>
+</ul>
+<b>4. The Null Space</b>
+<p>The concept of the null space of a matrix is introduced as another fundamental property.</p>
+<ul>
+<li><b>Definition:</b> The null space of a matrix $A$, denoted $N(A)$, is the set of all vectors $\bar{x}$ such that $A\bar{x} = \bar{0}$. The null space is always a subspace.</li>
+<li><b>Properties & Rank-Nullity Theorem:</b> If a square matrix has a "non-trivial" null space (i.e., it contains non-zero vectors), the matrix is singular (not invertible). The dimension of the null space is called the <b>nullity</b>. The Rank-Nullity theorem states that for any matrix $A$ with $n$ columns, $\text{rank}(A) + \text{nullity}(A) = n$.</li>
+<li><b>Key Takeaway:</b> The null space has direct physical interpretations. For a circuit's adjacency matrix $A$ (which describes how currents are connected to nodes), any valid current vector $\bar{i}$ must be in the null space of $A^T$. This mathematical condition is equivalent to satisfying Kirchhoff's Current Law (KCL) at every node in the circuit.</li>
+</ul>
+</div><h2>Assignment Explanation</h2><div>
+<p><b>Question 1: Rank of a matrix</b></p>
+<p><b>Question:</b> Rank of a matrix equals the</p>
+<p><b>Answer:</b> maximum number of linearly independent columns</p>
+<p><b>Explanation:</b> The rank of a matrix is a fundamental concept that measures the "non-degeneracy" of the linear transformation described by the matrix. It has several equivalent definitions:</p>
+<ul>
+<li>The maximum number of linearly independent column vectors.</li>
+<li>The maximum number of linearly independent row vectors.</li>
+<li>The dimension of the column space of the matrix.</li>
+<li>The number of non-zero rows (or pivots) in its row echelon form.</li>
+</ul>
+<p>The correct answer states one of these fundamental definitions. The other options are incorrect; for instance, the number of linearly dependent columns does not define the rank.</p>
+<br>
+
+<p><b>Question 2: Conjugate Transpose of a Matrix</b></p>
+<p><b>Question:</b> Consider the matrix<br>
+\$$ A = 
+\begin{bmatrix}
+1 + 2j & 5 - 2j & -6 + 2j \\
+-1 - 3j & -1 - 5j & -3 - j \\
+2 + 3j & -2 - 4j & 2 + j
+\end{bmatrix}
+$$
+The conjugate transpose or Hermitian transpose of the given matrix is</p>
+<p><b>Answer:</b> 
+\$$
+\begin{bmatrix}
+1 - 2j & -1 + 3j & 2 - 3j \\
+5 + 2j & -1 + 5j & -2 + 4j \\
+-6 - 2j & -3 + j & 2 - j
+\end{bmatrix}
+$$
+</p>
+<p><b>Explanation:</b> The conjugate transpose (or Hermitian transpose) of a matrix, denoted as $A^H$ or $A^*$, is found in two steps:</p>
+<p>1. <b>Transpose the matrix ($A^T$):</b> Swap the rows and columns.</p>
+\$$ A^T = 
+\begin{bmatrix}
+1 + 2j & -1 - 3j & 2 + 3j \\
+5 - 2j & -1 - 5j & -2 - 4j \\
+-6 + 2j & -3 - j & 2 + j
+\end{bmatrix}
+$$
+<p>2. <b>Take the complex conjugate of each element:</b> For each element $a + bj$, its conjugate is $a - bj$. We apply this to every element of $A^T$.</p>
+\$$ A^H = (A^T)^* = 
+\begin{bmatrix}
+1 - 2j & -1 + 3j & 2 - 3j \\
+5 + 2j & -1 + 5j & -2 + 4j \\
+-6 - 2j & -3 + j & 2 - j
+\end{bmatrix}
+$$
+This result matches the selected answer.</p>
+<br>
+
+<p><b>Question 3: Norm of a Complex Vector</b></p>
+<p><b>Question:</b> Consider the complex sinusoidal vector $\bar{u}(f) = [1, e^{j2\pi f}, e^{j4\pi f}, \dots, e^{j2(N-1)\pi f}]^T$. Then, $ ||\bar{u}(f)||^2 $ equals</p>
+<p><b>Answer:</b> $N$</p>
+<p><b>Explanation:</b> The squared norm of a complex vector $\bar{u}$ is calculated as the inner product of the vector with itself, which is $||\bar{u}||^2 = \bar{u}^H \bar{u}$, where $\bar{u}^H$ is the conjugate transpose of $\bar{u}$.</p>
+<p>1. First, find the conjugate transpose $\bar{u}^H$:</p>
+\$$ \bar{u}^H = [1, (e^{j2\pi f})^*, (e^{j4\pi f})^*, \dots, (e^{j2(N-1)\pi f})^*] $$
+\$$ \bar{u}^H = [1, e^{-j2\pi f}, e^{-j4\pi f}, \dots, e^{-j2(N-1)\pi f}] $$
+<p>2. Now, multiply $\bar{u}^H$ by $\bar{u}$:</p>
+\$$ ||\bar{u}||^2 = \bar{u}^H \bar{u} = (1)(1) + (e^{-j2\pi f})(e^{j2\pi f}) + \dots + (e^{-j2(N-1)\pi f})(e^{j2(N-1)\pi f}) $$
+\$$ = 1 + e^0 + e^0 + \dots + e^0 $$
+\$$ = \underbrace{1 + 1 + 1 + \dots + 1}_{N \text{ times}} $$
+\$$ = N $$
+<p>The sum consists of $N$ terms, each equal to 1, so the total sum is $N$.</p>
+<br>
+
+<p><b>Question 4: Rank of a Matrix</b></p>
+<p><b>Question:</b> The rank of the matrix $A$ given below is<br>
+\$$ A = 
+\begin{bmatrix}
+2 & 1 & -4 \\
+-3 & -2 & 6 \\
+1 & 5 & -7
+\end{bmatrix}
+$$
+</p>
+<p><b>Answer:</b> 3</p>
+<p><b>Explanation:</b> For a square matrix, the rank is equal to its size if and only if its determinant is non-zero. Let's calculate the determinant of the 3x3 matrix $A$.</p>
+\$$ \det(A) = 2 \begin{vmatrix} -2 & 6 \\ 5 & -7 \end{vmatrix} - 1 \begin{vmatrix} -3 & 6 \\ 1 & -7 \end{vmatrix} + (-4) \begin{vmatrix} -3 & -2 \\ 1 & 5 \end{vmatrix} $$
+\$$ = 2((-2)(-7) - (6)(5)) - 1((-3)(-7) - (6)(1)) - 4((-3)(5) - (-2)(1)) $$
+\$$ = 2(14 - 30) - 1(21 - 6) - 4(-15 + 2) $$
+\$$ = 2(-16) - 1(15) - 4(-13) $$
+\$$ = -32 - 15 + 52 = 5 $$
+<p>Since the determinant is 5 (which is not zero), the matrix is full rank. For a 3x3 matrix, full rank means the rank is 3.</p>
+<br>
+
+<p><b>Question 5: Adjoint of a Matrix</b></p>
+<p><b>Question:</b> Let $C$ denote the matrix of cofactors for $A$. Then, the adjoint of $A$ denoted by $\text{adj}(A)$, is given as</p>
+<p><b>Answer:</b> $C^T$</p>
+<p><b>Explanation:</b> By definition, the <b>adjoint</b> (or <b>adjugate</b>) of a square matrix $A$ is the transpose of its cofactor matrix, $C$. The cofactor matrix $C$ is a matrix of the same size as $A$ where each element $C_{ij}$ is the cofactor of the element $A_{ij}$. Therefore, the correct relationship is $\text{adj}(A) = C^T$.</p>
+<br>
+
+<p><b>Question 6: Linear Independence and Orthogonality</b></p>
+<p><b>Question:</b> The vectors $ \bar{u} = \begin{bmatrix} 2 \\ 4 \\ 2 \end{bmatrix} $ and $ \bar{v} = \begin{bmatrix} 1 \\ 2 \\ 1 \end{bmatrix} $ are</p>
+<p><b>Answer:</b> Neither orthogonal nor linearly independent</p>
+<p><b>Explanation:</b></p>
+<p>1. <b>Linear Independence:</b> Two vectors are linearly dependent if one is a scalar multiple of the other. We can see that $ \bar{u} = 2 \cdot \bar{v} $, since $ \begin{bmatrix} 2 \\ 4 \\ 2 \end{bmatrix} = 2 \cdot \begin{bmatrix} 1 \\ 2 \\ 1 \end{bmatrix} $. Because they are scalar multiples, the vectors are <b>linearly dependent</b> (i.e., not linearly independent).</p>
+<p>2. <b>Orthogonality:</b> Two vectors are orthogonal if their dot product is zero. The dot product is calculated as $\bar{u}^T \bar{v}$.</p>
+\$$ \bar{u}^T \bar{v} = (2)(1) + (4)(2) + (2)(1) = 2 + 8 + 2 = 12 $$
+<p>Since the dot product is 12 (not 0), the vectors are <b>not orthogonal</b>.</p>
+<p>Therefore, the vectors are neither orthogonal nor linearly independent.</p>
+<br>
+
+<p><b>Question 7: Conditions for Invertibility</b></p>
+<p><b>Question:</b> Which of the following conditions imply that matrix $A$ of size $n \times n$ is invertible?</p>
+<p><b>Answer:</b> All of these</p>
+<p><b>Explanation:</b> All the given options are equivalent conditions for an $n \times n$ matrix $A$ to be invertible (or non-singular). This is a core concept in linear algebra, often referred to as the Invertible Matrix Theorem.</p>
+<ul>
+<li><b>$\text{rank}(A) = n$:</b> A square matrix having full rank means its columns (and rows) are linearly independent, which is a condition for invertibility.</li>
+<li><b>$\det(A) \neq 0$:</b> A non-zero determinant is the standard computational test for invertibility.</li>
+<li><b>$A\bar{x} = 0 \iff \bar{x} = 0$:</b> This means the homogeneous equation has only the trivial solution. This is equivalent to saying the null space of A contains only the zero vector, which is another condition for invertibility.</li>
+</ul>
+<p>Since all three conditions are equivalent ways of stating that $A$ is invertible, the correct answer is "All of these".</p>
+<br>
+
+<p><b>Question 8: Inverse of a Matrix Formula</b></p>
+<p><b>Question:</b> Let $C$ denote the matrix of cofactors for $A$. Then, the inverse of $A$ is given as</p>
+<p><b>Answer:</b> $ \frac{C^T}{|A|} $</p>
+<p><b>Explanation:</b> The formula for the inverse of a square matrix $A$ is given by its adjoint divided by its determinant.
+\$$ A^{-1} = \frac{1}{\det(A)} \text{adj}(A) $$
+As established in Question 5, the adjoint of $A$ is the transpose of the cofactor matrix $C$, so $\text{adj}(A) = C^T$. Substituting this into the formula for the inverse gives:
+\$$ A^{-1} = \frac{1}{\det(A)} C^T = \frac{C^T}{|A|} $$
+(Note: $\det(A)$ is often written as $|A|$).</p>
+<br>
+
+<p><b>Question 9: Rank of a Matrix</b></p>
+<p><b>Question:</b> The rank of the matrix $A$ given below is<br>
+\$$ A = 
+\begin{bmatrix}
+-2 & -1 & -3 \\
+1 & 5 & -3 \\
+-3 & 7 & -13
+\end{bmatrix}
+$$
+</p>
+<p><b>Answer:</b> 2</p>
+<p><b>Explanation:</b> To find the rank, we can use Gaussian elimination to reduce the matrix to its row echelon form and count the number of non-zero rows.</p>
+<p>1. Start with matrix $A$. Swap Row 1 and Row 2 to get a leading 1.</p>
+\$$ \begin{bmatrix} 1 & 5 & -3 \\ -2 & -1 & -3 \\ -3 & 7 & -13 \end{bmatrix} $$
+<p>2. Perform row operations to create zeros below the first pivot: $R_2 \to R_2 + 2R_1$ and $R_3 \to R_3 + 3R_1$.</p>
+\$$ \begin{bmatrix} 1 & 5 & -3 \\ 0 & 9 & -9 \\ 0 & 22 & -22 \end{bmatrix} $$
+<p>3. Simplify the rows: $R_2 \to R_2 / 9$ and $R_3 \to R_3 / 22$.</p>
+\$$ \begin{bmatrix} 1 & 5 & -3 \\ 0 & 1 & -1 \\ 0 & 1 & -1 \end{bmatrix} $$
+<p>4. Create a zero below the second pivot: $R_3 \to R_3 - R_2$.</p>
+\$$ \begin{bmatrix} 1 & 5 & -3 \\ 0 & 1 & -1 \\ 0 & 0 & 0 \end{bmatrix} $$
+<p>The resulting matrix is in row echelon form. It has two non-zero rows. Therefore, the rank of matrix $A$ is 2.</p>
+<br>
+
+<p><b>Question 10: Hermitian Inner Product</b></p>
+<p><b>Question:</b> Consider two vectors $\bar{u} = [u_1, u_2, \dots, u_n]^T$ and $\bar{v} = [v_1, v_2, \dots, v_n]^T$. The quantity $\bar{u}^H\bar{v}$ equals</p>
+<p><b>Answer:</b> $ u_1^*v_1 + u_2^*v_2 + \dots + u_n^*v_n $</p>
+<p><b>Explanation:</b> The expression $\bar{u}^H\bar{v}$ represents the <b>Hermitian inner product</b> (or complex dot product) of vectors $\bar{u}$ and $\bar{v}$.</p>
+<p>1. First, find the Hermitian transpose $\bar{u}^H$. This involves transposing the column vector $\bar{u}$ into a row vector and taking the complex conjugate of each element. The complex conjugate of $u_i$ is denoted $u_i^*$.</p>
+\$$ \bar{u}^H = [u_1^*, u_2^*, \dots, u_n^*] $$
+<p>2. Next, perform the matrix multiplication of the row vector $\bar{u}^H$ with the column vector $\bar{v}$.</p>
+\$$ \bar{u}^H\bar{v} = [u_1^*, u_2^*, \dots, u_n^*] 
+\begin{bmatrix} v_1 \\ v_2 \\ \vdots \\ v_n \end{bmatrix} = u_1^*v_1 + u_2^*v_2 + \dots + u_n^*v_n $$
+<p>This is the standard definition of the inner product in a complex vector space.</p>
+</div></div>
+</body>
+</html>

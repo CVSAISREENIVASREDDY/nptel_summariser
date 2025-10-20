@@ -1,0 +1,833 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week10</title>
+
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+      };
+    </script>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 2em;
+        }
+        .mjx-display {
+            margin: 2.5em 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="week" id="week_10"><h1 class="week-title">Week 10</h1><h2>Transcript Explanations</h2><div class="chapter" id="Lecture 49 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 49 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts behind Support Vector Machines (SVMs) as presented in the transcript. The focus is on the foundational principles of SVM as a linear, binary classifier.</p>
+
+<h3>1. Introduction to Support Vector Machines (SVM)</h3>
+<p>A Support Vector Machine, abbreviated as <b>SVM</b>, is a powerful and widely used algorithm in machine learning for classification tasks. The transcript introduces SVM as a <b>binary classifier</b>. This means its primary function is to take a set of data and partition it into two distinct groups or classes.</p>
+
+<p>The goal is to find an optimal boundary that separates the data points of one class from the data points of the other. SVM is a highly effective method due to its strong theoretical foundation and excellent performance in many real-world applications.</p>
+
+<h3>2. The Binary Classification Problem</h3>
+<p>Binary classification is the task of categorizing data into one of two predefined classes. The transcript labels these classes as "Class 0" and "Class 1", which can also be represented by numerical values like {0, 1} or, as we'll see later, {+1, -1}. The output of a binary classifier is discrete; it provides a definitive label (e.g., "yes" or "no") rather than a continuous value.</p>
+
+<p>The transcript provides two practical examples:</p>
+<ul>
+    <li><b>Medical Diagnosis:</b> Analyzing medical data (like blood tests or scans) to determine the <i>presence</i> or <i>absence</i> of a disease. The output is a clear "yes" or "no", making it a binary classification problem.</li>
+    <li><b>Quality Control:</b> In manufacturing, data from various tests on a product (e.g., a car) is used to determine if it <i>meets</i> the required quality standards or <i>fails</i> to meet them. Again, the outcome falls into one of two categories.</li>
+</ul>
+
+<h3>3. Linear Classifiers and the Hyperplane</h3>
+<p>While many types of classifiers exist, SVM in its basic form is a <b>linear classifier</b>. Linear classifiers are preferred because they are generally simpler to determine and analyze compared to their non-linear counterparts. They work by creating a linear decision boundary to separate the classes.</p>
+
+<h4>The Hyperplane</h4>
+<p>In an N-dimensional space, this linear boundary is called a <b>hyperplane</b>. A hyperplane is the generalization of familiar geometric concepts:</p>
+<ul>
+    <li>In a 2-dimensional space (N=2), a hyperplane is simply a <b>line</b>.</li>
+    <li>In a 3-dimensional space (N=3), a hyperplane is a flat <b>plane</b>.</li>
+</ul>
+<p>For a space with more than three dimensions (N > 3), the boundary is still referred to as a hyperplane.</p>
+
+<h4>The Equation of a Hyperplane</h4>
+<p>A hyperplane in an N-dimensional space is defined by a linear equation. For a point with coordinates $(X_1, X_2, \dots, X_n)$, the equation is:</p>
+\$$ A_1 X_1 + A_2 X_2 + \dots + A_n X_n + B = 0 $$
+<p>Using the principles of linear algebra, this equation can be expressed more compactly in vector form. Let:</p>
+<ul>
+    <li>$\bar{a}$ be the <b>weight vector</b> (or coefficient vector): $ \bar{a} = \begin{bmatrix} A_1 \\ A_2 \\ \vdots \\ A_n \end{bmatrix} $</li>
+    <li>$\bar{x}$ be the <b>variable vector</b>: $ \bar{x} = \begin{bmatrix} X_1 \\ X_2 \\ \vdots \\ X_n \end{bmatrix} $</li>
+    <li>$B$ be a scalar constant, often called the bias.</li>
+</ul>
+<p>The equation of the hyperplane is then written as a dot product:</p>
+\$$ \bar{a}^T \bar{x} + B = 0 $$
+
+<h3>4. Half-Spaces: Dividing the Space</h3>
+<p>A key property of a hyperplane is that it divides the entire N-dimensional space into two distinct regions, known as <b>half-spaces</b>. These two regions are defined by the following inequalities:</p>
+<ol>
+    <li>The first half-space: $ \bar{a}^T \bar{x} + B \ge 0 $</li>
+    <li>The second half-space: $ \bar{a}^T \bar{x} + B \le 0 $</li>
+</ol>
+<p>The hyperplane itself ($ \bar{a}^T \bar{x} + B = 0 $) is the boundary between these two half-spaces. The fundamental idea of a linear classifier is to find a hyperplane such that all data points of Class 0 fall into one half-space, and all data points of Class 1 fall into the other.</p>
+
+<h3>5. Formulating the SVM Problem</h3>
+<p>To find the optimal hyperplane, we need to mathematically formulate the classification task. We start with a set of <i>M</i> training data points, where each point $\bar{x}_k$ has an associated class label $y_k$.</p>
+<p>A crucial step in the SVM formulation is the choice of class labels. Instead of {0, 1}, SVM uses <b>{+1, -1}</b>. For instance:</p>
+<ul>
+    <li>Class 0 is assigned the label $ y_k = +1 $</li>
+    <li>Class 1 is assigned the label $ y_k = -1 $</li>
+</ul>
+<p>This labeling convention allows us to create a single, elegant mathematical constraint for all data points.</p>
+
+<h4>The Combined Classification Constraint</h4>
+<p>Based on the half-space concept:</p>
+<ul>
+    <li>For a point $\bar{x}_k$ in Class 0 ($y_k = +1$), we require it to be in the positive half-space: $\bar{a}^T \bar{x}_k + B \ge 0$.</li>
+    <li>For a point $\bar{x}_k$ in Class 1 ($y_k = -1$), we require it to be in the negative half-space: $\bar{a}^T \bar{x}_k + B \le 0$.</li>
+</ul>
+<p>By multiplying the second inequality by $y_k = -1$, the inequality sign flips, giving $y_k(\bar{a}^T \bar{x}_k + B) \ge 0$. Notice that this same equation also holds for the first case (where $y_k = +1$). Therefore, we can combine both conditions into a single constraint that must be true for all data points:</p>
+\$$ y_k (\bar{a}^T \bar{x}_k + B) \ge 0 $$
+
+<h3>6. The Margin and the "Slab" Concept</h3>
+<p>The constraint $ y_k (\bar{a}^T \bar{x}_k + B) \ge 0 $ has a flaw: it is satisfied by the <b>trivial solution</b> where $\bar{a} = \mathbf{0}$ and $B=0$. To avoid this and to create a more robust classifier, the constraint is strengthened:</p>
+\$$ y_k (\bar{a}^T \bar{x}_k + B) \ge 1 $$
+<p>This seemingly small change has a profound geometric meaning. It no longer defines a single separating hyperplane. Instead, it defines two parallel hyperplanes that act as boundaries for each class:</p>
+<ul>
+    <li>For Class 0 ($y_k = +1$): $ \bar{a}^T \bar{x}_k + B \ge 1 $</li>
+    <li>For Class 1 ($y_k = -1$): $ \bar{a}^T \bar{x}_k + B \le -1 $</li>
+</ul>
+<p>These two hyperplanes, $ \bar{a}^T \bar{x} + B = 1 $ and $ \bar{a}^T \bar{x} + B = -1 $, form a margin or a "slab" between the two classes. The data points of each class must lie on or outside their respective boundary plane, ensuring there is a clear separation between them.</p>
+
+<p>The region between these two hyperplanes is a "no man's land" where no data points should fall. The width of this region is known as the <b>margin</b>.</p>
+
+<h3>7. The Goal of SVM: Maximizing the Margin</h3>
+<p>The central idea of the Support Vector Machine is not just to find any hyperplane that separates the data, but to find the hyperplane that creates the <b>maximum possible margin</b> (i.e., the thickest possible slab).</p>
+<p><b>Why is a wider margin better?</b></p>
+<p>A classifier with a larger margin is considered more <b>robust</b>. It is less sensitive to the specific location of the training data points and is more likely to classify new, unseen data correctly. A thin margin, by contrast, suggests a fragile classifier that might easily misclassify points that are slightly different from the training data. The goal of SVM is, therefore, to design a classifier that maximizes this slab width, thereby minimizing the potential for classification error.</p>
+</div></div><div class="chapter" id="Lecture 50 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 50 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts and mathematical derivations presented in the transcript, focusing on the formulation of the Support Vector Machine (SVM) as a geometric optimization problem.</p>
+
+<h3>1. The Core Idea of Support Vector Machines (SVM)</h3>
+<p>A Support Vector Machine (SVM) is a machine learning model used for classification tasks. The primary goal is to find an optimal separator for two distinct sets of data points in an n-dimensional space. The central philosophy of SVM is not just to find any separating boundary, but to find the <b>best</b> one.</p>
+<p>This "best" boundary is defined as the one that maximizes the margin or separation between the two classes. Geometrically, this is visualized as fitting the "thickest possible slab" between the two sets of points. This slab is defined by two parallel hyperplanes, with each hyperplane touching the closest points of one class. Maximizing the thickness of this slab leads to a more robust and generalizable classifier.</p>
+
+<h3>2. The Hyperplane: Equation and Normal Vector</h3>
+<p>The fundamental building block of the SVM classifier is the hyperplane.</p>
+<p><b>Equation of a Hyperplane:</b><br>
+In an n-dimensional space, a hyperplane is a flat, (n-1)-dimensional subspace. Its equation is given by a linear equation:</p>
+\$$ \bar{a}^T \bar{x} = c $$
+<p>Where:</p>
+<ul>
+    <li>$\bar{x}$ is a vector representing any point $(x_1, x_2, \dots, x_n)$ on the hyperplane.</li>
+    <li>$\bar{a}$ is a constant vector $(a_1, a_2, \dots, a_n)$ that defines the orientation of the hyperplane.</li>
+    <li>$c$ is a constant scalar that determines the position of the hyperplane relative to the origin.</li>
+    <li>$\bar{a}^T \bar{x}$ represents the dot product (or inner product) of the vectors $\bar{a}$ and $\bar{x}$.</li>
+</ul>
+
+<p><b>The Normal Vector to the Hyperplane:</b><br>
+An important property is that the vector $\bar{a}$ is always perpendicular (or normal) to the hyperplane. The transcript provides a clear proof of this fact:</p>
+<ol>
+    <li>Consider any two distinct points, $\bar{x}_1$ and $\bar{x}_2$, that lie on the hyperplane.</li>
+    <li>Since both points are on the hyperplane, they must both satisfy its equation:
+    \$$ \bar{a}^T \bar{x}_1 = c $$
+    \$$ \bar{a}^T \bar{x}_2 = c $$
+    </li>
+    <li>Subtracting the second equation from the first gives:
+    \$$ \bar{a}^T \bar{x}_1 - \bar{a}^T \bar{x}_2 = c - c $$
+    \$$ \bar{a}^T (\bar{x}_1 - \bar{x}_2) = 0 $$
+    </li>
+    <li>The vector $\bar{x}_1 - \bar{x}_2$ is a vector that lies entirely <i>within</i> the hyperplane (it connects two points on the hyperplane). Let's call this vector $\bar{x}_{\text{tilde}} = \bar{x}_1 - \bar{x}_2$.</li>
+    <li>The equation $\bar{a}^T \bar{x}_{\text{tilde}} = 0$ shows that the dot product of $\bar{a}$ and any vector $\bar{x}_{\text{tilde}}$ lying on the hyperplane is zero. By definition, this means $\bar{a}$ is orthogonal, or normal, to the hyperplane.</li>
+</ol>
+
+<h3>3. Distance of a Hyperplane from the Origin</h3>
+<p>The constant $c$ in the hyperplane equation is directly related to the perpendicular distance of the hyperplane from the origin. This relationship can be derived using the geometric definition of the dot product.</p>
+<ol>
+    <li>The dot product $\bar{a}^T \bar{x}$ can be expressed as:
+    \$$ \bar{a}^T \bar{x} = \|\bar{a}\| \|\bar{x}\| \cos(\theta) $$
+    where $\|\bar{a}\|$ and $\|\bar{x}\|$ are the magnitudes (norms) of the vectors, and $\theta$ is the angle between them.</li>
+    <li>In our geometric setup, $\bar{a}$ is the normal vector. The quantity $\|\bar{x}\| \cos(\theta)$ is the length of the projection of the vector $\bar{x}$ onto the normal vector $\bar{a}$. This projected length is precisely the perpendicular distance, $d$, of the hyperplane from the origin.</li>
+    <li>Substituting this back into the hyperplane equation:
+    \$$ \bar{a}^T \bar{x} = \|\bar{a}\| \cdot (\|\bar{x}\| \cos(\theta)) = c $$
+    \$$ \|\bar{a}\| \cdot d = c $$
+    </li>
+    <li>Solving for the distance $d$, we get:
+    \$$ d = \frac{c}{\|\bar{a}\|} $$
+    </li>
+</ol>
+<p>The sign of $c$ (and therefore $d$) indicates direction. If $c > 0$, the hyperplane is displaced from the origin in the same direction as the normal vector $\bar{a}$. If $c < 0$, it is displaced in the opposite direction. If $c=0$, the distance is zero, meaning the hyperplane passes through the origin.</p>
+
+<h3>4. Distance Between Two Parallel Hyperplanes</h3>
+<p>Two hyperplanes are parallel if they share the same normal vector $\bar{a}$. Their equations will only differ by the constant term:</p>
+<ul>
+    <li>Hyperplane 1: $ \bar{a}^T \bar{x} = c_1 $</li>
+    <li>Hyperplane 2: $ \bar{a}^T \bar{x} = c_2 $</li>
+</ul>
+<p>Using the formula from the previous section, we can find the distance of each hyperplane from the origin:</p>
+<ul>
+    <li>Distance of Hyperplane 1 from origin: $ d_1 = \frac{c_1}{\|\bar{a}\|} $</li>
+    <li>Distance of Hyperplane 2 from origin: $ d_2 = \frac{c_2}{\|\bar{a}\|} $</li>
+</ul>
+<p>The perpendicular distance between these two parallel hyperplanes is the difference between their individual distances from the origin:</p>
+\$$ d_{\text{between}} = d_1 - d_2 = \frac{c_1}{\|\bar{a}\|} - \frac{c_2}{\|\bar{a}\|} $$
+\$$ d_{\text{between}} = \frac{c_1 - c_2}{\|\bar{a}\|} $$
+<p>This formula gives the separation between the two parallel hyperplanes that form the slab in our SVM problem.</p>
+
+<h3>5. Formulating the SVM Optimization Problem</h3>
+<p>Now we can apply these geometric principles to the SVM classifier.</p>
+<p><b>Defining the Margin Hyperplanes:</b><br>
+In SVM, the two parallel hyperplanes that define the slab are canonically written as:</p>
+<ul>
+    <li>$ \bar{a}^T \bar{x} + b = 1 $</li>
+    <li>$ \bar{a}^T \bar{x} + b = -1 $</li>
+</ul>
+<p>To use our distance formula, we rewrite them in the form $\bar{a}^T \bar{x} = c$:</p>
+<ul>
+    <li>Hyperplane 1: $ \bar{a}^T \bar{x} = 1 - b \quad \implies c_1 = 1 - b $</li>
+    <li>Hyperplane 2: $ \bar{a}^T \bar{x} = -1 - b \quad \implies c_2 = -1 - b $</li>
+</ul>
+
+<p><b>Calculating the Margin (Slab Thickness):</b><br>
+The thickness of the slab, which is the separation we want to maximize, is the distance between these two hyperplanes. Using the formula $d = \frac{c_1 - c_2}{\|\bar{a}\|}$:</p>
+\$$ d = \frac{(1 - b) - (-1 - b)}{\|\bar{a}\|} = \frac{1 - b + 1 + b}{\|\bar{a}\|} $$
+\$$ d = \frac{2}{\|\bar{a}\|} $$
+<p>This is a key result: the width of the margin is inversely proportional to the magnitude (norm) of the normal vector $\bar{a}$.</p>
+
+<p><b>The Optimization Objective and Constraints:</b><br>
+The goal of SVM is to maximize this separation $d$.</p>
+<ul>
+    <li><b>Objective:</b> To maximize $ \frac{2}{\|\bar{a}\|} $. This is mathematically equivalent to minimizing the denominator, $ \|\bar{a}\| $. (Often, one minimizes $ \frac{1}{2}\|\bar{a}\|^2 $ for mathematical convenience, but the principle is the same).</li>
+    <li><b>Constraints:</b> We must ensure that all data points lie on the correct side of the margin. If we label the points of one class as $y_k = +1$ and the other as $y_k = -1$, this condition can be written as a single, elegant constraint:
+    \$$ y_k (\bar{a}^T \bar{x}_k + b) \ge 1 $$
+    for all data points $k = 1, 2, \dots, m$. This ensures that points with $y_k=+1$ are on or outside the $\bar{a}^T \bar{x} + b = 1$ hyperplane, and points with $y_k=-1$ are on or outside the $\bar{a}^T \bar{x} + b = -1$ hyperplane.</li>
+</ul>
+
+<p><b>The Final SVM Problem Formulation:</b><br>
+Combining the objective and constraints, the SVM problem is formally stated as:</p>
+<blockquote>
+    <b>Minimize:</b> $ \|\bar{a}\| $ <br>
+    <b>Subject to:</b> $ y_k (\bar{a}^T \bar{x}_k + b) \ge 1 $ for $ k=1, \dots, m $
+</blockquote>
+<p>This is a <b>convex optimization problem</b>. The objective function is convex, and the constraints define a convex set. A significant advantage of this is that any local minimum is also a global minimum, which guarantees that we can find the single best solution efficiently using specialized computational tools (like CVX, as mentioned in the transcript).</p>
+</div></div><div class="chapter" id="Lecture 51 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 51 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts, theories, and formulas related to <b>sparse regression</b> as presented in the transcript.</p>
+
+<h3>1. Introduction to Sparse Regression</h3>
+<p>Sparse regression is a specialized form of linear regression, a foundational technique in machine learning and signal processing. While standard linear regression builds a model using a linear combination of all available explanatory variables, sparse regression aims to create a model using the fewest possible variables.</p>
+
+<p>The standard linear regression model predicts a response variable, denoted as $\hat{y}$, using the following formula:</p>
+\$$ \hat{y} = \theta_1 x_1 + \theta_2 x_2 + \dots + \theta_n x_n $$
+<p>In this model:</p>
+<ul>
+    <li>$\hat{y}$ is the predicted response.</li>
+    <li>$x_1, x_2, \dots, x_n$ are the <b>regressors</b> or <b>explanatory variables</b>. These are the components of an n-dimensional vector $\bar{x}$.</li>
+    <li>$\theta_1, \theta_2, \dots, \theta_n$ are the <b>regression coefficients</b>. These coefficients determine the weight or importance of each corresponding explanatory variable in the prediction. They form a parameter vector denoted as $\bar{\theta}$.</li>
+</ul>
+
+<h3>2. The Principle of Sparsity</h3>
+<p>The core idea of sparse regression is to find a predictive model that is "sparse." This means the model relies on only a small, sparse subset of the available explanatory variables.</p>
+<p>In terms of the model's coefficients, this translates to the following condition:
+<ul>
+    <li><b>Many regression coefficients ($\theta_i$) are exactly zero.</b></li>
+    <li>Only a few coefficients are non-zero.</li>
+</ul>
+</p>
+<p>If a coefficient $\theta_i$ is zero, the corresponding variable $x_i$ has no influence on the prediction. Therefore, by forcing many coefficients to be zero, the model effectively performs variable selection, identifying the most critical factors for explaining the response.</p>
+<p>This results in a <b>sparse parameter vector</b> $\bar{\theta}$. For example, if there are many regressors, the vector $\bar{\theta}$ might look like this:</p>
+\$$ \bar{\theta} = \begin{bmatrix} 0 \\ \vdots \\ 2 \\ 0 \\ \vdots \\ -3 \\ 0 \\ \vdots \\ 1 \\ 0 \\ \vdots \end{bmatrix} $$
+<p>This vector has a large number of zero entries and very few non-zero entries.</p>
+
+<h3>3. The Computational Challenge of Sparsity</h3>
+<p>A significant challenge in sparse regression is that we do not know in advance which coefficients should be non-zero. A naive approach would be to test every possible combination of non-zero coefficients.</p>
+<p>For example, if we have $n=100$ total regressors and we believe that approximately $k=40$ of them are relevant (non-zero), we would need to examine every possible subset of 40 regressors. The number of combinations to check is given by the binomial coefficient:</p>
+\$$ \binom{n}{k} = \binom{100}{40} $$
+<p>This number is astronomically large, making a brute-force search computationally intractable. This type of combinatorial problem is known to be <b>NP-hard</b>, as its complexity grows exponentially with the size of the problem.</p>
+
+<h3>4. Formalizing Sparsity: The L0 Norm</h3>
+<p>To formalize the goal of finding the "sparsest" solution, we can use the concept of the <b>$L_0$ "norm"</b>. Although not a true mathematical norm, the $L_0$ norm of a vector counts the number of its non-zero elements.</p>
+<p>For the parameter vector $\bar{\theta}$, the $L_0$ norm is:</p>
+\$$ ||\bar{\theta}||_0 = \text{number of non-zero elements in } \bar{\theta} $$
+<p>The problem of sparse regression can then be framed as an optimization problem: find the vector $\bar{\theta}$ that fits the data well while having the smallest possible $L_0$ norm.</p>
+
+<h3>5. Matrix Formulation and the Underdetermined System</h3>
+<p>Given a training dataset with $M$ samples $ (y_k, \bar{x}_k) $ for $k=1, \dots, M$, where $y_k$ is the response and $\bar{x}_k$ is the vector of regressors for the $k$-th sample, we can write the entire system of equations in matrix form:</p>
+\$$ \bar{y} = X \bar{\theta} $$
+<p>Where:</p>
+<ul>
+    <li>$\bar{y}$ is the $M \times 1$ vector of observed responses.</li>
+    <li>$X$ is the $M \times n$ matrix where each row is a sample's regressor vector $\bar{x}_k^T$.</li>
+    <li>$\bar{\theta}$ is the $n \times 1$ vector of unknown regression coefficients that we need to find.</li>
+</ul>
+
+<h4>Contrast with Conventional Linear Regression</h4>
+<p>In <b>conventional linear regression</b>, we typically have more samples (equations) than regressors (unknowns), meaning $M \ge n$. The matrix $X$ is "tall," and the problem is overdetermined. A unique solution is found by minimizing the squared error, leading to the well-known <b>least-squares solution</b>:</p>
+\$$ \hat{\theta} = (X^T X)^{-1} X^T \bar{y} $$
+<p>However, in many modern sparse regression problems, the system is <b>underdetermined</b>. This means we have significantly fewer measurements (samples) than unknowns, i.e., $M \ll n$. In this case, the matrix $X$ is "wide." The matrix $X^T X$ becomes singular (non-invertible), and the least-squares formula cannot be used. An infinite number of solutions exist for $\bar{\theta}$, and we must use the sparsity constraint to find the single, meaningful solution.</p>
+
+<h3>6. Compressive Sensing</h3>
+<p>The problem of recovering a sparse vector $\bar{\theta}$ from an underdetermined system of linear equations $\bar{y} = X\bar{\theta}$ is the central focus of a modern field called <b>compressive sensing</b> (or compressed sensing).</p>
+<p>The name originates from the idea that we are "sensing" an n-dimensional signal or parameter vector $\bar{\theta}$ using only $M$ measurements, where $M \ll n$. We are effectively using a "compressed" set of information to reconstruct the full signal. This reconstruction is only possible if we can leverage prior knowledge that the signal $\bar{\theta}$ is sparse.</p>
+<p>Compressive sensing is a revolutionary field with significant applications in:</p>
+<ul>
+    <li>Signal and Image Processing</li>
+    <li>Medical Imaging (e.g., MRI, Tomography)</li>
+    <li>Geology and Radar</li>
+    <li>Machine Learning</li>
+</ul>
+<p>It allows for high-resolution signal recovery from far fewer measurements than required by traditional methods, fundamentally changing how data is acquired and processed in many scientific and engineering domains.</p>
+</div></div><div class="chapter" id="Lecture 52 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 52 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts, theories, and formulas related to sparse regression and the Orthogonal Matching Pursuit (OMP) algorithm, as presented in the transcript.</p>
+
+<h3>1. The Sparse Regression Model and its Interpretation</h3>
+<p>Sparse regression aims to model a response vector $\mathbf{y}$ using a linear combination of explanatory variables (or regressors) from a matrix $\mathbf{X}$, with the constraint that only a few of these variables are used. This means the corresponding regression coefficient vector $\boldsymbol{\theta}$ is "sparse," i.e., it has very few non-zero elements.</p>
+
+<p>The fundamental model is given by:</p>
+\$$ \mathbf{y} = \mathbf{X}\boldsymbol{\theta} $$
+<p>where:</p>
+<ul>
+    <li>$\mathbf{y}$ is an $m \times 1$ vector of observed responses.</li>
+    <li>$\mathbf{X}$ is an $m \times n$ matrix of explanatory variables, where each column represents a different variable. The transcript emphasizes the case where $\mathbf{X}$ is a "wide" matrix ($n > m$).</li>
+    <li>$\boldsymbol{\theta}$ is an $n \times 1$ vector of regression coefficients. The goal is for this vector to be sparse.</li>
+</ul>
+
+<p>The model can be rewritten by expressing the matrix $\mathbf{X}$ in terms of its columns $\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_n$:</p>
+\$$ \mathbf{y} = [\mathbf{x}_1 | \mathbf{x}_2 | \dots | \mathbf{x}_n] \begin{pmatrix} \theta_1 \\ \theta_2 \\ \vdots \\ \theta_n \end{pmatrix} = \sum_{i=1}^{n} \mathbf{x}_i \theta_i $$
+<p>This form highlights that $\mathbf{y}$ is being represented as a <b>linear combination of the columns of $\mathbf{X}$</b>. Since $\boldsymbol{\theta}$ must be sparse, the problem becomes one of finding the <b>fewest columns</b> of $\mathbf{X}$ that can be linearly combined to provide the best possible approximation of $\mathbf{y}$. This reframing of the problem leads to alternative names for the task:</p>
+<ul>
+    <li><b>Subset Selection:</b> We are selecting the best subset of columns (explanatory variables) from the full set available in $\mathbf{X}$.</li>
+    <li><b>Basis Selection:</b> If we consider the columns $\{\mathbf{x}_1, \dots, \mathbf{x}_n\}$ as a basis (or more accurately, a dictionary or spanning set), the task is to select a small subset of these basis vectors to represent $\mathbf{y}$.</li>
+</ul>
+
+<h3>2. The Core Idea: A Greedy Approach Using Projections</h3>
+<p>The algorithm described is a greedy, iterative procedure. The intuition is to build the approximation of $\mathbf{y}$ one step at a time by selecting the most useful column of $\mathbf{X}$ at each iteration.</p>
+<p>To find the "most useful" or "best" column, we need a measure of similarity between the columns $\mathbf{x}_j$ and the target vector $\mathbf{y}$ (or what's left of it to be explained, known as the <b>residue</b>). The transcript explains that this similarity can be measured by calculating the <b>projection</b> of one vector onto another. A larger projection implies greater similarity.</p>
+<p>The projection of $\mathbf{y}$ onto a column vector $\mathbf{x}_j$ is proportional to their inner product (or dot product), which is calculated as $\mathbf{x}_j^T \mathbf{y}$. Therefore, the strategy is to find the column $\mathbf{x}_j$ that maximizes this value.</p>
+\$$ j_{\text{best}} = \arg\max_{j} |\mathbf{x}_j^T \mathbf{y}| $$
+<p>This chosen column $\mathbf{x}_{j_{\text{best}}}$ is the first explanatory variable selected to explain the response $\mathbf{y}$.</p>
+
+<h3>3. The Orthogonal Matching Pursuit (OMP) Algorithm</h3>
+<p>OMP is the iterative algorithm that formalizes the greedy approach described above. It iteratively "matches" the best column to the current residue and then "orthogonally" projects the data to find the new residue for the next iteration.</p>
+
+<h4>Initialization</h4>
+<ul>
+    <li><b>Iteration Index:</b> Set $k=1$.</li>
+    <li><b>Residue:</b> The initial residue is the entire response vector, as nothing has been explained yet.
+        \$$ \mathbf{r}^{(0)} = \mathbf{y} $$
+    </li>
+    <li><b>Basis Matrix:</b> The initial set of selected columns is empty. This is represented by an empty matrix $\mathbf{X}_0$.</li>
+</ul>
+
+<h4>Iteration Steps (for iteration $k$)</h4>
+<p>The algorithm repeats the following steps until a stopping criterion is met.</p>
+
+<ol>
+    <li><b>Matching Step (Find Best Column):</b><br>
+    Find the column of $\mathbf{X}$ that is most correlated with the residue from the previous iteration, $\mathbf{r}^{(k-1)}$. This is done by finding the index $i_k$ that maximizes the absolute value of the projection.
+    \$$ i_k = \arg\max_{j} |\mathbf{x}_j^T \mathbf{r}^{(k-1)}| $$
+    This step identifies the most promising explanatory variable to add to the model.
+    </li>
+
+    <li><b>Augmentation Step (Update Basis):</b><br>
+    The basis matrix $\mathbf{X}_k$ is formed by augmenting the basis from the previous step, $\mathbf{X}_{k-1}$, with the newly chosen column, $\mathbf{x}_{i_k}$.
+    \$$ \mathbf{X}_k = [\mathbf{X}_{k-1} | \mathbf{x}_{i_k}] $$
+    At each step, this matrix contains all the columns selected so far.
+    </li>
+
+    <li><b>Least Squares Solution (Find Coefficients):</b><br>
+    With the current basis $\mathbf{X}_k$, find the best linear combination of these columns to approximate the original vector $\mathbf{y}$. This is a standard least squares problem:
+    \$$ \min_{\boldsymbol{\theta}^{(k)}} ||\mathbf{y} - \mathbf{X}_k \boldsymbol{\theta}^{(k)}||_2^2 $$
+    The solution gives the optimal coefficients $\boldsymbol{\theta}^{(k)}$ for the chosen subset of columns. The well-known formula for the least squares estimate is:
+    \$$ \boldsymbol{\theta}^{(k)} = (\mathbf{X}_k^T \mathbf{X}_k)^{-1} \mathbf{X}_k^T \mathbf{y} $$
+    </li>
+
+    <li><b>Residue Update:</b><br>
+    The new residue $\mathbf{r}^{(k)}$ is the part of $\mathbf{y}$ that is not explained by the current approximation, $\mathbf{X}_k \boldsymbol{\theta}^{(k)}$.
+    \$$ \mathbf{r}^{(k)} = \mathbf{y} - \mathbf{X}_k \boldsymbol{\theta}^{(k)} $$
+    This residue is the approximation error and will be used in the matching step of the next iteration. Geometrically, this residue is orthogonal to the subspace spanned by the columns of $\mathbf{X}_k$, which is where the "Orthogonal" part of the algorithm's name comes from.
+    </li>
+</ol>
+<p>The iteration index is then incremented ($k \leftarrow k+1$) and the process repeats.</p>
+
+<h4>Stopping Criteria</h4>
+<p>The iterative process must be stopped. The transcript suggests two common criteria:</p>
+<ol>
+    <li><b>Approximation Error Threshold:</b> Stop when the norm of the residue falls below a small, predefined threshold $\epsilon$. This means the approximation is "good enough."
+    \$$ ||\mathbf{r}^{(k)}||_2 = ||\mathbf{y} - \mathbf{X}_k \boldsymbol{\theta}^{(k)}||_2 \leq \epsilon $$
+    </li>
+    <li><b>Stagnation of Residue:</b> Stop when the residue no longer decreases significantly from one iteration to the next. This indicates that adding more columns is not improving the model's explanatory power.</li>
+</ol>
+
+<h3>4. Mapping the Final Solution</h3>
+<p>After the algorithm terminates (e.g., at iteration $K$), the output is a small vector $\boldsymbol{\theta}^{(K)}$ and a set of indices $\{i_1, i_2, \dots, i_K\}$ corresponding to the columns selected. The final sparse regression vector $\boldsymbol{\theta}$ (of original dimension $n \times 1$) must be constructed.</p>
+<ul>
+    <li>The $j$-th element of the solution vector $\boldsymbol{\theta}^{(K)}$ corresponds to the column index $i_j$ chosen in the $j$-th iteration.</li>
+    <li>This value is placed at the $i_j$-th position in the final sparse vector $\boldsymbol{\theta}$.</li>
+    <li>All other elements of $\boldsymbol{\theta}$ (corresponding to columns that were not selected) are set to zero.</li>
+</ul>
+<p>For example, if the $j$-th element of $\boldsymbol{\theta}^{(K)}$ is $\theta^{(K)}_j$, and this corresponds to the column with original index $i_j$, then in the final $n \times 1$ vector $\boldsymbol{\theta}$, we set:</p>
+\$$ \theta_{i_j} = \theta^{(K)}_j $$
+<p>The resulting vector $\boldsymbol{\theta}$ will have a large number of zeros, thus achieving the goal of sparse regression.</p>
+
+</div></div><div class="chapter" id="Lecture 53 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 53 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts and steps demonstrated in the transcript for solving a sparse regression problem using the <b>Orthogonal Matching Pursuit (OMP)</b> algorithm.</p>
+
+<h3>1. The Sparse Regression Problem</h3>
+<p>The core problem is to solve a system of linear equations of the form:</p>
+\$$ \bar{y} = \mathbf{X} \bar{\theta} $$
+<p>where:</p>
+<ul>
+    <li>$\bar{y}$ is a vector of known measurements.</li>
+    <li>$\mathbf{X}$ is a known matrix, often called the dictionary or design matrix.</li>
+    <li>$\bar{\theta}$ is a vector of unknown coefficients or parameters that we need to find.</li>
+</ul>
+<p>The problem is made challenging by two conditions present in the example:</p>
+<ol>
+    <li><b>Underdetermined System:</b> The matrix $\mathbf{X}$ is a "wide matrix," meaning it has more columns (unknowns, $n$) than rows (measurements, $m$). In this case, $m=4$ and $n=6$. An underdetermined system ($m < n$) has infinitely many possible solutions for $\bar{\theta}$.</li>
+    <li><b>Sparsity Constraint:</b> To find a unique and meaningful solution, we impose the constraint that $\bar{\theta}$ must be <b>sparse</b>. A sparse vector is one where most of its elements are zero. The challenge is that we do not know in advance which elements of $\bar{\theta}$ are non-zero. The set of indices of these non-zero elements is called the <b>support</b> of the vector, which is unknown.</li>
+</ol>
+<p>The OMP algorithm is a greedy iterative method designed to find this sparse solution $\bar{\theta}$.</p>
+
+<h3>2. Example Setup</h3>
+<p>The transcript sets up the following specific problem:</p>
+<p>The measurement vector $\bar{y}$ is:</p>
+\$$ \bar{y} = \begin{pmatrix} 7 \\ 3 \\ 4 \\ 0 \end{pmatrix} $$
+<p>The matrix $\mathbf{X}$, composed of six column vectors $\mathbf{x}_1, \dots, \mathbf{x}_6$, is:</p>
+\$$ \mathbf{X} = \begin{pmatrix} 1 & 1 & 0 & 1 & 0 & 0 \\ 1 & 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 1 & 1 & 0 \\ 0 & 1 & 1 & 0 & 1 & 1 \end{pmatrix} $$
+<p>Our goal is to find the sparse vector $\bar{\theta} \in \mathbb{R}^6$ that satisfies $\bar{y} = \mathbf{X} \bar{\theta}$.</p>
+
+<h3>3. The Orthogonal Matching Pursuit (OMP) Algorithm</h3>
+
+<h4>Initialization</h4>
+<p>The algorithm starts by initializing two variables:</p>
+<ul>
+    <li>The initial <b>residue</b>, $\bar{r}_0$, which is the unexplained part of $\bar{y}$. Initially, nothing is explained, so the residue is the entire measurement vector.</li>
+    \$$ \bar{r}_0 = \bar{y} = \begin{pmatrix} 7 \\ 3 \\ 4 \\ 0 \end{pmatrix} $$
+    <li>The initial <b>basis matrix</b>, $\mathbf{X}_0$, which contains the columns of $\mathbf{X}$ selected so far. Initially, no columns have been selected.</li>
+    \$$ \mathbf{X}_0 = \text{[] (an empty matrix)} $$
+</ul>
+
+<h4>Iteration 1</h4>
+<p>Each iteration of OMP consists of three main steps: Matching, Solving, and Updating the Residue.</p>
+
+<p><b>Step 1: Matching</b><br>
+The goal is to find the column in the original matrix $\mathbf{X}$ that is most correlated with the current residue $\bar{r}_0$. This is done by finding the column that has the largest projection (in absolute value) onto the residue. The index $j$ is chosen to maximize this correlation:</p>
+\$$ i_1 = \arg\max_{j} |\langle \mathbf{x}_j, \bar{r}_0 \rangle| = \arg\max_{j} |\mathbf{x}_j^T \bar{r}_0| $$
+<p>A practical way to compute all projections at once is to multiply the transpose of $\mathbf{X}$ with the residue vector:</p>
+\$$ \mathbf{X}^T \bar{r}_0 = \begin{pmatrix} 1 & 1 & 0 & 0 \\ 1 & 0 & 0 & 1 \\ 0 & 0 & 1 & 1 \\ 1 & 0 & 1 & 0 \\ 0 & 0 & 1 & 1 \\ 0 & 1 & 0 & 1 \end{pmatrix} \begin{pmatrix} 7 \\ 3 \\ 4 \\ 0 \end{pmatrix} = \begin{pmatrix} 10 \\ 7 \\ 4 \\ 11 \\ 4 \\ 3 \end{pmatrix} $$
+<p>We look for the largest value in the resulting vector, which is 11. The index of this maximum value is 4. Therefore, the first chosen index is $i_1 = 4$. This means that column $\mathbf{x}_4$ is the most important for explaining the signal $\bar{y}$.</p>
+
+<p><b>Step 2: Least Squares Solution</b><br>
+We form a new basis matrix $\mathbf{X}_1$ by augmenting the previous one with the newly selected column, $\mathbf{x}_4$.</p>
+\$$ \mathbf{X}_1 = [\mathbf{X}_0, \mathbf{x}_{i_1}] = [\mathbf{x}_4] = \begin{pmatrix} 1 \\ 0 \\ 1 \\ 0 \end{pmatrix} $$
+<p>Now, we find the best possible approximation of $\bar{y}$ using only the columns in $\mathbf{X}_1$. This is a classic least squares problem: find $\bar{\theta}_1$ that minimizes $ ||\bar{y} - \mathbf{X}_1 \bar{\theta}_1||^2 $. The solution is given by the pseudo-inverse formula:</p>
+\$$ \bar{\theta}_1 = (\mathbf{X}_1^T \mathbf{X}_1)^{-1} \mathbf{X}_1^T \bar{y} $$
+<p>Let's compute this:</p>
+\$$ \mathbf{X}_1^T \mathbf{X}_1 = \begin{pmatrix} 1 & 0 & 1 & 0 \end{pmatrix} \begin{pmatrix} 1 \\ 0 \\ 1 \\ 0 \end{pmatrix} = 2 $$
+\$$ (\mathbf{X}_1^T \mathbf{X}_1)^{-1} = \frac{1}{2} $$
+\$$ \mathbf{X}_1^T \bar{y} = \begin{pmatrix} 1 & 0 & 1 & 0 \end{pmatrix} \begin{pmatrix} 7 \\ 3 \\ 4 \\ 0 \end{pmatrix} = 11 $$
+\$$ \bar{\theta}_1 = \frac{1}{2} \times 11 = \frac{11}{2} $$
+<p>This is the estimated coefficient for the chosen column $\mathbf{x}_4$.</p>
+
+<p><b>Step 3: Residue Update</b><br>
+We calculate the new residue $\bar{r}_1$ by subtracting the approximation we just found from the original vector $\bar{y}$.</p>
+\$$ \bar{r}_1 = \bar{y} - \mathbf{X}_1 \bar{\theta}_1 = \begin{pmatrix} 7 \\ 3 \\ 4 \\ 0 \end{pmatrix} - \begin{pmatrix} 1 \\ 0 \\ 1 \\ 0 \end{pmatrix} \left(\frac{11}{2}\right) = \begin{pmatrix} 7 - 11/2 \\ 3 - 0 \\ 4 - 11/2 \\ 0 - 0 \end{pmatrix} = \begin{pmatrix} 3/2 \\ 3 \\ -3/2 \\ 0 \end{pmatrix} $$
+<p>This completes the first iteration. The new residue $\bar{r}_1$ represents the part of $\bar{y}$ that is still unexplained.</p>
+
+<h4>Iteration 2</h4>
+<p>We repeat the same three steps, now using the residue from the previous iteration, $\bar{r}_1$.</p>
+
+<p><b>Step 1: Matching</b><br>
+We find the column of $\mathbf{X}$ that is most correlated with the new residue $\bar{r}_1$.</p>
+\$$ i_2 = \arg\max_{j} |\mathbf{x}_j^T \bar{r}_1| $$
+<p>Again, we compute $\mathbf{X}^T \bar{r}_1$:</p>
+\$$ \mathbf{X}^T \bar{r}_1 = \begin{pmatrix} 1 & 1 & 0 & 0 \\ 1 & 0 & 0 & 1 \\ 0 & 0 & 1 & 1 \\ 1 & 0 & 1 & 0 \\ 0 & 0 & 1 & 1 \\ 0 & 1 & 0 & 1 \end{pmatrix} \begin{pmatrix} 3/2 \\ 3 \\ -3/2 \\ 0 \end{pmatrix} = \begin{pmatrix} 9/2 \\ 3/2 \\ -3/2 \\ 0 \\ -3/2 \\ 3 \end{pmatrix} $$
+<p>The maximum absolute value in this vector is $9/2 = 4.5$, which corresponds to the first index. Thus, the second chosen index is $i_2 = 1$.</p>
+
+<p><b>Step 2: Least Squares Solution</b><br>
+We augment the basis matrix $\mathbf{X}_1$ with the newly selected column $\mathbf{x}_1$.</p>
+\$$ \mathbf{X}_2 = [\mathbf{X}_1, \mathbf{x}_1] = [\mathbf{x}_4, \mathbf{x}_1] = \begin{pmatrix} 1 & 1 \\ 0 & 1 \\ 1 & 0 \\ 0 & 0 \end{pmatrix} $$
+<p>We solve the least squares problem again to find the coefficients $\bar{\theta}_2$ that best approximate $\bar{y}$ using the columns in $\mathbf{X}_2$.</p>
+\$$ \bar{\theta}_2 = (\mathbf{X}_2^T \mathbf{X}_2)^{-1} \mathbf{X}_2^T \bar{y} $$
+<p>First, calculate $\mathbf{X}_2^T \mathbf{X}_2$:</p>
+\$$ \mathbf{X}_2^T \mathbf{X}_2 = \begin{pmatrix} 1 & 0 & 1 & 0 \\ 1 & 1 & 0 & 0 \end{pmatrix} \begin{pmatrix} 1 & 1 \\ 0 & 1 \\ 1 & 0 \\ 0 & 0 \end{pmatrix} = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix} $$
+<p>Next, find its inverse:</p>
+\$$ (\mathbf{X}_2^T \mathbf{X}_2)^{-1} = \frac{1}{(2)(2) - (1)(1)} \begin{pmatrix} 2 & -1 \\ -1 & 2 \end{pmatrix} = \frac{1}{3} \begin{pmatrix} 2 & -1 \\ -1 & 2 \end{pmatrix} $$
+<p>Now, calculate $\mathbf{X}_2^T \bar{y}$:</p>
+\$$ \mathbf{X}_2^T \bar{y} = \begin{pmatrix} 1 & 0 & 1 & 0 \\ 1 & 1 & 0 & 0 \end{pmatrix} \begin{pmatrix} 7 \\ 3 \\ 4 \\ 0 \end{pmatrix} = \begin{pmatrix} 11 \\ 10 \end{pmatrix} $$
+<p>Finally, we compute $\bar{\theta}_2$:</p>
+\$$ \bar{\theta}_2 = \frac{1}{3} \begin{pmatrix} 2 & -1 \\ -1 & 2 \end{pmatrix} \begin{pmatrix} 11 \\ 10 \end{pmatrix} = \frac{1}{3} \begin{pmatrix} 22 - 10 \\ -11 + 20 \end{pmatrix} = \frac{1}{3} \begin{pmatrix} 12 \\ 9 \end{pmatrix} = \begin{pmatrix} 4 \\ 3 \end{pmatrix} $$
+
+<p><b>Step 3: Residue Update</b><br>
+Calculate the final residue $\bar{r}_2$:</p>
+\$$ \bar{r}_2 = \bar{y} - \mathbf{X}_2 \bar{\theta}_2 = \begin{pmatrix} 7 \\ 3 \\ 4 \\ 0 \end{pmatrix} - \begin{pmatrix} 1 & 1 \\ 0 & 1 \\ 1 & 0 \\ 0 & 0 \end{pmatrix} \begin{pmatrix} 4 \\ 3 \end{pmatrix} = \begin{pmatrix} 7 \\ 3 \\ 4 \\ 0 \end{pmatrix} - \begin{pmatrix} 4+3 \\ 3 \\ 4 \\ 0 \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \\ 0 \\ 0 \end{pmatrix} $$
+
+<h4>Termination</h4>
+<p>The residue $\bar{r}_2$ is the zero vector. This means that we have found a perfect representation of $\bar{y}$ using the chosen columns. The algorithm terminates. In practice, the algorithm would terminate when the norm of the residue falls below a small, pre-defined threshold, accounting for noise in the measurements.</p>
+
+<h3>4. Constructing the Final Sparse Vector</h3>
+<p>The algorithm has identified the non-zero coefficients and their corresponding locations.</p>
+<ul>
+    <li>The selected indices were $i_1 = 4$ and $i_2 = 1$.</li>
+    <li>The final coefficient vector for the chosen basis $\mathbf{X}_2 = [\mathbf{x}_4, \mathbf{x}_1]$ is $\bar{\theta}_2 = \begin{pmatrix} 4 \\ 3 \end{pmatrix}$.</li>
+</ul>
+<p>To construct the final sparse vector $\bar{\theta} \in \mathbb{R}^6$, we place the calculated coefficients at their correct positions:</p>
+<ul>
+    <li>The first element of $\bar{\theta}_2$, which is 4, corresponds to the first column of $\mathbf{X}_2$, which is $\mathbf{x}_4$. So, the 4th element of $\bar{\theta}$ is 4.</li>
+    <li>The second element of $\bar{\theta}_2$, which is 3, corresponds to the second column of $\mathbf{X}_2$, which is $\mathbf{x}_1$. So, the 1st element of $\bar{\theta}$ is 3.</li>
+</ul>
+<p>All other elements of $\bar{\theta}$ are zero. Therefore, the final sparse solution is:</p>
+\$$ \bar{\theta} = \begin{pmatrix} 3 \\ 0 \\ 0 \\ 4 \\ 0 \\ 0 \end{pmatrix} $$
+
+<h3>5. Verification</h3>
+<p>We can verify the solution by multiplying $\mathbf{X}$ by our computed $\bar{\theta}$ to see if we get back the original $\bar{y}$.</p>
+\$$ \mathbf{X}\bar{\theta} = \begin{pmatrix} 1 & 1 & 0 & 1 & 0 & 0 \\ 1 & 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 1 & 1 & 0 \\ 0 & 1 & 1 & 0 & 1 & 1 \end{pmatrix} \begin{pmatrix} 3 \\ 0 \\ 0 \\ 4 \\ 0 \\ 0 \end{pmatrix} = 3 \begin{pmatrix} 1 \\ 1 \\ 0 \\ 0 \end{pmatrix} + 4 \begin{pmatrix} 1 \\ 0 \\ 1 \\ 0 \end{pmatrix} = \begin{pmatrix} 3+4 \\ 3+0 \\ 0+4 \\ 0+0 \end{pmatrix} = \begin{pmatrix} 7 \\ 3 \\ 4 \\ 0 \end{pmatrix} = \bar{y} $$
+<p>The result matches the original measurement vector, confirming that the OMP algorithm successfully found the correct 2-sparse solution to the underdetermined system.</p>
+</div></div><div class="chapter" id="Lecture 54 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 54 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the key concepts and theories related to clustering, as presented in the transcript. The focus is on unsupervised machine learning, the definition of a cluster, its applications, and an introduction to the K-Means clustering algorithm.</p>
+
+<b>1. Introduction to Clustering and Unsupervised Learning</b>
+<p>
+Clustering is a fundamental technique in machine learning (ML). It falls under a category of algorithms known as <b>unsupervised learning</b>.
+</p>
+<ul>
+    <li><b>Unsupervised Learning:</b> This type of learning deals with data that has not been labeled or tagged. The goal is to analyze a large, unorganized dataset to discover hidden patterns, structures, and relationships without any prior guidance on what these patterns might be. The transcript states this means "there are no labels on data".</li>
+    <li><b>Cluster:</b> A cluster is defined as a group of similar objects. The key idea is that objects within the same cluster share similar characteristics, while objects in different clusters are dissimilar. As the transcript puts it, a cluster is a "tight-knit group exhibiting some similar characteristic features." Visually, this can be imagined as groups of closely packed points in a multi-dimensional space.</li>
+    <li><b>Clustering Algorithm:</b> The purpose of a clustering algorithm is to take this unlabeled data and automatically organize it into meaningful groups or clusters. It identifies these groups based on the intrinsic similarities between the data points.</li>
+</ul>
+
+<b>2. Applications of Clustering</b>
+<p>
+Clustering is a versatile tool with a wide range of applications across various fields. The transcript highlights several key areas:
+</p>
+<ul>
+    <li><b>Data Analysis and Pattern Recognition:</b> At its core, clustering is used to find inherent groupings and structures in data, which is essential for analysis and recognizing patterns.</li>
+    <li><b>Computer Vision and Image Segmentation:</b> A prominent application is in image processing.
+        <ul>
+            <li><b>Image Segmentation:</b> This is the process of partitioning a digital image into multiple segments or regions. The goal is to simplify the image into something that is more meaningful and easier to analyze. Clustering is used to group pixels with similar properties (like color, intensity, or texture).</li>
+            <li><b>Examples:</b>
+                <ol>
+                    <li><b>Foreground-Background Separation:</b> In an image containing a person, the pixels can be grouped into two clusters: one for the person (foreground) and another for the rest of the image (background).</li>
+                    <li><b>Geographical Feature Identification:</b> In a satellite image, pixels can be clustered to distinguish between different geographical features, such as land masses and bodies of water.</li>
+                </ol>
+            </li>
+        </ul>
+    </li>
+    <li><b>Epidemiology:</b> When studying a disease outbreak, clustering can be used to group cases geographically. This helps identify "hotspots" or areas where the disease is spreading fastest, enabling targeted interventions to control the spread.</li>
+    <li><b>Finance and Marketing:</b> Businesses can use clustering to analyze customer data. By grouping customers based on their purchasing habits or spending patterns, companies can create targeted marketing campaigns, offer personalized promotions, and understand market segments.</li>
+</ul>
+
+<b>3. K-Means Clustering Algorithm</b>
+<p>
+The transcript introduces K-Means as one of the simplest, most popular, and widely used clustering algorithms.
+</p>
+<ul>
+    <li><b>The "K" in K-Means:</b> The letter 'K' is a parameter that represents the predefined <b>number of clusters</b> the algorithm will create. For example, if $ K=2 $, the algorithm will partition the data into two distinct clusters (binary clustering).</li>
+    <li><b>The Goal:</b> Given a dataset, the K-Means algorithm aims to partition the data points into $ K $ different clusters in such a way that each data point belongs to the cluster with the nearest mean (or centroid).</li>
+</ul>
+
+<b>4. Key Concepts and Formulas in K-Means</b>
+<p>
+To understand how K-Means works, we need to define its core components:
+</p>
+<ul>
+    <li><b>Data Set:</b> We start with a set of $ M $ data points, which are represented as N-dimensional vectors:
+    \$$ \bar{x}_1, \bar{x}_2, \dots, \bar{x}_M $$
+    Here, $ \bar{x}_j $ is the $ j $-th data vector.</li>
+
+    <li><b>Clusters ($ C_i $):</b> The data will be partitioned into $ K $ clusters, denoted as:
+    \$$ C_1, C_2, \dots, C_K $$
+    Each $ C_i $ represents a set of data points that are grouped together.</li>
+
+    <li><b>Centroids ($ \bar{\mu}_i $):</b> Each cluster $ C_i $ is characterized by its center point, known as a <b>centroid</b>. The centroid is essentially the mean (average) of all the data points belonging to that cluster. It can be thought of as a representative or the "center of gravity" for the cluster. The centroids for the $ K $ clusters are denoted by:
+    \$$ \bar{\mu}_1, \bar{\mu}_2, \dots, \bar{\mu}_K $$
+    where $ \bar{\mu}_i $ is the centroid of the $ i $-th cluster, $ C_i $.</li>
+
+    <li><b>Cluster Assignment Indicator ($ \alpha_{ij} $):</b> This is a crucial parameter that indicates which cluster a particular data point belongs to. It is defined as follows:
+    \$$ \alpha_{ij} = \begin{cases} 1 & \text{if data point } \bar{x}_j \text{ belongs to Cluster } i \\ 0 & \text{else} \end{cases} $$
+    <p>A fundamental assumption in K-Means is that each data point can belong to only <b>one</b> cluster. This means that for any given data point $ \bar{x}_j $, exactly one of the $ \alpha_{ij} $ values (for $ i=1, 2, \dots, K $) will be 1, and all others will be 0.</p>
+    <p><b>Example:</b> If we have $ K=10 $ clusters and we are considering the second data point ($ j=2 $), and this point is assigned to the third cluster ($ i=3 $), then:
+    <ul>
+        <li>$ \alpha_{3,2} = 1 $</li>
+        <li>$ \alpha_{i,2} = 0 $ for all $ i \neq 3 $ (i.e., for $ i = 1, 2, 4, \dots, 10 $).</li>
+    </ul>
+    </li>
+</ul>
+<p>
+Ultimately, the output of the K-Means clustering algorithm is the set of these assignment indicators, $ \alpha_{ij} $, for all data points and all clusters. In essence, the algorithm takes the initially unlabeled data and assigns a label (the cluster index) to each data point, thereby organizing the chaotic data into structured groups.
+</p>
+</div></div><div class="chapter" id="Lecture 55 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 55 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the K-means clustering algorithm, an unsupervised machine learning technique used for grouping unlabeled data. The explanation is based on the concepts, theories, and formulas presented in the transcript.</p>
+
+<h3>1. Introduction to K-means Clustering</h3>
+<p>K-means is a popular algorithm for <b>clustering</b>, which is the task of partitioning a dataset into groups, or "clusters." The goal is to group data points in such a way that points within the same cluster are more similar to each other than to those in other clusters. It is an example of <b>unsupervised learning</b> because it works with unlabeled data, meaning the algorithm must discover the underlying structure or groups on its own without any pre-defined categories.</p>
+
+<p>The "K" in K-means refers to the number of clusters you want to find in the data, which is a parameter that must be specified beforehand. The algorithm aims to find the best placement for `K` centroids (or cluster centers) and assign each data point to the nearest centroid, thereby forming `K` distinct clusters.</p>
+
+<h3>2. Core Concepts and Notation</h3>
+<p>Before diving into the algorithm, let's define the key variables and parameters:</p>
+<ul>
+    <li><b>Number of Clusters (K)</b>: The predefined number of clusters to be formed.</li>
+    <li><b>Data Points</b>: The dataset consists of `m` data points, represented as vectors: $ \bar{x}_1, \bar{x}_2, \dots, \bar{x}_m $. Each $ \bar{x}_j $ is a feature vector.</li>
+    <li><b>Cluster Centroids ($ \bar{\mu}_i $)</b>: The center of a cluster `i`. There are `K` centroids, one for each cluster: $ \bar{\mu}_1, \bar{\mu}_2, \dots, \bar{\mu}_K $.</li>
+    <li><b>Assignment Parameters ($ \alpha_{ij} $)</b>: These are binary parameters that indicate which cluster a data point belongs to.
+    \$$ \alpha_{ij} = \begin{cases} 1 & \text{if } \bar{x}_j \text{ is assigned to cluster } i \\ 0 & \text{otherwise} \end{cases} $$
+    For any given point $ \bar{x}_j $, it can only belong to one cluster. Therefore, for a fixed `j`, the sum of $ \alpha_{ij} $ over all clusters `i` must be 1.</li>
+</ul>
+
+<h3>3. The K-means Cost Function</h3>
+<p>The primary goal of the K-means algorithm is to find the cluster assignments ($ \alpha_{ij} $) and centroids ($ \bar{\mu}_i $) that minimize a specific cost function. This cost function, often called the distortion function, measures the total intra-cluster variation. It is defined as the sum of the squared Euclidean distances between each data point and the centroid of its assigned cluster.</p>
+
+<p>The cost function `J` is given by:</p>
+\$$ J = \sum_{i=1}^{K} \sum_{j=1}^{m} \alpha_{ij} \| \bar{x}_j - \bar{\mu}_i \|^2 $$
+<p><b>Explanation of the formula:</b></p>
+<ul>
+    <li>$ \| \bar{x}_j - \bar{\mu}_i \|^2 $ calculates the squared distance between data point `j` and centroid `i`.</li>
+    <li>The $ \alpha_{ij} $ term acts as a switch. If point `j` is assigned to cluster `i` ($ \alpha_{ij} = 1 $), its distance to centroid `i` is added to the total cost. If it's not assigned to cluster `i` ($ \alpha_{ij} = 0 $), this term becomes zero.</li>
+    <li>The summations add up these squared distances for all points across all clusters.</li>
+</ul>
+<p>Minimizing this function intuitively means making the clusters as compact as possible, ensuring that each point $ \bar{x}_j $ is close to the centroid $ \bar{\mu}_i $ of its own cluster.</p>
+
+<h3>4. The Iterative K-means Algorithm</h3>
+<p>K-means is an iterative algorithm that minimizes the cost function by repeatedly performing two main steps. Let's denote the iteration index by `l`.</p>
+
+<h4>Step 0: Initialization</h4>
+<p>The algorithm starts by initializing the `K` cluster centroids. This is typically done by randomly selecting `K` data points from the dataset to serve as the initial centroids. These initial centroids are denoted as $ \bar{\mu}_1^{(0)}, \bar{\mu}_2^{(0)}, \dots, \bar{\mu}_K^{(0)} $, where the superscript `(0)` indicates the initial (zeroth) iteration.</p>
+
+<h4>The Iterative Loop (for $ l=1, 2, \dots $)</h4>
+<p>The algorithm then enters a loop that alternates between two steps until convergence.</p>
+
+<p><b>Step 1: Cluster Assignment (Expectation Step)</b></p>
+<p>In this step, we assume the centroids are fixed from the previous iteration, $ \bar{\mu}_i^{(l-1)} $. The goal is to assign each data point $ \bar{x}_j $ to the closest centroid. This assignment is done by finding the cluster `i` that minimizes the distance $ \| \bar{x}_j - \bar{\mu}_i^{(l-1)} \|^2 $.</p>
+<p>Mathematically, for each point $ \bar{x}_j $, we find the index of the closest centroid, $ i_{\text{tilde}} $, such that:</p>
+\$$ i_{\text{tilde}} = \arg\min_{i} \| \bar{x}_j - \bar{\mu}_i^{(l-1)} \|^2 $$
+<p>We then update the assignment parameters for the current iteration `l`:</p>
+\$$ \alpha_{i_{\text{tilde}}j}^{(l)} = 1 \quad \text{and} \quad \alpha_{ij}^{(l)} = 0 \quad \text{for all } i \neq i_{\text{tilde}} $$
+<p>This process is repeated for all data points $ j = 1, \dots, m $. This is known as a <b>hard partitioning</b> because each point is assigned exclusively to one cluster.</p>
+
+<p><b>Step 2: Centroid Update (Maximization Step)</b></p>
+<p>After assigning all points to clusters, we now have a fixed set of cluster assignments $ \alpha_{ij}^{(l)} $. The next step is to recompute the centroids for each cluster to better represent the points assigned to them. We update the centroids $ \bar{\mu}_i $ by minimizing the cost function with the new, fixed assignments.</p>
+<p>For each cluster `i`, we want to find the $ \bar{\mu}_i $ that minimizes:</p>
+\$$ \sum_{j=1}^{m} \alpha_{ij}^{(l)} \| \bar{x}_j - \bar{\mu}_i \|^2 $$
+<p>To find the minimum, we take the gradient of this expression with respect to $ \bar{\mu}_i $ and set it to zero. The expression can be expanded as:</p>
+\$$ \sum_{j=1}^{m} \alpha_{ij}^{(l)} (\bar{x}_j - \bar{\mu}_i)^T (\bar{x}_j - \bar{\mu}_i) = \sum_{j=1}^{m} \alpha_{ij}^{(l)} (\bar{x}_j^T\bar{x}_j - 2\bar{\mu}_i^T\bar{x}_j + \bar{\mu}_i^T\bar{\mu}_i) $$
+<p>Taking the gradient with respect to $ \bar{\mu}_i $ and setting it to zero gives:</p>
+\$$ \sum_{j=1}^{m} \alpha_{ij}^{(l)} (-2\bar{x}_j + 2\bar{\mu}_i) = 0 $$
+<p>Solving for $ \bar{\mu}_i $ yields the updated centroid for the `l`-th iteration, $ \bar{\mu}_i^{(l)} $:</p>
+\$$ \bar{\mu}_i^{(l)} = \frac{\sum_{j=1}^{m} \alpha_{ij}^{(l)} \bar{x}_j}{\sum_{j=1}^{m} \alpha_{ij}^{(l)}} $$
+<p><b>Intuitive Meaning:</b> The new centroid of a cluster is simply the <b>mean (or average)</b> of all the data points assigned to that cluster. The numerator sums the vectors of all points in the cluster, and the denominator counts how many points are in the cluster.</p>
+
+<h3>5. Convergence</h3>
+<p>The algorithm repeats Steps 1 and 2 until it converges. Convergence is reached when the cluster assignments and the centroids no longer change in subsequent iterations. At this point, the algorithm has found a stable solution, which corresponds to a local minimum of the cost function. In practice, the algorithm is often stopped after a fixed number of iterations or when the change in the cost function falls below a small threshold.</p>
+
+<h3>6. Simplified K-means Algorithm Summary</h3>
+<p>Putting it all together, the K-means algorithm can be summarized in a more intuitive, non-mathematical way:</p>
+<ol>
+    <li><b>Initialize</b>: Randomly choose `K` initial cluster centroids.</li>
+    <li><b>Repeat until convergence</b>:
+        <ul>
+            <li><b>Assign Points</b>: For each data point, calculate its distance to all `K` centroids and assign it to the cluster of the closest centroid.</li>
+            <li><b>Update Centroids</b>: For each cluster, recalculate its centroid as the average (mean) of all the points that were just assigned to it.</li>
+        </ul>
+    </li>
+</ol>
+<p>This simple yet powerful iterative process is what makes K-means one of the most widely used clustering algorithms in machine learning.</p>
+</div></div><h2>Weekly Summary</h2><div><p>This week's lectures cover three key applications of linear algebra in machine learning: Support Vector Machines (SVM), Sparse Regression, and K-Means Clustering.</p><p><b>1. Support Vector Machines (SVM)</b></p><p>The lectures introduce SVM as a powerful tool for <i>binary classification</i>, which involves partitioning data into two distinct classes (e.g., presence/absence of a disease). The focus is on linear classifiers, which use a mathematical object called a <i>hyperplane</i> to separate the data.</p><ul><li><b>Main Topics:</b><ul><li><b>Binary Classification:</b> The problem of classifying data into two categories, such as +1 or -1.</li><li><b>Hyperplanes:</b> An n-dimensional plane, defined by the equation $\mathbf{a}^T\mathbf{x} + b = 0$, that divides the data space into two half-spaces. The vector $\mathbf{a}$ is normal (perpendicular) to the hyperplane.</li><li><b>The SVM Objective:</b> Instead of just finding any separating hyperplane, SVM aims to find the one that maximizes the margin or "slab" between the two classes. This is achieved by finding two parallel hyperplanes, $\mathbf{a}^T\mathbf{x} + b = 1$ and $\mathbf{a}^T\mathbf{x} + b = -1$, and maximizing the distance between them.</li><li><b>Mathematical Formulation:</b> The distance between the two bounding hyperplanes is derived to be $2 / ||\mathbf{a}||$. Therefore, to maximize this distance, one must minimize $||\mathbf{a}||$.</li></ul></li><li><b>Key Takeaways:</b><br>The core idea of SVM is to create the most robust linear classifier by finding the hyperplane with the maximum possible margin between the two data classes. This translates into a solvable convex optimization problem: minimize $||\mathbf{a}||$ subject to the constraint that all data points are correctly classified and lie outside the margin, i.e., $y_k(\mathbf{a}^T\mathbf{x}_k + b) \ge 1$ for all data points $k$.</li></ul><p><b>2. Sparse Regression and Compressive Sensing</b></p><p>This section moves from classification to regression, focusing on a special case called <i>sparse regression</i>. This is a form of linear regression where the model, $\mathbf{y} = \mathbf{X}\boldsymbol{\theta}$, assumes that the parameter vector $\boldsymbol{\theta}$ is <i>sparse</i>, meaning it has very few non-zero elements.</p><ul><li><b>Main Topics:</b><ul><li><b>Sparsity:</b> The assumption that a signal or parameter vector can be represented with very few non-zero coefficients. In regression, this means the outcome is explained by only a small subset of the available explanatory variables.</li><li><b>Compressive Sensing:</b> An application of sparse regression, particularly for underdetermined systems where the number of measurements ($m$) is much smaller than the number of unknown parameters ($n$). The standard least-squares solution is not applicable here.</li><li><b>Orthogonal Matching Pursuit (OMP):</b> A greedy, iterative algorithm to solve the sparse regression problem. It works by sequentially selecting the column of $\mathbf{X}$ that is most correlated with the current residual (the part of $\mathbf{y}$ not yet explained).</li><li><b>OMP Example:</b> A detailed numerical example demonstrates the OMP algorithm step-by-step: (1) finding the column with the maximum projection on the residue, (2) augmenting the basis with this column, (3) solving a least-squares problem with the current basis, and (4) updating the residue. The process is repeated until the residue is sufficiently small.</li></ul></li><li><b>Key Takeaways:</b><br>When faced with an underdetermined system, it is possible to recover the parameter vector $\boldsymbol{\theta}$ if it is known to be sparse. The Orthogonal Matching Pursuit (OMP) algorithm provides a practical, greedy method to identify the few important explanatory variables and estimate their coefficients, effectively solving the sparse regression problem.</li></ul><p><b>3. Clustering with the K-Means Algorithm</b></p><p>The final topic covers <i>clustering</i>, a fundamental technique in <i>unsupervised learning</i> where the goal is to group unlabeled data points into meaningful clusters based on similarity.</p><ul><li><b>Main Topics:</b><ul><li><b>Unsupervised Learning:</b> A class of machine learning algorithms that work with data that has not been labeled or categorized. Clustering is a primary example.</li><li><b>The K-Means Algorithm:</b> An iterative algorithm that partitions a dataset into a pre-determined number (K) of clusters.</li><li><b>Centroids:</b> Each cluster is represented by a central point, or <i>centroid</i>, which is the mean of all the points in that cluster.</li><li><b>The K-Means Process:</b> The algorithm alternates between two main steps:<br>1. <b>Assignment Step:</b> Each data point is assigned to the cluster whose centroid is the closest (based on Euclidean distance).<br>2. <b>Update Step:</b> The centroid of each cluster is recalculated as the average of all points currently assigned to it.</li></ul></li><li><b>Key Takeaways:</b><br>K-Means is a simple yet powerful algorithm for partitioning data. It aims to minimize the within-cluster sum of squares (the total squared distance between each point and its assigned centroid). The algorithm iteratively refines cluster assignments and centroids until they stabilize, effectively grouping similar data points together without any prior labels.</li></ul></div><h2>Assignment Explanation</h2><div>
+<p><b>Question 1: Circulant Matrix for ISI Channel</b></p>
+<p>
+The question asks to construct a circulant matrix for an Inter Symbol Interference (ISI) channel. A circulant matrix is a special type of Toeplitz matrix where each row is a cyclic shift of the row above it. Given the channel taps $ h = [h(0), h(1), h(2), h(3)] = [-2, -1, 3, -3] $ and $N=4$ subcarriers, the corresponding $4 \times 4$ circulant matrix $H$ is constructed as follows:
+<br>
+The first row of the matrix is the vector of channel taps $ [h(0), h(1), h(2), h(3)] $.
+<br>
+Each subsequent row is the right cyclic shift of the row above it.
+</p>
+<ul>
+    <li><b>Row 1:</b> $[-2, -1, 3, -3]$</li>
+    <li><b>Row 2 (shift Row 1):</b> $[-3, -2, -1, 3]$</li>
+    <li><b>Row 3 (shift Row 2):</b> $[3, -3, -2, -1]$</li>
+    <li><b>Row 4 (shift Row 3):</b> $[-1, 3, -3, -2]$</li>
+</ul>
+<p>
+This results in the matrix:
+\$$
+H =
+\begin{bmatrix}
+-2 & -1 & 3 & -3 \\
+-3 & -2 & -1 & 3 \\
+3 & -3 & -2 & -1 \\
+-1 & 3 & -3 & -2
+\end{bmatrix}
+$$
+This matches the fourth option, which is the correct answer.
+</p>
+<hr>
+
+<p><b>Question 2: Matrix Exponential</b></p>
+<p>
+This question asks for the matrix exponential $e^{tH}$ of the matrix $H = \begin{bmatrix} 0 & 0 \\ -1 & 0 \end{bmatrix}$.
+<br>
+The matrix exponential is defined by the Taylor series expansion:
+\$$ e^{tH} = I + tH + \frac{(tH)^2}{2!} + \frac{(tH)^3}{3!} + \dots $$
+First, we compute the powers of $H$:
+\$$ H^2 = H \cdot H = \begin{bmatrix} 0 & 0 \\ -1 & 0 \end{bmatrix} \begin{bmatrix} 0 & 0 \\ -1 & 0 \end{bmatrix} = \begin{bmatrix} 0 & 0 \\ 0 & 0 \end{bmatrix} = \mathbf{0} $$
+Since $H^2$ is the zero matrix, all higher powers ($H^3, H^4, \dots$) will also be zero. Such a matrix is called nilpotent.
+<br>
+The Taylor series therefore truncates after the first two terms:
+\$$ e^{tH} = I + tH $$
+Substituting the matrices for $I$ and $H$:
+\$$ e^{tH} = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix} + t \begin{bmatrix} 0 & 0 \\ -1 & 0 \end{bmatrix} = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix} + \begin{bmatrix} 0 & 0 \\ -t & 0 \end{bmatrix} = \begin{bmatrix} 1 & 0 \\ -t & 1 \end{bmatrix} $$
+This is the correct answer.
+</p>
+<hr>
+
+<p><b>Question 3: Bias in User-Rating Matrix</b></p>
+<p>
+The question asks to calculate the bias $r_a$ from a given user-rating matrix. In the context of recommender systems, the bias (often denoted as $\mu$) is the overall average of all known ratings.
+<br>
+The given ratings are: 2, 4, 3, 3, 3, 3, 4, 2.
+<br>
+To find the average, we sum all the ratings and divide by the number of ratings.
+</p>
+<ul>
+    <li><b>Sum of all ratings:</b> $ 2 + 4 + 3 + 3 + 3 + 3 + 4 + 2 = 24 $</li>
+    <li><b>Number of ratings:</b> 8</li>
+    <li><b>Average rating (bias):</b> $ r_a = \frac{24}{8} = 3 $</li>
+</ul>
+<p>
+The bias $r_a$ is 3.
+</p>
+<hr>
+
+<p><b>Question 4: OFDM Technology</b></p>
+<p>
+The question asks how Orthogonal Frequency Division Multiplexing (OFDM) enables high-speed data transmission in systems like 4G and 5G.
+<br>
+The main challenge in high-speed wireless communication is multipath fading, which causes Inter-Symbol Interference (ISI). ISI occurs when delayed copies of a transmitted symbol interfere with subsequent symbols. OFDM combats this by dividing a high-rate data stream into many lower-rate streams, which are transmitted in parallel on different orthogonal subcarrier frequencies.
+<br>
+By doing this, the symbol duration on each subcarrier becomes much longer than the delay spread of the channel. This significantly reduces the effect of ISI. Additionally, a cyclic prefix is added to each OFDM symbol to further eliminate ISI and maintain subcarrier orthogonality.
+<br>
+Therefore, the primary benefit of OFDM is its ability to effectively handle and eliminate ISI, allowing for reliable high-speed data transmission. The correct answer is "by eliminating Inter Symbol Interference (ISI)".
+</p>
+<hr>
+
+<p><b>Question 5: Support Vector Machines (SVMs)</b></p>
+<p>
+The question asks about the application of Support Vector Machines (SVMs).
+<br>
+SVMs are a powerful set of supervised learning models used for data analysis. Their most prominent and well-known application is for <b>classification</b> tasks. An SVM classifier works by finding the hyperplane that best separates data points belonging to different classes in a high-dimensional space. The "best" separation is achieved by maximizing the margin, or the distance between the hyperplane and the nearest data points from each class.
+<br>
+While SVMs can also be adapted for regression tasks (known as Support Vector Regression or SVR), their primary and most common use is classification.
+</p>
+<hr>
+
+<p><b>Question 6: SC-FDMA Technology</b></p>
+<p>
+The question asks about the application of Single-Carrier Frequency-Division Multiple Access (SC-FDMA) technology.
+<br>
+SC-FDMA is a multiple access scheme that has a key advantage over its close relative, OFDMA: a lower Peak-to-Average Power Ratio (PAPR). A high PAPR requires expensive and power-inefficient linear amplifiers. For mobile devices (user equipment), power efficiency is critical for maximizing battery life.
+<br>
+Because of its low PAPR property, SC-FDMA was chosen as the multiple access scheme for the <b>uplink of 4G systems</b> (i.e., for transmissions from the mobile phone to the base station). The downlink (base station to mobile) uses OFDMA, as power efficiency is less of a concern for the base station.
+</p>
+<hr>
+
+<p><b>Question 7: IFFT Matrix</b></p>
+<p>
+The question asks to identify the $4 \times 4$ Inverse Fast Fourier Transform (IFFT) matrix.
+<br>
+The $N \times N$ Inverse Discrete Fourier Transform (IDFT) matrix, $F^{-1}$, is defined by its elements:
+\$$ (F^{-1})_{k,n} = \frac{1}{N} e^{j \frac{2\pi kn}{N}} $$
+For $N=4$, the primitive root of unity is $W_4 = e^{-j2\pi/4} = -j$. The IDFT matrix uses the conjugate, so we need powers of $W_4^{-1} = e^{j2\pi/4} = j$.
+<br>
+The matrix is constructed as:
+\$$ F^{-1} = \frac{1}{4} \begin{bmatrix}
+(W_4^{-1})^0 & (W_4^{-1})^0 & (W_4^{-1})^0 & (W_4^{-1})^0 \\
+(W_4^{-1})^0 & (W_4^{-1})^1 & (W_4^{-1})^2 & (W_4^{-1})^3 \\
+(W_4^{-1})^0 & (W_4^{-1})^2 & (W_4^{-1})^4 & (W_4^{-1})^6 \\
+(W_4^{-1})^0 & (W_4^{-1})^3 & (W_4^{-1})^6 & (W_4^{-1})^9
+\end{bmatrix} $$
+Substituting the values $j^0=1, j^1=j, j^2=-1, j^3=-j, j^4=1, \dots$:
+\$$ F^{-1} = \frac{1}{4} \begin{bmatrix}
+1 & 1 & 1 & 1 \\
+1 & j & -1 & -j \\
+1 & -1 & 1 & -1 \\
+1 & -j & -1 & j
+\end{bmatrix} $$
+This matches the first option.
+</p>
+<hr>
+
+<p><b>Question 8: Matrix Exponential</b></p>
+<p>
+This question asks for the matrix exponential $e^{tH}$ where $H = \omega \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}$.
+<br>
+The matrix $\begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}$ is a generator of rotations. The matrix exponential $e^{tH}$ corresponds to a rotation matrix.
+<br>
+We can compute this using the Taylor series. Let's find the powers of $H$:
+\$$ H = \begin{bmatrix} 0 & -\omega \\ \omega & 0 \end{bmatrix} $$
+\$$ H^2 = \begin{bmatrix} 0 & -\omega \\ \omega & 0 \end{bmatrix} \begin{bmatrix} 0 & -\omega \\ \omega & 0 \end{bmatrix} = \begin{bmatrix} -\omega^2 & 0 \\ 0 & -\omega^2 \end{bmatrix} = -\omega^2 I $$
+\$$ H^3 = -\omega^2 H, \quad H^4 = \omega^4 I, \quad \dots $$
+The Taylor series for $e^{tH}$ is:
+\$$ e^{tH} = I + tH + \frac{t^2H^2}{2!} + \frac{t^3H^3}{3!} + \dots $$
+\$$ e^{tH} = I + tH - \frac{t^2\omega^2 I}{2!} - \frac{t^3\omega^2 H}{3!} + \dots $$
+Grouping terms with $I$ and $H$:
+\$$ e^{tH} = I \left(1 - \frac{(\omega t)^2}{2!} + \frac{(\omega t)^4}{4!} - \dots \right) + \frac{H}{\omega} \left(\omega t - \frac{(\omega t)^3}{3!} + \frac{(\omega t)^5}{5!} - \dots \right) $$
+The series in the parentheses are the Taylor series for $\cos(\omega t)$ and $\sin(\omega t)$, respectively.
+\$$ e^{tH} = I \cos(\omega t) + \frac{H}{\omega} \sin(\omega t) $$
+Substituting $I = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$ and $\frac{H}{\omega} = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}$:
+\$$ e^{tH} = \begin{bmatrix} \cos(\omega t) & 0 \\ 0 & \cos(\omega t) \end{bmatrix} + \begin{bmatrix} 0 & -\sin(\omega t) \\ \sin(\omega t) & 0 \end{bmatrix} = \begin{bmatrix} \cos(\omega t) & -\sin(\omega t) \\ \sin(\omega t) & \cos(\omega t) \end{bmatrix} $$
+This is the standard 2D rotation matrix.
+</p>
+<hr>
+
+<p><b>Question 9: Operations in OFDM</b></p>
+<p>
+The question asks about the core signal processing operations in an OFDM system.
+<br>
+OFDM works by transmitting data in the frequency domain. Each data symbol is assigned to modulate a specific orthogonal subcarrier.
+</p>
+<ul>
+    <li><b>At the transmitter:</b> The set of frequency-domain symbols (one for each subcarrier) needs to be converted into a time-domain signal for transmission over the air. This transformation from the frequency domain to the time domain is performed by the <b>Inverse Fast Fourier Transform (IFFT)</b>.</li>
+    <li><b>At the receiver:</b> The incoming time-domain signal is captured. To recover the data symbols from each subcarrier, the signal must be transformed back to the frequency domain. This is accomplished using the <b>Fast Fourier Transform (FFT)</b>.</li>
+</ul>
+<p>
+Therefore, the correct sequence of operations is IFFT at the transmitter and FFT at the receiver.
+</p>
+<hr>
+
+<p><b>Question 10: Linear Minimum Mean Square Error (LMMSE) Estimate</b></p>
+<p>
+The question asks for the LMMSE estimate of a vector $\bar{x}$ from a measurement $\bar{y}$ based on the linear model $\bar{y} = H\bar{x} + \bar{n}$.
+<br>
+The formula for the LMMSE estimator is:
+\$$ \hat{x} = (H^T R_{nn}^{-1} H + R_{xx}^{-1})^{-1} H^T R_{nn}^{-1} \bar{y} $$
+We are given:
+\$$ H = \begin{bmatrix} 1 & 1 \\ 1 & -1 \\ 1 & 1 \\ 1 & -1 \end{bmatrix}, \quad \bar{y} = \begin{bmatrix} -1 \\ 3 \\ -2 \\ 1 \end{bmatrix}, \quad R_{xx} = \frac{1}{2}I, \quad R_{nn} = I $$
+From the covariances, we get $R_{nn}^{-1} = I$ and $R_{xx}^{-1} = 2I$.
+<br>
+The formula simplifies to:
+\$$ \hat{x} = (H^T H + 2I)^{-1} H^T \bar{y} $$
+Let's compute the terms:
+<br>
+1.  $H^T H$:
+    \$$ H^T H = \begin{bmatrix} 1 & 1 & 1 & 1 \\ 1 & -1 & 1 & -1 \end{bmatrix} \begin{bmatrix} 1 & 1 \\ 1 & -1 \\ 1 & 1 \\ 1 & -1 \end{bmatrix} = \begin{bmatrix} 4 & 0 \\ 0 & 4 \end{bmatrix} = 4I $$
+2.  $(H^T H + 2I)^{-1}$:
+    \$$ (4I + 2I)^{-1} = (6I)^{-1} = \frac{1}{6}I $$
+3.  $H^T \bar{y}$:
+    \$$ H^T \bar{y} = \begin{bmatrix} 1 & 1 & 1 & 1 \\ 1 & -1 & 1 & -1 \end{bmatrix} \begin{bmatrix} -1 \\ 3 \\ -2 \\ 1 \end{bmatrix} = \begin{bmatrix} -1+3-2+1 \\ -1-3-2-1 \end{bmatrix} = \begin{bmatrix} 1 \\ -7 \end{bmatrix} $$
+4.  Finally, combine the results:
+    \$$ \hat{x} = \frac{1}{6}I \cdot \begin{bmatrix} 1 \\ -7 \end{bmatrix} = \frac{1}{6}\begin{bmatrix} 1 \\ -7 \end{bmatrix} $$
+<p>
+<i>Note: The calculated answer based on the problem's values is $\frac{1}{6}\begin{bmatrix} 1 \\ -7 \end{bmatrix}$. However, this is not among the options. The accepted answer is $\frac{1}{6}\begin{bmatrix} 1 \\ 1 \end{bmatrix}$. This indicates a likely typo in the question's provided vector $\bar{y}$. For the accepted answer to be correct, the term $H^T \bar{y}$ would need to be $\begin{bmatrix} 1 \\ 1 \end{bmatrix}$. This would happen, for instance, if $\bar{y} = [3, 1, -2, -1]^T$. Assuming the typo and following the logic to the given answer, we select $\frac{1}{6}\begin{bmatrix} 1 \\ 1 \end{bmatrix}$.</i>
+</p>
+</div></div>
+</body>
+</html>

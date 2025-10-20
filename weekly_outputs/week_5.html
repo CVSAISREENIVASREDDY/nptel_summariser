@@ -1,0 +1,570 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week5</title>
+
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+      };
+    </script>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 2em;
+        }
+        .mjx-display {
+            margin: 2.5em 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="week" id="week_5"><h1 class="week-title">Week 5</h1><h2>Transcript Explanations</h2><div class="chapter" id="Lecture  21| Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture  21| Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts and formulas related to the <b>Least Squares (LS) solution</b> for systems of linear equations, as presented in the transcript.</p>
+
+<h3>1. The System of Linear Equations</h3>
+<p>The starting point is a standard system of linear equations, which can be represented in matrix-vector form:</p>
+\$$ \mathbf{y} = A \mathbf{x} $$
+<p>Where:</p>
+<ul>
+    <li>$\mathbf{y}$ is an $m \times 1$ vector of observations or outputs. In the transcript, it is written as $\begin{pmatrix} y_1 \\ y_2 \\ \vdots \\ y_m \end{pmatrix}$.</li>
+    <li>$\mathbf{x}$ is an $n \times 1$ vector of unknowns or inputs. In the transcript, it is written as $\begin{pmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{pmatrix}$.</li>
+    <li>$A$ is an $m \times n$ matrix that maps the input vector $\mathbf{x}$ to the output vector $\mathbf{y}$.</li>
+</ul>
+<p>The number $m$ represents the number of linear equations (or observations), while $n$ represents the number of unknown variables.</p>
+
+<h3>2. The Challenge of Overdetermined Systems</h3>
+<p>A standard, unique solution exists if the matrix $A$ is square ($m = n$) and invertible. In this case, the solution is simply:</p>
+\$$ \mathbf{x} = A^{-1} \mathbf{y} $$
+<p>However, the transcript focuses on a different scenario known as an <b>overdetermined system</b>, which occurs when there are more equations than unknowns, i.e., $\mathbf{m > n}$.</p>
+
+<p><b>Key characteristics of overdetermined systems:</b></p>
+<ul>
+    <li><b>More Observations than Unknowns:</b> In practical terms, this means we have more data points or measurements ($m$) than parameters ($n$) we are trying to determine.</li>
+    <li><b>Non-Square Matrix:</b> The matrix $A$ is a "tall" matrix (more rows than columns), meaning it is not square and therefore the concept of a standard inverse $A^{-1}$ does not apply.</li>
+    <li><b>No Exact Solution (Generally):</b> An exact solution to $\mathbf{y} = A\mathbf{x}$ exists only if the vector $\mathbf{y}$ lies in the <b>column space</b> of $A$. The column space of $A$ is the set of all possible linear combinations of its columns. Since there are $n$ columns in an $m$-dimensional space (with $n < m$), the column space is an $n$-dimensional subspace. It is very unlikely for a general $m$-dimensional vector $\mathbf{y}$ to fall exactly within this lower-dimensional subspace. Therefore, for most overdetermined systems, there is no vector $\mathbf{x}$ that can exactly satisfy $\mathbf{y} = A\mathbf{x}$.</li>
+</ul>
+
+<h3>3. The Least Squares Problem: Finding the Best Approximation</h3>
+<p>Since an exact solution is generally impossible, the goal shifts from finding an exact solution to finding the <b>best approximate solution</b>. We want to find a vector $\mathbf{x}$ such that $A\mathbf{x}$ is as "close" as possible to $\mathbf{y}$. This is formulated as an optimization problem.</p>
+
+<p><b>1. Define the Error:</b> The approximation error is defined as the difference between the actual observations $\mathbf{y}$ and the approximated values $A\mathbf{x}$:</p>
+\$$ \mathbf{e} = \mathbf{y} - A\mathbf{x} $$
+
+<p><b>2. Minimize the Error's Magnitude:</b> We cannot minimize the error vector $\mathbf{e}$ directly. Instead, we minimize its magnitude. The standard approach is to minimize the square of the Euclidean norm (length) of the error vector. This avoids dealing with square roots and has desirable mathematical properties.</p>
+<p>The problem is formally stated as:</p>
+\$$ \min_{\mathbf{x}} ||\mathbf{e}||^2 = \min_{\mathbf{x}} ||\mathbf{y} - A\mathbf{x}||^2 $$
+<p>This is called the <b>Least Squares problem</b> because minimizing the squared norm is equivalent to minimizing the sum of the squares of the components of the error vector.</p>
+
+<h3>4. Derivation of the Least Squares Solution</h3>
+<p>To find the vector $\mathbf{x}$ that minimizes this objective function, we use calculus. First, the objective function is expanded.</p>
+
+<p><b>Step 1: Expand the Objective Function</b><br>
+The squared norm $||\mathbf{v}||^2$ is equal to the dot product $\mathbf{v}^T \mathbf{v}$. Applying this to our error vector:</p>
+\$$ f(\mathbf{x}) = ||\mathbf{y} - A\mathbf{x}||^2 = (\mathbf{y} - A\mathbf{x})^T (\mathbf{y} - A\mathbf{x}) $$
+<p>Using the property $(B C)^T = C^T B^T$, we get:</p>
+\$$ f(\mathbf{x}) = (\mathbf{y}^T - \mathbf{x}^T A^T) (\mathbf{y} - A\mathbf{x}) $$
+<p>Expanding this product yields four terms:</p>
+\$$ f(\mathbf{x}) = \mathbf{y}^T\mathbf{y} - \mathbf{y}^T A\mathbf{x} - \mathbf{x}^T A^T \mathbf{y} + \mathbf{x}^T A^T A \mathbf{x} $$
+<p>The two middle terms, $\mathbf{y}^T A\mathbf{x}$ and $\mathbf{x}^T A^T \mathbf{y}$, are scalars. Since the transpose of a scalar is itself, they are equal: $(\mathbf{x}^T A^T \mathbf{y})^T = \mathbf{y}^T (A^T)^T (\mathbf{x}^T)^T = \mathbf{y}^T A \mathbf{x}$. Therefore, they can be combined:</p>
+\$$ f(\mathbf{x}) = \mathbf{y}^T\mathbf{y} - 2\mathbf{x}^T A^T \mathbf{y} + \mathbf{x}^T A^T A \mathbf{x} $$
+<p>This is a quadratic function of $\mathbf{x}$.</p>
+
+<p><b>Step 2: Find the Minimum using the Gradient</b><br>
+To find the minimum of $f(\mathbf{x})$, we compute its gradient with respect to $\mathbf{x}$ and set it to zero. We use the following standard vector calculus identities:</p>
+<ul>
+    <li>Gradient of a linear term: $\nabla_{\mathbf{x}} (\mathbf{x}^T \mathbf{c}) = \mathbf{c}$</li>
+    <li>Gradient of a quadratic term: $\nabla_{\mathbf{x}} (\mathbf{x}^T P \mathbf{x}) = (P + P^T)\mathbf{x}$. If $P$ is symmetric (i.e., $P = P^T$), this simplifies to $2P\mathbf{x}$.</li>
+</ul>
+<p>Applying this to our objective function:</p>
+<ul>
+    <li>The term $\mathbf{y}^T\mathbf{y}$ is a constant with respect to $\mathbf{x}$, so its gradient is $\mathbf{0}$.</li>
+    <li>The term $-2\mathbf{x}^T (A^T \mathbf{y})$ is linear in $\mathbf{x}$. Its gradient is $-2A^T\mathbf{y}$.</li>
+    <li>The term $\mathbf{x}^T (A^T A) \mathbf{x}$ is quadratic. The matrix $P = A^T A$ is symmetric, because $(A^T A)^T = A^T (A^T)^T = A^T A$. Therefore, its gradient is $2(A^T A)\mathbf{x}$.</li>
+</ul>
+<p>The full gradient is:</p>
+\$$ \nabla_{\mathbf{x}} f(\mathbf{x}) = \mathbf{0} - 2A^T\mathbf{y} + 2A^T A \mathbf{x} $$
+<p>Setting the gradient to zero to find the minimum:</p>
+\$$ -2A^T\mathbf{y} + 2A^T A \mathbf{x} = \mathbf{0} $$
+\$$ A^T A \mathbf{x} = A^T \mathbf{y} $$
+<p>This final equation is known as the <b>Normal Equation</b>.</p>
+
+<p><b>Step 3: Solve for x</b><br>
+Assuming the matrix $A^T A$ is invertible, we can solve for $\mathbf{x}$ by multiplying both sides by its inverse:</p>
+\$$ \mathbf{x}_{LS} = (A^T A)^{-1} A^T \mathbf{y} $$
+<p>This is the <b>Least Squares (LS) solution</b>. The condition for $A^T A$ to be invertible is that the matrix $A$ must have <b>full column rank</b>, which means its columns must be linearly independent.</p>
+
+<h3>5. The Pseudo-Inverse</h3>
+<p>The expression derived for the LS solution contains a very important matrix:</p>
+\$$ A^\dagger = (A^T A)^{-1} A^T $$
+<p>This matrix, denoted $A^\dagger$ (read "A dagger"), is called the <b>pseudo-inverse</b> of $A$ (specifically, the left pseudo-inverse).</p>
+
+<p><b>Why is it called a "pseudo-inverse"?</b></p>
+<ul>
+    <li>It is not a true inverse because $A$ is not square.</li>
+    <li>However, it "acts" like an inverse from one side. If we multiply $A$ on the left by $A^\dagger$, we get the identity matrix:
+        \$$ A^\dagger A = \left((A^T A)^{-1} A^T\right) A = (A^T A)^{-1} (A^T A) = I $$
+        Because it yields the identity matrix when multiplied on the left, it is more precisely called a <b>left inverse</b>.</li>
+    <li>It is important to note that multiplying on the right does <i>not</i> generally yield the identity matrix (i.e., $A A^\dagger \neq I$).</li>
+</ul>
+<p>Using the pseudo-inverse notation, the least squares solution can be written compactly as:</p>
+\$$ \mathbf{x}_{LS} = A^\dagger \mathbf{y} $$
+<p>This elegant form shows a beautiful parallel to the simple solution $\mathbf{x} = A^{-1}\mathbf{y}$ for invertible square matrices. In fact, if $A$ is square and invertible, the pseudo-inverse $A^\dagger$ simplifies to the true inverse $A^{-1}$, making the concept consistent across different types of systems.</p>
+</div></div><div class="chapter" id="Lecture 22 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 22 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This module provides a deeper, more intuitive understanding of the least squares solution. Instead of relying purely on mathematical derivation, it explores the geometric interpretation of the problem, leading to the same result through the powerful <b>Principle of Orthogonality</b>.</p>
+
+<h3>1. The Least Squares Problem Revisited</h3>
+<p>The core problem is to find an approximate solution to an overdetermined system of linear equations of the form:</p>
+\$$ \mathbf{y} = \mathbf{A}\mathbf{x} $$
+<p>Where:</p>
+<ul>
+    <li><b>A</b> is an $m \times n$ matrix, typically a "tall" matrix where the number of rows $m$ is greater than the number of columns $n$ ($m > n$).</li>
+    <li><b>x</b> is an $n \times 1$ unknown vector.</li>
+    <li><b>y</b> is an $m \times 1$ measurement or observation vector.</li>
+</ul>
+<p>An exact solution exists only if the vector $\mathbf{y}$ lies in the n-dimensional subspace spanned by the columns of matrix <b>A</b> (also known as the column space of <b>A</b>). When $\mathbf{y}$ is outside this subspace, which is often the case in practice due to noise or modeling errors, no exact solution exists. The least squares method aims to find the "best" approximate solution.</p>
+
+<h3>2. The Least Squares Objective and Solution</h3>
+<p>The goal of least squares is to find the vector $\mathbf{x}$ that minimizes the squared Euclidean norm (or length) of the error vector $\mathbf{e} = \mathbf{y} - \mathbf{A}\mathbf{x}$. The problem is formally stated as:</p>
+\$$ \arg\min_{\mathbf{x}} \|\mathbf{y} - \mathbf{A}\mathbf{x}\|^2 $$
+<p>The solution to this minimization problem, as derived previously, is given by:</p>
+\$$ \mathbf{x} = (\mathbf{A}^T \mathbf{A})^{-1} \mathbf{A}^T \mathbf{y} $$
+<p>The matrix $(\mathbf{A}^T \mathbf{A})^{-1} \mathbf{A}^T$ is known as the <b>pseudo-inverse</b> of <b>A</b>. This module explains <i>why</i> the solution has this specific structure.</p>
+
+<h3>3. The Geometric Interpretation and the Principle of Orthogonality</h3>
+<p>The key to understanding the least squares solution lies in its geometric interpretation.</p>
+
+<b>a. The Column Space of A</b>
+<p>The product $\mathbf{A}\mathbf{x}$ can be expressed as a linear combination of the columns of <b>A</b> (let's denote them as $\mathbf{a}_1, \mathbf{a}_2, \dots, \mathbf{a}_n$):</p>
+\$$ \mathbf{A}\mathbf{x} = x_1\mathbf{a}_1 + x_2\mathbf{a}_2 + \dots + x_n\mathbf{a}_n $$
+<p>This means that for any possible choice of $\mathbf{x}$, the resulting vector $\mathbf{A}\mathbf{x}$ will always lie within the subspace spanned by the columns of <b>A</b>.</p>
+
+<b>b. Finding the Closest Vector</b>
+<p>The least squares problem is equivalent to finding the vector $\mathbf{A}\mathbf{x}$ in the column space of <b>A</b> that is closest to the given vector $\mathbf{y}$. Intuitively, the distance between $\mathbf{y}$ and the subspace is minimized when the error vector, $\mathbf{e} = \mathbf{y} - \mathbf{A}\mathbf{x}$, is perpendicular (orthogonal) to the subspace itself.</p>
+<p>Imagine a plane (a 2D subspace) in 3D space. The point on the plane closest to a point outside the plane is found by dropping a perpendicular from the point to the plane. The same principle applies here in higher dimensions.</p>
+
+<b>c. The Principle of Orthogonality</b>
+<p>This geometric insight is formalized as the <b>Principle of Orthogonality</b>. For the error $\|\mathbf{e}\|$ to be minimum, the error vector $\mathbf{e}$ must be orthogonal to every vector in the column space of <b>A</b>. It is sufficient to show that $\mathbf{e}$ is orthogonal to all the basis vectors of the subspace, which are the columns of <b>A</b>.</p>
+<p>This gives us $n$ orthogonality conditions:</p>
+\$$ \mathbf{a}_1^T \mathbf{e} = 0, \quad \mathbf{a}_2^T \mathbf{e} = 0, \quad \dots, \quad \mathbf{a}_n^T \mathbf{e} = 0 $$
+<p>These individual conditions can be consolidated into a single compact matrix equation:</p>
+\$$ \mathbf{A}^T \mathbf{e} = \mathbf{0} $$
+
+<h3>4. Deriving the Normal Equations</h3>
+<p>By substituting the definition of the error vector $\mathbf{e} = \mathbf{y} - \mathbf{A}\mathbf{x}$ into the orthogonality condition, we get:</p>
+\$$ \mathbf{A}^T (\mathbf{y} - \mathbf{A}\mathbf{x}) = \mathbf{0} $$
+<p>Distributing $\mathbf{A}^T$ gives:</p>
+\$$ \mathbf{A}^T \mathbf{y} - \mathbf{A}^T \mathbf{A}\mathbf{x} = \mathbf{0} $$
+<p>Rearranging this equation yields the celebrated <b>Normal Equations</b>:</p>
+\$$ \mathbf{A}^T \mathbf{A}\mathbf{x} = \mathbf{A}^T \mathbf{y} $$
+<p>This result is derived directly from the geometric principle without any calculus. To solve for $\mathbf{x}$, we can invert the matrix $\mathbf{A}^T \mathbf{A}$, provided it is invertible. This is true if and only if the matrix <b>A</b> has <b>full column rank</b> (i.e., its columns are linearly independent).</p>
+
+<h3>5. The Projection Matrix</h3>
+<p>The best approximation to $\mathbf{y}$ within the column space is the vector $\hat{\mathbf{y}} = \mathbf{A}\mathbf{x}$. Geometrically, $\hat{\mathbf{y}}$ is the projection of $\mathbf{y}$ onto the column space of <b>A</b>. We can find an expression for this projection by substituting our solution for $\mathbf{x}$:</p>
+\$$ \hat{\mathbf{y}} = \mathbf{A}\mathbf{x} = \mathbf{A} \left( (\mathbf{A}^T \mathbf{A})^{-1} \mathbf{A}^T \mathbf{y} \right) $$
+<p>If we group the matrices, we get:</p>
+\$$ \hat{\mathbf{y}} = \left[ \mathbf{A} (\mathbf{A}^T \mathbf{A})^{-1} \mathbf{A}^T \right] \mathbf{y} $$
+<p>The matrix in the brackets is the <b>projection matrix</b>, denoted as $\mathbf{P_A}$, which projects any vector $\mathbf{y}$ onto the subspace spanned by the columns of <b>A</b>.</p>
+\$$ \mathbf{P_A} = \mathbf{A} (\mathbf{A}^T \mathbf{A})^{-1} \mathbf{A}^T $$
+
+<b>Properties of the Projection Matrix</b>
+<p>A fundamental property of a projection matrix is that it is <b>idempotent</b>, which means that applying the projection more than once has no further effect. Mathematically, this is expressed as:</p>
+\$$ \mathbf{P_A}^2 = \mathbf{P_A} $$
+<p>This is intuitive: once a vector is projected into a subspace, it is already in that subspace. Projecting it again will not change it. The algebraic proof is as follows:</p>
+\$$ \mathbf{P_A}^2 = \mathbf{P_A} \cdot \mathbf{P_A} = \left( \mathbf{A} (\mathbf{A}^T \mathbf{A})^{-1} \mathbf{A}^T \right) \left( \mathbf{A} (\mathbf{A}^T \mathbf{A})^{-1} \mathbf{A}^T \right) $$
+<p>The terms in the middle, $\mathbf{A}^T \mathbf{A}$, cancel with their inverse $(\mathbf{A}^T \mathbf{A})^{-1}$ to become the identity matrix:</p>
+\$$ \mathbf{P_A}^2 = \mathbf{A} (\mathbf{A}^T \mathbf{A})^{-1} \underbrace{(\mathbf{A}^T \mathbf{A}) (\mathbf{A}^T \mathbf{A})^{-1}}_{\mathbf{I}} \mathbf{A}^T = \mathbf{A} (\mathbf{A}^T \mathbf{A})^{-1} \mathbf{A}^T = \mathbf{P_A} $$
+
+<h3>6. Extension to Complex Matrices</h3>
+<p>For complex matrices, which are common in fields like wireless communications, the same principles apply. The only change is that the transpose operation ($T$) is replaced by the Hermitian (conjugate transpose) operation ($H$). The least squares solution becomes:</p>
+\$$ \mathbf{x} = (\mathbf{A}^H \mathbf{A})^{-1} \mathbf{A}^H \mathbf{y} $$
+
+</div></div><div class="chapter" id="Lecture 23 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 23 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This transcript explains how the least squares technique is applied to solve a practical problem in modern wireless communications, specifically in designing a receiver for a Multiple Input Multiple Output (MIMO) system. The explanation covers the system model, the problem faced by the receiver, the application of the least squares formula, and the interpretation of this solution as a "Zero-Forcing" receiver.</p>
+
+<b>1. The MIMO System Model</b>
+<p>A MIMO system is a wireless communication technology that uses multiple antennas at both the transmitter (multiple inputs) and the receiver (multiple outputs) to improve communication performance. The relationship between the transmitted signals, the wireless channel, and the received signals can be represented by a system of linear equations.</p>
+<ul>
+    <li>Let $t$ be the number of transmit antennas (inputs) and $r$ be the number of receive antennas (outputs).</li>
+    <li>The system is considered <b>overdetermined</b> when the number of receive antennas is greater than the number of transmit antennas, i.e., $r > t$.</li>
+    <li>The transmitted signals (symbols) form a vector $\mathbf{x}$ of size $t \times 1$.</li>
+    <li>The received signals form a vector $\mathbf{y}$ of size $r \times 1$.</li>
+    <li>The wireless channel is represented by a channel matrix $H$ of size $r \times t$. Each element $h_{ij}$ represents the channel gain (a complex number) between the j-th transmit antenna and the i-th receive antenna.</li>
+    <li>The system is also affected by random noise, represented by a vector $\mathbf{n}$ of size $r \times 1$.</li>
+</ul>
+<p>The fundamental model for a MIMO system is given by the linear equation:</p>
+\$$ \mathbf{y} = H\mathbf{x} + \mathbf{n} $$
+<p>In vector/matrix form, this looks like:</p>
+\$$ \begin{pmatrix} y_1 \\ y_2 \\ \vdots \\ y_r \end{pmatrix} = \begin{pmatrix} h_{11} & h_{12} & \dots & h_{1t} \\ h_{21} & h_{22} & \dots & h_{2t} \\ \vdots & \vdots & \ddots & \vdots \\ h_{r1} & h_{r2} & \dots & h_{rt} \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \\ \vdots \\ x_t \end{pmatrix} + \begin{pmatrix} n_1 \\ n_2 \\ \vdots \\ n_r \end{pmatrix} $$
+
+<b>2. The Receiver's Task and the Least Squares Solution</b>
+<p>The primary goal of the receiver is to estimate the originally transmitted symbol vector $\mathbf{x}$ using the received signal vector $\mathbf{y}$ and its knowledge of the channel matrix $H$. We denote this estimate as $\hat{\mathbf{x}}$.</p>
+<p>If the system were square ($r = t$) and the matrix $H$ were invertible, the solution would be straightforward: $\hat{\mathbf{x}} = H^{-1}\mathbf{y}$ (ignoring noise). However, in an overdetermined system ($r > t$), $H$ is not a square matrix and does not have a standard inverse.</p>
+<p>This is precisely where the least squares technique becomes essential. The goal is to find an estimate $\hat{\mathbf{x}}$ that minimizes the squared Euclidean norm of the error (or residual) vector, $\mathbf{y} - H\mathbf{x}$. The problem is formulated as:</p>
+\$$ \min_{\hat{\mathbf{x}}} ||\mathbf{y} - H\hat{\mathbf{x}}||^2 $$
+<p>The solution to this minimization problem is the least squares estimate. Since the channel matrix $H$ is generally complex in wireless communications, we use the <b>Hermitian transpose</b> (conjugate transpose), denoted by $H^H$, instead of the standard transpose.</p>
+<p>The formula for the least squares estimate $\hat{\mathbf{x}}$ is:</p>
+\$$ \hat{\mathbf{x}} = (H^H H)^{-1} H^H \mathbf{y} $$
+<p>The matrix $ (H^H H)^{-1} H^H $ is known as the <b>pseudo-inverse</b> of $H$, often denoted as $H^\dagger$. So, the solution can be written compactly as:</p>
+\$$ \hat{\mathbf{x}} = H^\dagger \mathbf{y} $$
+<p>In the context of MIMO receivers, this specific implementation of the least squares solution is called the <b>Zero-Forcing (ZF) Receiver</b>.</p>
+
+<b>3. The Zero-Forcing (ZF) Receiver</b>
+<p>The name "Zero-Forcing" comes from how this receiver handles interference between the different transmitted symbols.</p>
+<p>In the original received signal $y_i$, each component is a linear combination of <i>all</i> transmitted symbols, creating inter-symbol interference. For example:</p>
+\$$ y_i = h_{i1}x_1 + h_{i2}x_2 + \dots + h_{it}x_t + n_i $$
+<p>Here, the signal from $x_2, x_3, \dots$ acts as interference when trying to detect $x_1$.</p>
+<p>The ZF receiver applies the pseudo-inverse matrix to the received vector $\mathbf{y}$. Let's see what happens when we substitute the system model $\mathbf{y} = H\mathbf{x} + \mathbf{n}$ into the ZF receiver equation:</p>
+\$$ \hat{\mathbf{x}} = (H^H H)^{-1} H^H (\mathbf{y}) $$
+\$$ \hat{\mathbf{x}} = (H^H H)^{-1} H^H (H\mathbf{x} + \mathbf{n}) $$
+<p>Distributing the matrix multiplication:</p>
+\$$ \hat{\mathbf{x}} = \underbrace{(H^H H)^{-1} (H^H H)}_{I} \mathbf{x} + \underbrace{(H^H H)^{-1} H^H}_{H^\dagger} \mathbf{n} $$
+\$$ \hat{\mathbf{x}} = \mathbf{x} + H^\dagger \mathbf{n} $$
+<p>Let's call the processed output $\tilde{\mathbf{y}} = \hat{\mathbf{x}}$ and the processed noise $\tilde{\mathbf{n}} = H^\dagger \mathbf{n}$. The equation becomes:</p>
+\$$ \tilde{\mathbf{y}} = \mathbf{x} + \tilde{\mathbf{n}} $$
+<p>In component form, this is $\tilde{y}_i = x_i + \tilde{n}_i$. This result is significant: the i-th component of the processed output depends <i>only</i> on the i-th transmitted symbol $x_i$ (plus some processed noise). The interference from all other symbols $x_j$ (where $j \neq i$) has been completely removed. The receiver has effectively "forced" the inter-symbol interference to zero, hence the name.</p>
+
+<b>4. Linear Receivers</b>
+<p>The ZF receiver calculates the estimate $\hat{\mathbf{x}}$ via a matrix multiplication: $\hat{\mathbf{x}} = C \mathbf{y}$, where $C = H^\dagger$. Since the output is a linear transformation of the input vector $\mathbf{y}$, this type of receiver is known as a <b>linear receiver</b>. The ZF receiver is a prominent member of this class.</p>
+
+<b>5. A Numerical Example</b>
+<p>The transcript provides an example with a real-valued channel matrix (for simplicity) to demonstrate the calculations.</p>
+<ul>
+    <li><b>System Parameters:</b> $r=4$ receive antennas, $t=2$ transmit antennas.</li>
+    <li><b>Channel Matrix:</b>
+        \$$ H = \begin{pmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3 \\ 1 & 4 \end{pmatrix} $$
+    </li>
+</ul>
+<p><b>Step 1: Calculate $H^T H$</b> (Using transpose $H^T$ as H is real)</p>
+\$$ H^T H = \begin{pmatrix} 1 & 1 & 1 & 1 \\ 1 & 2 & 3 & 4 \end{pmatrix} \begin{pmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3 \\ 1 & 4 \end{pmatrix} = \begin{pmatrix} 4 & 10 \\ 10 & 30 \end{pmatrix} $$
+<p><b>Step 2: Calculate the inverse $(H^T H)^{-1}$</b></p>
+<p>For a $2 \times 2$ matrix $ \begin{pmatrix} a & b \\ c & d \end{pmatrix} $, the inverse is $ \frac{1}{ad-bc} \begin{pmatrix} d & -b \\ -c & a \end{pmatrix} $.</p>
+\$$ \det(H^T H) = (4)(30) - (10)(10) = 120 - 100 = 20 $$
+\$$ (H^T H)^{-1} = \frac{1}{20} \begin{pmatrix} 30 & -10 \\ -10 & 4 \end{pmatrix} $$
+<p><b>Step 3: Calculate the pseudo-inverse $H^\dagger = (H^T H)^{-1} H^T$</b></p>
+\$$ H^\dagger = \frac{1}{20} \begin{pmatrix} 30 & -10 \\ -10 & 4 \end{pmatrix} \begin{pmatrix} 1 & 1 & 1 & 1 \\ 1 & 2 & 3 & 4 \end{pmatrix} $$
+\$$ H^\dagger = \frac{1}{20} \begin{pmatrix} (30-10) & (30-20) & (30-30) & (30-40) \\ (-10+4) & (-10+8) & (-10+12) & (-10+16) \end{pmatrix} $$
+\$$ H^\dagger = \frac{1}{20} \begin{pmatrix} 20 & 10 & 0 & -10 \\ -6 & -2 & 2 & 6 \end{pmatrix} = \begin{pmatrix} 1 & 1/2 & 0 & -1/2 \\ -3/10 & -1/10 & 1/10 & 3/10 \end{pmatrix} $$
+<p><b>Step 4: Determine the symbol estimates</b></p>
+<p>The final estimates $\hat{x}_1$ and $\hat{x}_2$ are found using $\hat{\mathbf{x}} = H^\dagger \mathbf{y}$:</p>
+\$$ \begin{pmatrix} \hat{x}_1 \\ \hat{x}_2 \end{pmatrix} = \begin{pmatrix} 1 & 1/2 & 0 & -1/2 \\ -3/10 & -1/10 & 1/10 & 3/10 \end{pmatrix} \begin{pmatrix} y_1 \\ y_2 \\ y_3 \\ y_4 \end{pmatrix} $$
+<p>This gives the explicit formulas for the symbol estimates as linear combinations of the received signals:</p>
+\$$ \hat{x}_1 = y_1 + \frac{1}{2}y_2 - \frac{1}{2}y_4 $$
+\$$ \hat{x}_2 = -\frac{3}{10}y_1 - \frac{1}{10}y_2 + \frac{1}{10}y_3 + \frac{3}{10}y_4 $$
+<p>This example clearly illustrates how the abstract least squares formula is applied to produce a concrete signal processing algorithm for a state-of-the-art wireless communication system.</p>
+</div></div><div class="chapter" id="Lecture 24 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 24 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This document provides a detailed explanation of the concepts presented in the transcript, focusing on the application of the least squares principle to channel estimation in wireless communication systems.</p>
+
+<b>1. Introduction to Channel Estimation and MISO Systems</b>
+<p>The core topic is <b>channel estimation</b>, a crucial process in wireless communication. It is explained in the context of a specific type of system called a <b>MISO (Multiple Input Single Output)</b> system.</p>
+<ul>
+    <li><b>MISO System:</b> This refers to a wireless setup where the transmitter has multiple antennas (Multiple Input) and the receiver has only one antenna (Single Output). This is common in scenarios like a base station with many antennas transmitting to a mobile phone with a single antenna (downlink), or a Wi-Fi router transmitting to a laptop.</li>
+    <li><b>System Model:</b> A MISO system with $t$ transmit antennas and one receive antenna is often called a $1 \times t$ system. The communication path between each transmit antenna and the single receive antenna is characterized by a <b>channel coefficient</b>.</li>
+</ul>
+<p>If there are $t$ transmit antennas, there will be $t$ channel coefficients, denoted as $h_1, h_2, \dots, h_t$. The term $h_i$ represents the complex gain (attenuation and phase shift) of the signal traveling from transmit antenna $i$ to the receive antenna. These coefficients can be grouped into a single channel vector:</p>
+\$$ \bar{h} = \begin{bmatrix} h_1 \\ h_2 \\ \vdots \\ h_t \end{bmatrix} $$
+
+<b>2. The Problem: Estimating Unknown Channels</b>
+<p>In a real-world wireless environment, these channel coefficients $h_i$ are unknown to the receiver. They are affected by factors like distance, obstacles, and movement. For the receiver to correctly decode the information sent by the transmitter, it must first determine or estimate these channel coefficients. This process is called <b>channel estimation</b>.</p>
+
+<b>3. The Solution: Pilot Symbols</b>
+<p>To enable channel estimation, the transmitter sends a set of known signals called <b>pilot symbols</b> or <b>training symbols</b>. These are not user data but are predetermined symbols known by both the transmitter and the receiver. By observing how these known pilot symbols are altered by the channel, the receiver can deduce the channel's characteristics.</p>
+<ul>
+    <li>A sequence of pilot symbols is called a <b>training sequence</b>.</li>
+    <li>At each time instant $j$, the transmitter sends a vector of pilot symbols, $\bar{x}_j$, where each element corresponds to a different transmit antenna.
+    \$$ \bar{x}_j = \begin{bmatrix} x_{1j} \\ x_{2j} \\ \vdots \\ x_{tj} \end{bmatrix} $$
+    Here, $x_{ij}$ is the pilot symbol transmitted from antenna $i$ at time instant $j$.
+    </li>
+</ul>
+
+<b>4. Mathematical Model for Channel Estimation</b>
+<p>The signal received at a specific time instant is a linear combination of the symbols transmitted from all antennas, each weighted by its respective channel coefficient, plus some additive noise. For time instant $j=1$, the received signal $y_1$ is:</p>
+\$$ y_1 = x_{11}h_1 + x_{21}h_2 + \dots + x_{t1}h_t + n_1 $$
+<p>where $n_1$ is the noise sample at that time. This can be written more compactly using vector notation:</p>
+\$$ y_1 = \begin{bmatrix} x_{11} & x_{21} & \dots & x_{t1} \end{bmatrix} \begin{bmatrix} h_1 \\ h_2 \\ \vdots \\ h_t \end{bmatrix} + n_1 = \bar{x}_1^T \bar{h} + n_1 $$
+<p>This process is repeated for $L$ time instants, using $L$ different pilot vectors ($\bar{x}_1, \bar{x}_2, \dots, \bar{x}_L$). This generates a system of $L$ linear equations:</p>
+\$$ y_1 = \bar{x}_1^T \bar{h} + n_1 $$
+\$$ y_2 = \bar{x}_2^T \bar{h} + n_2 $$
+\$$ \vdots $$
+\$$ y_L = \bar{x}_L^T \bar{h} + n_L $$
+<p>This entire system can be consolidated into a single matrix equation, which forms the basis for the least squares problem:</p>
+\$$ \bar{y} = X \bar{h} + \bar{n} $$
+where:
+<ul>
+    <li>$\bar{y} = [y_1, y_2, \dots, y_L]^T$ is the $L \times 1$ vector of received observations.</li>
+    <li>$\bar{h} = [h_1, h_2, \dots, h_t]^T$ is the $t \times 1$ unknown channel vector we want to estimate.</li>
+    <li>$\bar{n} = [n_1, n_2, \dots, n_L]^T$ is the $L \times 1$ noise vector.</li>
+    <li>$X$ is the $L \times t$ <b>pilot matrix</b>, constructed by stacking the transposed pilot vectors:
+    \$$ X = \begin{bmatrix} \bar{x}_1^T \\ \bar{x}_2^T \\ \vdots \\ \bar{x}_L^T \end{bmatrix} = \begin{bmatrix} x_{11} & x_{21} & \dots & x_{t1} \\ x_{12} & x_{22} & \dots & x_{t2} \\ \vdots & \vdots & \ddots & \vdots \\ x_{1L} & x_{2L} & \dots & x_{tL} \end{bmatrix} $$
+    </li>
+</ul>
+
+<b>5. Least Squares Channel Estimation</b>
+<p>The linear model $\bar{y} = X \bar{h} + \bar{n}$ is in the standard form for a least squares problem. The goal is to find the estimate of the channel, $\hat{h}$, that minimizes the squared error between the observed outputs $\bar{y}$ and the outputs predicted by the model $X\bar{h}$. This is known as minimizing the least squares cost function: $ ||\bar{y} - X\bar{h}||^2 $.</p>
+<p>The solution to this minimization problem is the well-known least squares formula:</p>
+\$$ \hat{h} = (X^H X)^{-1} X^H \bar{y} $$
+<p>Here, $X^H$ denotes the Hermitian (conjugate transpose) of $X$. If the pilot symbols and channel coefficients are real numbers, this simplifies to the regular transpose ($X^T$).</p>
+<p>This estimate $\hat{h}$ is also the <b>Maximum Likelihood (ML) estimate</b> if the noise samples $n_i$ are assumed to be independent and identically distributed (i.i.d.) Gaussian random variables.</p>
+
+<b>6. Example of Channel Estimation</b>
+<p>The transcript provides an example for a $2 \times 1$ MISO system ($t=2$) with $L=4$ pilot transmissions.</p>
+<ul>
+    <li><b>Pilot Vectors:</b> $\bar{x}_1=[2, -2]^T, \bar{x}_2=[3, 2]^T, \bar{x}_3=[2, -3]^T, \bar{x}_4=[2, 2]^T$</li>
+    <li><b>Observation Vector:</b> $\bar{y} = [-1, 2, -3, 2]^T$</li>
+</ul>
+<p><b>Step 1: Form the Pilot Matrix X</b></p>
+\$$ X = \begin{bmatrix} \bar{x}_1^T \\ \bar{x}_2^T \\ \bar{x}_3^T \\ \bar{x}_4^T \end{bmatrix} = \begin{bmatrix} 2 & -2 \\ 3 & 2 \\ 2 & -3 \\ 2 & 2 \end{bmatrix} $$
+<p>An important property of this specific pilot matrix is that its columns are <b>orthogonal</b>. The dot product of the first and second columns is $ (2)( -2) + (3)(2) + (2)(-3) + (2)(2) = -4 + 6 - 6 + 4 = 0 $. Using orthogonal pilots simplifies computation significantly.</p>
+<p><b>Step 2: Calculate $X^T X$</b></p>
+\$$ X^T X = \begin{bmatrix} 2 & 3 & 2 & 2 \\ -2 & 2 & -3 & 2 \end{bmatrix} \begin{bmatrix} 2 & -2 \\ 3 & 2 \\ 2 & -3 \\ 2 & 2 \end{bmatrix} = \begin{bmatrix} 21 & 0 \\ 0 & 21 \end{bmatrix} = 21I $$
+<p>Because the columns are orthogonal, $X^T X$ is a diagonal matrix. This makes its inverse trivial to compute:</p>
+\$$ (X^T X)^{-1} = \frac{1}{21} I = \begin{bmatrix} 1/21 & 0 \\ 0 & 1/21 \end{bmatrix} $$
+
+<p><b>Step 3: Calculate $X^T \bar{y}$</b></p>
+\$$ X^T \bar{y} = \begin{bmatrix} 2 & 3 & 2 & 2 \\ -2 & 2 & -3 & 2 \end{bmatrix} \begin{bmatrix} -1 \\ 2 \\ -3 \\ 2 \end{bmatrix} = \begin{bmatrix} -2+6-6+4 \\ 2+4+9+4 \end{bmatrix} = \begin{bmatrix} 2 \\ 19 \end{bmatrix} $$
+
+<p><b>Step 4: Compute the Channel Estimate $\hat{h}$</b></p>
+\$$ \hat{h} = (X^T X)^{-1} (X^T \bar{y}) = \frac{1}{21} \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix} \begin{bmatrix} 2 \\ 19 \end{bmatrix} = \frac{1}{21} \begin{bmatrix} 2 \\ 19 \end{bmatrix} = \begin{bmatrix} 2/21 \\ 19/21 \end{bmatrix} $$
+<p>Thus, the least squares estimate for the channel vector is $\hat{h} = [2/21, 19/21]^T$.</p>
+
+<b>7. Generalization to System Identification</b>
+<p>The concept of channel estimation is a specific application of a broader field called <b>system identification</b>. The general problem is to determine the characteristics of an unknown system (a "black box").</p>
+<ul>
+    <li>The <b>unknown channel</b> $\bar{h}$ corresponds to the <b>unknown system</b>.</li>
+    <li>The <b>pilot symbols</b> correspond to known <b>probing signals</b> sent into the system.</li>
+    <li>The <b>received observations</b> correspond to the measured <b>outputs</b> of the system.</li>
+</ul>
+<p>By analyzing the relationship between the known inputs and the measured outputs, one can identify the system's properties. The least squares principle is a fundamental and powerful tool for solving such linear system identification problems.</p>
+</div></div><div class="chapter" id="Lecture 25 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham"><h3 class="heading">Lecture 25 | Applied Linear Algebra | Vector Properties | Prof AK Jagannatham</h3><div>
+<p>This module provides an introduction to <b>Linear Regression</b>, framing it as a key application of the least squares method within the field of Machine Learning (ML).</p>
+
+<h3>1. What is Linear Regression?</h3>
+<p>
+Linear regression is a predictive modeling technique used to establish a relationship between a dependent variable and one or more independent variables. The core idea is to predict a continuous outcome, referred to as the <b>response</b>, by using a set of <b>explanatory variables</b>.
+</p>
+<p>
+Imagine plotting data points on a 2D graph, with an explanatory variable $x$ on the horizontal axis and a response variable $y$ on the vertical axis. If the points show a clear trend, linear regression aims to fit a straight line (a "linear model") through these points. This line represents the learned relationship. Once this model is established, you can take a new value for the explanatory variable $x'$ and use the line to predict its corresponding response, $\hat{y}$.
+</p>
+<p>
+The "learning" aspect of this machine learning technique is the process of finding the best possible linear model that fits the given data.
+</p>
+
+<h3>2. The Linear Regression Model</h3>
+<p>The relationship between the variables is expressed through a mathematical equation. Let's define the components:</p>
+<ul>
+    <li><b>Response (y):</b> This is the single variable we are trying to predict. It is also known as the output, observation, or the <i>dependent variable</i>.</li>
+    <li><b>Explanatory Variables ($x_1, x_2, ..., x_n$):</b> These are the variables used to predict the response. They are also known as features, predictors, or <i>independent variables</i>.</li>
+</ul>
+<p>
+The general form of the linear regression model is given by:
+</p>
+\$$ y = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + \dots + \theta_n x_n + \epsilon $$
+<p>Let's break down the components of this formula:</p>
+<ul>
+    <li><b>Regression Coefficients ($\theta_1, \theta_2, ..., \theta_n$):</b> These are the parameters or weights that quantify the effect each explanatory variable $x_i$ has on the response $y$.</li>
+    <li><b>Intercept ($\theta_0$):</b> This is a constant term, also known as the <i>bias</i>. It represents the expected value of the response $y$ when all explanatory variables are zero.</li>
+    <li><b>Error Term ($\epsilon$):</b> This term, also called the <i>disturbance</i>, accounts for the variability in $y$ that cannot be explained by the linear combination of the explanatory variables. It represents the modeling error or noise in the data.</li>
+</ul>
+
+<h3>3. Vector and Matrix Formulation</h3>
+<p>
+The linear model can be expressed more compactly using vector notation. This is where linear algebra becomes crucial. We define two vectors:
+</p>
+<ul>
+    <li>An augmented vector of explanatory variables: $\bar{x} = \begin{bmatrix} 1 \\ x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix}$</li>
+    <li>A vector of regression parameters: $\bar{\theta} = \begin{bmatrix} \theta_0 \\ \theta_1 \\ \theta_2 \\ \vdots \\ \theta_n \end{bmatrix}$</li>
+</ul>
+<p>
+Using these vectors, the model for a single observation simplifies to:
+</p>
+\$$ y = \bar{x}^T \bar{\theta} + \epsilon $$
+<p>
+Once the model parameters $\bar{\theta}$ are determined, we can make predictions. For a new set of explanatory variables $\bar{x}$, the predicted response, denoted as $\hat{y}$, is calculated by ignoring the error term:
+</p>
+\$$ \hat{y} = \bar{x}^T \bar{\theta} $$
+
+<h3>4. Applications of Linear Regression</h3>
+<p>Linear regression is a versatile tool used in numerous fields. The transcript highlights several examples:</p>
+<ul>
+    <li><b>Stock Market Prediction:</b> Predict the price of a stock (response $y$) based on the prices of related stocks or a market index (explanatory variables $x_1, ..., x_n$).</li>
+    <li><b>Sales Forecasting:</b> Predict the sales of a product, like SUVs (response $y$), using factors like sales of other vehicles (cars, bikes) and economic indicators such as average income or GDP (explanatory variables).</li>
+    <li><b>Financial Risk Management:</b> Estimate a portfolio's risk (response $y$) based on variables like interest rates, exchange rates, and individual stock prices.</li>
+    <li>Other applications mentioned include housing price prediction and traffic prediction.</li>
+</ul>
+
+<h3>5. Determining the Regression Parameters with Least Squares</h3>
+<p>
+The central question is how to find the optimal values for the regression coefficients in the vector $\bar{\theta}$. This is done using a set of historical data known as <b>training data</b>. This dataset consists of $m$ observations, where for each observation, we know both the explanatory variables and the actual response.
+</p>
+<p>
+Our training data is a set of $m$ pairs: $ (y_1, \bar{x}_1), (y_2, \bar{x}_2), \dots, (y_m, \bar{x}_m) $.
+</p>
+<p>We can write out the linear model for each of these $m$ data points:</p>
+\$$ y_1 = \bar{x}_1^T \bar{\theta} + \epsilon_1 $$
+\$$ y_2 = \bar{x}_2^T \bar{\theta} + \epsilon_2 $$
+\$$ \vdots $$
+\$$ y_m = \bar{x}_m^T \bar{\theta} + \epsilon_m $$
+<p>This system of equations can be written in a single, compact matrix equation:</p>
+\$$ \bar{y} = X \bar{\theta} + \bar{\epsilon} $$
+<p>Where:</p>
+<ul>
+    <li>$\bar{y}$ is the $m \times 1$ vector of observed responses: $\begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_m \end{bmatrix}$</li>
+    <li>$X$ is the $m \times (n+1)$ matrix of explanatory variables, where each row is one observation's vector $\bar{x}_i^T$: $\begin{bmatrix} \bar{x}_1^T \\ \bar{x}_2^T \\ \vdots \\ \bar{x}_m^T \end{bmatrix} = \begin{bmatrix} 1 & x_{11} & \dots & x_{n1} \\ 1 & x_{12} & \dots & x_{n2} \\ \vdots & \vdots & \ddots & \vdots \\ 1 & x_{1m} & \dots & x_{nm} \end{bmatrix}$</li>
+    <li>$\bar{\theta}$ is the $(n+1) \times 1$ vector of unknown regression coefficients we want to find.</li>
+    <li>$\bar{\epsilon}$ is the $m \times 1$ vector of errors for each observation.</li>
+</ul>
+
+<p>
+The goal is to find the vector $\bar{\theta}$ that provides the "best fit" for the training data. This is achieved by finding the $\bar{\theta}$ that minimizes the overall error between the predicted responses ($X\bar{\theta}$) and the actual responses ($\bar{y}$). This is precisely a <b>least squares problem</b>, where we aim to minimize the sum of the squared errors, $ ||\bar{y} - X\bar{\theta}||^2 $.
+</p>
+<p>
+The solution to this least squares problem gives us the optimal vector of regression coefficients, denoted $\hat{\theta}$:
+</p>
+\$$ \hat{\theta} = (X^T X)^{-1} X^T \bar{y} $$
+<p>
+By applying this formula, we use the training data ($X$ and $\bar{y}$) to "learn" the best regression parameters. Once $\hat{\theta}$ is calculated, the linear model is complete and can be used to make predictions on new, unseen data.
+</p>
+</div></div><h2>Weekly Summary</h2><div><p>This week's modules introduce the fundamental concept of the <b>Least Squares (LS) solution</b>, its geometric interpretation, and its wide-ranging applications in wireless communications and machine learning.</p><p><b>1. The Least Squares Problem and Solution</b></p><p>The core topic is finding an approximate solution to an overdetermined system of linear equations $\mathbf{y} = A\mathbf{x}$, where the matrix $A$ is $m \times n$ with $m > n$ (more equations than unknowns). Such systems, often called <i>tall matrices</i>, typically have no exact solution because the vector $\mathbf{y}$ does not lie in the column space of $A$.</p><ul><li><b>Key Takeaway:</b> Instead of an exact solution, we seek the vector $\mathbf{x}$ that minimizes the squared norm of the error, $||\mathbf{y} - A\mathbf{x}||^2$. This is the <b>Least Squares problem</b>.</li><li><b>Key Takeaway:</b> The LS solution is derived by setting the gradient of the error function to zero. This leads to the <b>normal equations</b>:<br>\$$ A^T A \mathbf{x} = A^T \mathbf{y} $$</li><li><b>Key Takeaway:</b> The solution to the normal equations gives the Least Squares solution:<br>\$$ \mathbf{x}_{LS} = (A^T A)^{-1} A^T \mathbf{y} $$<br>This solution requires that $A^T A$ is invertible, which holds if $A$ has full column rank. The matrix $A^\dagger = (A^T A)^{-1} A^T$ is known as the <b>pseudo-inverse</b> of $A$.</li></ul><p><b>2. Geometric Interpretation of Least Squares</b></p><p>A deeper, intuitive understanding of the LS solution is provided through a geometric lens.</p><ul><li><b>Key Takeaway:</b> The vector $A\mathbf{x}_{LS}$ is the point in the column space of $A$ that is closest to the vector $\mathbf{y}$. This closest point is the <b>orthogonal projection</b> of $\mathbf{y}$ onto the column space.</li><li><b>Key Takeaway:</b> The distance is minimized when the error vector $\mathbf{e} = \mathbf{y} - A\mathbf{x}_{LS}$ is orthogonal to the column space of $A$. This is the <b>Principle of Orthogonality</b>, which provides an alternative way to derive the normal equations ($A^T\mathbf{e} = \mathbf{0}$).</li><li><b>Key Takeaway:</b> The matrix $P_A = A(A^T A)^{-1} A^T$ is the <b>projection matrix</b> that projects any vector onto the column space of $A$. It is an idempotent matrix, meaning $P_A^2 = P_A$.</li></ul><p><b>3. Applications of Least Squares</b></p><p>The power of the LS technique is demonstrated through several practical applications.</p><ul><li><b>MIMO Wireless Communication:</b><br>In a Multiple-Input Multiple-Output (MIMO) system modeled as $\mathbf{y} = H\mathbf{x} + \mathbf{n}$, the receiver must estimate the transmitted symbols $\mathbf{x}$.<br><i>Key Takeaway:</i> The <b>Zero-Forcing (ZF) receiver</b> is a direct application of the LS solution, where the estimate is $\hat{\mathbf{x}} = (H^H H)^{-1} H^H \mathbf{y}$. It is a form of linear receiver that forces interference between symbols to zero.</li><br><li><b>Channel Estimation:</b><br>In wireless systems, the channel coefficients ($\mathbf{h}$) are often unknown and must be estimated. This is done by transmitting known "pilot symbols" and observing the output.<br><i>Key Takeaway:</i> The channel estimation problem is formulated as a standard LS problem $\mathbf{y} = X\mathbf{h} + \mathbf{n}$, where $X$ is the matrix of pilot symbols. The LS estimate for the channel is $\hat{\mathbf{h}} = (X^H X)^{-1} X^H \mathbf{y}$. This general technique is also known as <b>system identification</b>.</li><br><li><b>Machine Learning - Linear Regression:</b><br>Linear regression is a core machine learning technique used to predict a response variable ($y$) based on a linear combination of explanatory variables ($x_1, \dots, x_n$).<br><i>Key Takeaway:</i> The unknown regression coefficients ($\boldsymbol{\theta}$) of the model are learned from a training dataset by framing the problem as a least squares task: find $\boldsymbol{\theta}$ to minimize $||\mathbf{y} - X\boldsymbol{\theta}||^2$. The solution is $\hat{\boldsymbol{\theta}} = (X^T X)^{-1} X^T \mathbf{y}$, which provides the "best fit" linear model for the data.</li></ul></div><h2>Assignment Explanation</h2><div>
+<p>Here is an explanation of the questions and answers from the assignment.</p>
+<hr>
+
+<h3>Question 1</h3>
+<p><b>Question:</b> Consider a matrix A of size $3 \times 8$. The Rank+Nullity of this matrix equals</p>
+<p><b>Answer:</b> 8</p>
+<p><b>Explanation:</b> This question is a direct application of the <b>Rank-Nullity Theorem</b>. The theorem states that for any matrix with $n$ columns, the sum of its rank and its nullity is equal to the number of columns.</p>
+<p>
+    The rank is the dimension of the column space (number of linearly independent columns), and the nullity is the dimension of the null space (the space of vectors $\mathbf{x}$ such that $A\mathbf{x} = 0$).
+</p>
+<p>
+    For the given matrix $A$ of size $3 \times 8$, the number of columns is $n=8$. Therefore:
+    \$$ \text{rank}(A) + \text{nullity}(A) = 8 $$
+</p>
+
+<hr>
+<h3>Question 2</h3>
+<p><b>Question:</b> Consider an Alamouti coded system with channel coefficients $h_1 = 1 + j$ and $h_2 = -1 -j$. The effective channel matrix for this system is given as</p>
+<p><b>Answer:</b> 
+\$$ \begin{bmatrix} 1+j & -1+j \\ -1-j & 1-j \end{bmatrix} $$
+</p>
+<p><b>Explanation:</b> In Alamouti's space-time block coding, the received signal can be manipulated to form an equivalent linear system $\mathbf{y} = H_{eff} \mathbf{s}$, where $\mathbf{s}$ is the vector of transmitted symbols and $H_{eff}$ is the effective channel matrix. A common form for this matrix is:</p>
+\$$ H_{eff} = \begin{bmatrix} h_1 & h_2^* \\ h_2 & -h_1^* \end{bmatrix} $$
+<p>However, another valid representation, which is used here, is:</p>
+\$$ H_{eff} = \begin{bmatrix} h_1 & h_2^* \\ h_2 & h_1^* \end{bmatrix} $$
+<p>Let's calculate the components using the given channel coefficients:</p>
+<ul>
+    <li>$h_1 = 1 + j$</li>
+    <li>$h_2 = -1 - j$</li>
+    <li>The complex conjugate of $h_1$ is $h_1^* = 1 - j$.</li>
+    <li>The complex conjugate of $h_2$ is $h_2^* = -1 + j$.</li>
+</ul>
+<p>Substituting these values into the matrix structure gives:</p>
+\$$ H_{eff} = \begin{bmatrix} 1+j & -1+j \\ -1-j & 1-j \end{bmatrix} $$
+<p>This matches the accepted answer.</p>
+
+<hr>
+<h3>Question 3</h3>
+<p><b>Question:</b> The picture shown corresponds to</p>
+<p><b>Answer:</b> Regression</p>
+<p><b>Explanation:</b> The image displays a set of data points (a scatter plot) and a straight line drawn through them. This line represents the "line of best fit." The process of finding a function (in this case, a line) that best models the relationship between variables in a dataset is called <b>regression</b>. Specifically, this is an example of linear regression.</p>
+
+<hr>
+<h3>Question 4</h3>
+<p><b>Question:</b> Consider the matrix A below. The pseudo-inverse of the matrix A is
+\$$ A = \begin{bmatrix} 1 & -1 \\ 1 & 1 \\ -1 & 1 \\ -1 & -1 \end{bmatrix} $$
+</p>
+<p><b>Answer:</b> 
+\$$ \frac{1}{4} \begin{bmatrix} 1 & 1 & -1 & -1 \\ -1 & 1 & 1 & -1 \end{bmatrix} $$
+</p>
+<p><b>Explanation:</b> The pseudo-inverse $A^+$ of a matrix $A$ is given by the formula $A^+ = (A^H A)^{-1} A^H$, where $A^H$ is the conjugate transpose (or just the transpose $A^T$ for real matrices).</p>
+<p>1. <b>Check if columns are orthogonal.</b> Let the columns be $\mathbf{c_1} = [1, 1, -1, -1]^T$ and $\mathbf{c_2} = [-1, 1, 1, -1]^T$.
+    \$$ \mathbf{c_1}^T \mathbf{c_2} = (1)(-1) + (1)(1) + (-1)(1) + (-1)(-1) = -1 + 1 - 1 + 1 = 0 $$
+    The columns are orthogonal. This simplifies the calculation of $A^T A$.</p>
+<p>2. <b>Calculate $A^T A$:</b>
+    \$$ A^T A = \begin{bmatrix} \mathbf{c_1}^T \mathbf{c_1} & \mathbf{c_1}^T \mathbf{c_2} \\ \mathbf{c_2}^T \mathbf{c_1} & \mathbf{c_2}^T \mathbf{c_2} \end{bmatrix} = \begin{bmatrix} 1^2+1^2+(-1)^2+(-1)^2 & 0 \\ 0 & (-1)^2+1^2+1^2+(-1)^2 \end{bmatrix} = \begin{bmatrix} 4 & 0 \\ 0 & 4 \end{bmatrix} = 4I $$
+</p>
+<p>3. <b>Calculate $(A^T A)^{-1}$:</b>
+    \$$ (A^T A)^{-1} = (4I)^{-1} = \frac{1}{4}I = \begin{bmatrix} 1/4 & 0 \\ 0 & 1/4 \end{bmatrix} $$
+</p>
+<p>4. <b>Calculate the pseudo-inverse $A^+ = (A^T A)^{-1} A^T$:</b>
+    \$$ A^+ = \frac{1}{4}I \cdot A^T = \frac{1}{4} A^T = \frac{1}{4} \begin{bmatrix} 1 & 1 & -1 & -1 \\ -1 & 1 & 1 & -1 \end{bmatrix} $$
+</p>
+
+<hr>
+<h3>Question 5</h3>
+<p><b>Question:</b> The eigenvalues of a Hermitian symmetric matrix are</p>
+<p><b>Answer:</b> Real but not necessarily positive</p>
+<p><b>Explanation:</b> A Hermitian matrix is a square matrix that is equal to its own conjugate transpose ($H = H^H$). A key property of Hermitian matrices is that all of their eigenvalues are real numbers. They are not guaranteed to be positive. For an eigenvalue to be positive, the matrix must also be positive definite.</p>
+
+<hr>
+<h3>Question 6</h3>
+<p><b>Question:</b> Consider the Gaussian classification problem with the two classes distributed as $C_1 \sim \mathcal{N}(\bar{\mu}_1, \Sigma)$ and $C_2 \sim \mathcal{N}(\bar{\mu}_2, \Sigma)$. The classifier for this problem, to classify a new vector $\bar{x}$, can be formulated as</p>
+<p><b>Answer:</b> Choose $C_1$ if $(\bar{\mu}_1 - \bar{\mu}_2)^T \Sigma^{-1} \bar{x} - \frac{1}{2}(\bar{\mu}_1^T \Sigma^{-1} \bar{\mu}_1 - \bar{\mu}_2^T \Sigma^{-1} \bar{\mu}_2) \geq 0$ and $C_2$ otherwise</p>
+<p><b>Explanation:</b> This is a problem of Linear Discriminant Analysis (LDA). When the classes have Gaussian distributions with the same covariance matrix $\Sigma$ and equal prior probabilities, the decision rule is to choose the class whose mean is "closer" to the new point $\bar{x}$ in a statistical sense (Mahalanobis distance). We choose class $C_1$ if its posterior probability is higher than that of $C_2$. This leads to the decision boundary:</p>
+<p>\$$ (\bar{x} - \bar{\mu}_2)^T \Sigma^{-1} (\bar{x} - \bar{\mu}_2) \geq (\bar{x} - \bar{\mu}_1)^T \Sigma^{-1} (\bar{x} - \bar{\mu}_1) $$
+Expanding and simplifying this inequality gives the linear decision rule shown in the answer. The expression represents a hyperplane that separates the two classes.</p>
+
+<hr>
+<h3>Question 7</h3>
+<p><b>Question:</b> The picture shown corresponds to</p>
+<p><b>Answer:</b> Classification</p>
+<p><b>Explanation:</b> The image shows two distinct groups or "clusters" of data points. A line is drawn to separate these two groups. The task of creating a model or rule (the line) to assign new data points to one of these predefined categories (the clusters) is known as <b>classification</b>. The line is the decision boundary.</p>
+
+<hr>
+<h3>Question 8</h3>
+<p><b>Question:</b> The eigenvalues $\lambda_i$ of a unitary matrix $U$ satisfy the property</p>
+<p><b>Answer:</b> $|\lambda_i| = 1$</p>
+<p><b>Explanation:</b> A unitary matrix $U$ is defined by the property $U^H U = I$, where $U^H$ is the conjugate transpose. Unitary matrices preserve the norm of a vector. Let $\mathbf{v}$ be an eigenvector of $U$ with eigenvalue $\lambda$. Then:</p>
+<p>\$$ U\mathbf{v} = \lambda\mathbf{v} $$</p>
+<p>Taking the norm of both sides:</p>
+<p>\$$ ||U\mathbf{v}|| = ||\lambda\mathbf{v}|| = |\lambda| \cdot ||\mathbf{v}|| $$</p>
+<p>Since $U$ preserves norms, $||U\mathbf{v}|| = ||\mathbf{v}||$. Therefore:</p>
+<p>\$$ ||\mathbf{v}|| = |\lambda| \cdot ||\mathbf{v}|| $$</p>
+<p>Because an eigenvector $\mathbf{v}$ is non-zero, we can divide by $||\mathbf{v}||$ to get $|\lambda| = 1$. This means all eigenvalues of a unitary matrix lie on the unit circle in the complex plane.</p>
+
+<hr>
+<h3>Question 9</h3>
+<p><b>Question:</b> The eigenvalues of the matrix below are $ A = \begin{bmatrix} 2 & 3 \\ 2 & 1 \end{bmatrix} $</p>
+<p><b>Answer:</b> 4, -1</p>
+<p><b>Explanation:</b> The eigenvalues $\lambda$ are the roots of the characteristic equation $\det(A - \lambda I) = 0$.</p>
+<p>1. <b>Set up the characteristic equation:</b>
+\$$ \det \left( \begin{bmatrix} 2 & 3 \\ 2 & 1 \end{bmatrix} - \lambda \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix} \right) = 0 $$
+\$$ \det \left( \begin{bmatrix} 2-\lambda & 3 \\ 2 & 1-\lambda \end{bmatrix} \right) = 0 $$
+</p>
+<p>2. <b>Calculate the determinant:</b>
+\$$ (2-\lambda)(1-\lambda) - (3)(2) = 0 $$
+\$$ 2 - 2\lambda - \lambda + \lambda^2 - 6 = 0 $$
+\$$ \lambda^2 - 3\lambda - 4 = 0 $$
+</p>
+<p>3. <b>Solve the quadratic equation for $\lambda$:</b>
+\$$ (\lambda - 4)(\lambda + 1) = 0 $$
+The solutions (eigenvalues) are $\lambda_1 = 4$ and $\lambda_2 = -1$.</p>
+
+<hr>
+<h3>Question 10</h3>
+<p><b>Question:</b> For a square matrix A, the eigenvalues $\lambda$ are given as solution to the equation</p>
+<p><b>Answer:</b> $|A - \lambda I| = 0$</p>
+<p><b>Explanation:</b> This is the definition of the characteristic equation. By definition, an eigenvalue $\lambda$ of a matrix $A$ is a scalar for which there exists a non-zero eigenvector $\mathbf{v}$ such that:</p>
+<p>\$$ A\mathbf{v} = \lambda\mathbf{v} $$</p>
+<p>This can be rearranged as:</p>
+<p>\$$ A\mathbf{v} - \lambda I\mathbf{v} = 0 $$
+\$$ (A - \lambda I)\mathbf{v} = 0 $$</p>
+<p>For this equation to have a non-trivial solution for $\mathbf{v}$ (i.e., $\mathbf{v} \neq 0$), the matrix $(A - \lambda I)$ must be singular. A square matrix is singular if and only if its determinant is zero. Therefore, we must solve for $\lambda$ in the equation:</p>
+\$$ \det(A - \lambda I) = 0 $$
+<p>This is commonly written using vertical bars as $|A - \lambda I| = 0$.</p>
+
+</div></div>
+</body>
+</html>
