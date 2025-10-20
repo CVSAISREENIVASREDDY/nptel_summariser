@@ -1,0 +1,25 @@
+# Environments
+.venv/
+venv/
+.env
+.env.env
+
+# Cache
+.ruff_cache/
+__pycache__/
+**/__pycache__/
+.ipynb_checkpoints/
+
+# VSCode
+.vscode/
+
+# Notebooks
+test.ipynb
+
+# Outputs
+*.html
+transcripts.json
+weekly_outputs/
+
+# Assignments
+assignments/
